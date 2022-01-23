@@ -5,3 +5,4 @@ sqlparse==0.4.2
 django-bootstrap-pagination==1.7.1
 django-widget-tweaks==1.4.8
 libgravatar==1.0.0
+django-with-asserts==0.0.1

@@ -14,6 +14,10 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     bio = models.CharField(max_length=520, blank=True)
 
+    class Meta:
+        """Model options."""
+        ordering = ['last_name', 'first_name']
+
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 

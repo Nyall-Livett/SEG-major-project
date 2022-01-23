@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from .forms import SignUpForm, LogInForm, UserForm
+from .forms import SignUpForm, LogInForm, UserForm, PasswordForm
 from .models import User
 from .helpers import login_prohibited
 from django.views import View
@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django.http import Http404
 
 @login_prohibited
 def home(request):
@@ -66,7 +67,7 @@ class LogInView(LoginProhibitedMixin, View):
     """View that handles log in."""
 
     http_method_names = ['get', 'post']
-    redirect_when_logged_in_url = 'feed'
+    redirect_when_logged_in_url = 'dashboard'
 
     def get(self, request):
         """Display log in template."""
@@ -96,6 +97,31 @@ def log_out(request):
     logout(request)
     return redirect('home')
 
+class PasswordView(LoginRequiredMixin, FormView):
+    """View that handles password change requests."""
+
+    template_name = 'password.html'
+    form_class = PasswordForm
+
+    def get_form_kwargs(self, **kwargs):
+        """Pass the current user to the password change form."""
+
+        kwargs = super().get_form_kwargs(**kwargs)
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def form_valid(self, form):
+        """Handle valid form by saving the new password."""
+
+        form.save()
+        login(self.request, self.request.user)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Redirect the user after successful password change."""
+
+        messages.add_message(self.request, messages.SUCCESS, "Password updated!")
+        return reverse('dashboard')
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View to update logged-in user's profile."""

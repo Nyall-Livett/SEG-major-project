@@ -9,11 +9,11 @@ from clubs.tests.helpers import LogInTester, MenuTesterMixin, reverse_with_next
 class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     """Tests of the log in view."""
 
-    fixtures = ['microblogs/tests/fixtures/default_user.json']
+    fixtures = ['clubs/tests/fixtures/default_user.json']
 
     def setUp(self):
         self.url = reverse('log_in')
-        self.user = User.objects.get(username='@johndoe')
+        self.user = User.objects.get(username='johndoe')
 
     def test_log_in_url(self):
         self.assertEqual(self.url,'/log_in/')
@@ -48,12 +48,12 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     def test_get_log_in_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
         response = self.client.get(self.url, follow=True)
-        redirect_url = reverse('feed')
+        redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'feed.html')
+        self.assertTemplateUsed(response, 'dashboard.html')
 
     def test_unsuccesful_log_in(self):
-        form_input = { 'username': '@johndoe', 'password': 'WrongPassword123' }
+        form_input = { 'username': 'johndoe', 'password': 'WrongPassword123' }
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
@@ -79,7 +79,7 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_log_in_with_blank_password(self):
-        form_input = { 'username': '@johndoe', 'password': '' }
+        form_input = { 'username': 'johndoe', 'password': '' }
         response = self.client.post(self.url, form_input)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')
@@ -92,19 +92,19 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
         self.assertEqual(messages_list[0].level, messages.ERROR)
 
     def test_succesful_log_in(self):
-        form_input = { 'username': '@johndoe', 'password': 'Password123' }
+        form_input = { 'username': 'johndoe', 'password': 'Password123' }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
-        response_url = reverse('feed')
+        response_url = reverse('dashboard')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'feed.html')
+        self.assertTemplateUsed(response, 'dashboard.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
         self.assert_menu(response)
 
     def test_succesful_log_in_with_redirect(self):
         redirect_url = reverse('user_list')
-        form_input = { 'username': '@johndoe', 'password': 'Password123', 'next': redirect_url }
+        form_input = { 'username': 'johndoe', 'password': 'Password123', 'next': redirect_url }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertTrue(self._is_logged_in())
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
@@ -114,15 +114,15 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
 
     def test_post_log_in_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
-        form_input = { 'username': '@wronguser', 'password': 'WrongPassword123' }
+        form_input = { 'username': 'wronguser', 'password': 'WrongPassword123' }
         response = self.client.post(self.url, form_input, follow=True)
-        redirect_url = reverse('feed')
+        redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-        self.assertTemplateUsed(response, 'feed.html')
+        self.assertTemplateUsed(response, 'dashboard.html')
 
     def test_post_log_in_with_incorrect_credentials_and_redirect(self):
         redirect_url = reverse('user_list')
-        form_input = { 'username': '@johndoe', 'password': 'WrongPassword123', 'next': redirect_url }
+        form_input = { 'username': 'johndoe', 'password': 'WrongPassword123', 'next': redirect_url }
         response = self.client.post(self.url, form_input)
         next = response.context['next']
         self.assertEqual(next, redirect_url)
@@ -130,7 +130,7 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     def test_valid_log_in_by_inactive_user(self):
         self.user.is_active = False
         self.user.save()
-        form_input = { 'username': '@johndoe', 'password': 'Password123' }
+        form_input = { 'username': 'johndoe', 'password': 'Password123' }
         response = self.client.post(self.url, form_input, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'log_in.html')

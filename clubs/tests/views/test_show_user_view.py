@@ -1,20 +1,19 @@
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User, Post
-from clubs.tests.helpers import create_posts, reverse_with_next
-from with_asserts.mixin import AssertHTMLMixin
+from clubs.models import User
+from clubs.tests.helpers import reverse_with_next
 
-class ShowUserTest(TestCase, AssertHTMLMixin):
+class ShowUserTest(TestCase):
 
     fixtures = [
-        'microblogs/tests/fixtures/default_user.json',
-        'microblogs/tests/fixtures/other_users.json'
+        'clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/other_users.json'
     ]
 
     def setUp(self):
-        self.user = User.objects.get(username='@johndoe')
-        self.target_user = User.objects.get(username='@janedoe')
+        self.user = User.objects.get(username='johndoe')
+        self.target_user = User.objects.get(username='janedoe')
         self.url = reverse('show_user', kwargs={'user_id': self.target_user.id})
 
     def test_show_user_url(self):
@@ -26,19 +25,8 @@ class ShowUserTest(TestCase, AssertHTMLMixin):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'show_user.html')
         self.assertContains(response, "Jane Doe")
-        self.assertContains(response, "@janedoe")
-        followable = response.context['followable']
-        self.assertTrue(followable)
-        follow_toggle_url = reverse('follow_toggle', kwargs={'user_id': self.target_user.id})
-        query = f'.//form[@action="{follow_toggle_url}"]//button'
-        with self.assertHTML(response) as html:
-            button = html.find(query)
-            self.assertEquals(button.text, "Follow")
-        self.user.toggle_follow(self.target_user)
+        self.assertContains(response, "janedoe")
         response = self.client.get(self.url)
-        with self.assertHTML(response) as html:
-            button = html.find(query)
-            self.assertEquals(button.text, "Unfollow")
 
     def test_get_show_user_with_own_id(self):
         self.client.login(username=self.user.username, password='Password123')
@@ -47,14 +35,7 @@ class ShowUserTest(TestCase, AssertHTMLMixin):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'show_user.html')
         self.assertContains(response, "John Doe")
-        self.assertContains(response, "@johndoe")
-        followable = response.context['followable']
-        self.assertFalse(followable)
-        follow_toggle_url = reverse('follow_toggle', kwargs={'user_id': self.target_user.id})
-        query = f'.//form[@action="{follow_toggle_url}"]//button'
-        with self.assertHTML(response) as html:
-            button = html.find(query)
-            self.assertIsNone(button)
+        self.assertContains(response, "johndoe")
 
     def test_get_show_user_with_invalid_id(self):
         self.client.login(username=self.user.username, password='Password123')
