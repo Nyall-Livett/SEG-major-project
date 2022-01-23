@@ -28,3 +28,8 @@ def sign_up(request):
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
+
+
+def log_out(request):
+    logout(request)
+    return redirect('home')
