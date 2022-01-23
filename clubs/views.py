@@ -7,10 +7,13 @@ from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from .forms import SignUpForm, LogInForm
+from .forms import SignUpForm, LogInForm, UserForm
 from .models import User
 from .helpers import login_prohibited
 from django.views import View
+from django.views.generic.edit import FormView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
 @login_prohibited
 def home(request):
@@ -90,3 +93,21 @@ class LogInView(LoginProhibitedMixin, View):
 def log_out(request):
     logout(request)
     return redirect('home')
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """View to update logged-in user's profile."""
+
+    model = UserForm
+    template_name = "profile.html"
+    form_class = UserForm
+
+    def get_object(self):
+        """Return the object (user) to be updated."""
+        user = self.request.user
+        return user
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
