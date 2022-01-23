@@ -14,6 +14,8 @@ from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 
 @login_prohibited
 def home(request):
@@ -111,3 +113,27 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         """Return redirect URL after successful update."""
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all users."""
+
+    model = User
+    template_name = "user_list.html"
+    context_object_name = "users"
+    paginate_by = settings.USERS_PER_PAGE
+
+class ShowUserView(LoginRequiredMixin, DetailView):
+    """View that shows individual user details."""
+
+    model = User
+    template_name = 'show_user.html'
+    pk_url_kwarg = 'user_id'
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to user_list if user_id invalid."""
+
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('user_list')

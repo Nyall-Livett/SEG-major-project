@@ -1,6 +1,7 @@
 asgiref==3.4.1
 backports.zoneinfo==0.2.1
-Django==4.0.1
+Django==3.2.5
 sqlparse==0.4.2
+django-bootstrap-pagination==1.7.1
 django-widget-tweaks==1.4.8
 libgravatar==1.0.0
