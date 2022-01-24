@@ -36,3 +36,10 @@ class Club(models.Model):
     description = models.CharField(max_length=2048, blank=False)
     founder = models.ForeignKey(User, related_name="founder_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
+
+    def add_member(self, user):
+        if user not in self.members.all():
+            user.clubs.add(self)
+
+    def __str__(self):
+        return self.name
