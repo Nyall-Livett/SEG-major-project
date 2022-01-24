@@ -30,3 +30,9 @@ class User(AbstractUser):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
+
+class Club(models.Model):
+    name = models.CharField(max_length=64, unique=True, blank=False)
+    description = models.CharField(max_length=2048, blank=False)
+    founder = models.ForeignKey(User, related_name="founder_of", on_delete=models.PROTECT)
+    members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
