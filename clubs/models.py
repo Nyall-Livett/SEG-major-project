@@ -32,6 +32,7 @@ class User(AbstractUser):
         return self.gravatar(size=60)
 
 class Club(models.Model):
+    """Club model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
     founder = models.ForeignKey(User, related_name="founder_of", on_delete=models.PROTECT)
@@ -40,6 +41,10 @@ class Club(models.Model):
     def add_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
+
+    def grant_ownership(self, user):
+        self.founder = user
+        self.save()
 
     def __str__(self):
         return self.name
