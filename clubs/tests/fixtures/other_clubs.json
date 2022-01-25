@@ -1,0 +1,29 @@
+[
+  {
+    "model": "clubs.club",
+    "pk": 1,
+    "fields": {
+      "name": "Oxford Book Club",
+      "description": "This a book club based in Oxfordshire",
+      "founder": 1
+    }
+  },
+  {
+    "model": "clubs.club",
+    "pk": 2,
+    "fields": {
+      "name": "London Book Club",
+      "description": "This a book club based in London",
+      "founder": 1
+    }
+  },
+  {
+    "model": "clubs.club",
+    "pk": 3,
+    "fields": {
+      "name": "Reading Book Club",
+      "description": "This a book club based in Reading",
+      "founder": 1
+    }
+  }
+]
