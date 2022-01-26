@@ -1,8 +1,11 @@
+from re import template
 from django.views.generic.edit import FormView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.detail import DetailView
 from django.urls import reverse
 from django.contrib import messages
+from django.http import Http404
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 
@@ -51,3 +54,20 @@ class TransferClubOwnership(LoginRequiredMixin, View):
 
     def redirect(self):
         return redirect("dashboard")
+
+class ShowClubView(LoginRequiredMixin, DetailView):
+
+    model = Club
+    template_name = 'show_club.html'
+    pk_url_kwarg = 'club_id'
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to club_list if club_id invalid."""
+
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('club_list')
+
+    def render(self):
+        self
