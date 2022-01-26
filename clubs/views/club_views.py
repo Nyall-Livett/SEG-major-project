@@ -69,5 +69,4 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         except Http404:
             return redirect('club_list')
 
-    def render(self):
-        self
+
