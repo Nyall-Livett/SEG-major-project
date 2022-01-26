@@ -27,10 +27,8 @@ urlpatterns = [
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
+    path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
     path('users/', views.UserListView.as_view(), name='user_list'),
-
-    # path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
-    # path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubOwnership.as_view(), name='transfer_ownership')
 ]

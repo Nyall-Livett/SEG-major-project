@@ -10,3 +10,12 @@ class UserAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'username', 'first_name', 'last_name', 'email', 'is_active',
     ]
+
+
+# @admin.register(Club)
+# class ClubAdmin(admin.ModelAdmin):
+#     """Configuration of the admin interface for clubs."""
+
+#     list_display = [
+#         'name', 'description', 'founder',
+#     ]
