@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Club
+from .models import User, Club, Post
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -137,3 +137,13 @@ class ClubForm(forms.ModelForm):
         model = Club
         fields = ['name', 'description']
         widgets = {'description': forms.Textarea()}
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        """Form options."""
+
+        model = Post
+        fields = ['title','body']
+        widgets = {
+            'body': forms.Textarea()
+        }

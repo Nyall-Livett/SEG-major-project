@@ -29,6 +29,8 @@ urlpatterns = [
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('users/', views.UserListView.as_view(), name='user_list'),
 
+    # path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
+    # path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubOwnership.as_view(), name='transfer_ownership')
 ]
