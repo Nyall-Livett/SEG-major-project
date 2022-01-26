@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.views.generic.edit import FormView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
 
 from clubs.models import Club, User
@@ -51,3 +53,11 @@ class TransferClubOwnership(LoginRequiredMixin, View):
 
     def redirect(self):
         return redirect("dashboard")
+
+class ClubListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all users."""
+
+    model = Club
+    template_name = "club_list.html"
+    context_object_name = "clubs"
+    paginate_by = settings.USERS_PER_PAGE
