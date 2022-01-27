@@ -56,3 +56,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     club = models.ForeignKey(Club,on_delete=models.CASCADE, related_name="club")
     author = models.ForeignKey(User,on_delete=models.CASCADE, related_name="author")
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['-created_at']

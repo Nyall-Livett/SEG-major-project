@@ -3,6 +3,7 @@ from django.test import TestCase
 from clubs.models import Post, User, Club
 
 class PostTest(TestCase):
+
     fixtures = ['clubs/tests/fixtures/default_user.json',
         'clubs/tests/fixtures/default_club.json']
 
