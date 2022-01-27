@@ -4,6 +4,8 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse
 from clubs.forms import PostForm
 from clubs.models import Post, Club
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 class NewPostView(LoginRequiredMixin, CreateView):
     """Class-based generic view for new post handling."""
@@ -17,6 +19,9 @@ class NewPostView(LoginRequiredMixin, CreateView):
         """Process a valid form."""
         form.instance.author = self.request.user
         form.instance.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        if(form.instance.author not in form.instance.club.members.all()):
+            raise PermissionDenied()
+        messages.add_message(self.request, messages.SUCCESS, f"You have successfully add a new post to forums.")
         return super().form_valid(form)
 
     def get_success_url(self):

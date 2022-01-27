@@ -36,9 +36,18 @@ class NewPostTest(TestCase):
         user_count_after = Post.objects.count()
         self.assertEqual(user_count_after, user_count_before)
 
+    def test_post_new_post_when_is_not_a_member(self):
+        self.client.login(username=self.user.username, password="Password123")
+        user_count_before = Post.objects.count()
+        response = self.client.post(self.url, self.data, follow=True)
+        user_count_after = Post.objects.count()
+        self.assertEqual(user_count_after, user_count_before)
+        self.assertEqual(response.status_code, 403)
+
     def test_successful_new_post(self):
         self.client.login(username=self.user.username, password="Password123")
         user_count_before = Post.objects.count()
+        self.club.add_member(self.user)
         response = self.client.post(self.url, self.data, follow=True)
         user_count_after = Post.objects.count()
         self.assertEqual(user_count_after, user_count_before+1)
@@ -53,8 +62,9 @@ class NewPostTest(TestCase):
         self.assertTemplateUsed(response, 'forum.html')
 
     # def test_unsuccessful_new_post(self):
-    #     self.data['title'] = ''
     #     self.client.login(username=self.user.username, password='Password123')
+    #     self.club.add_member(self.user)
+    #     self.data['title'] = ''
     #     user_count_before = Post.objects.count()
     #     response = self.client.post(self.url, self.data, follow=True)
     #     user_count_after = Post.objects.count()
@@ -64,6 +74,8 @@ class NewPostTest(TestCase):
     def test_cannot_create_post_for_other_user(self):
         self.client.login(username=self.user.username, password='Password123')
         other_user = User.objects.get(username='janedoe')
+        self.club.add_member(self.user)
+        self.club.add_member(other_user)
         self.data['author'] = other_user.id
         user_count_before = Post.objects.count()
         response = self.client.post(self.url, self.data, follow=True)

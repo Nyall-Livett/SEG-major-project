@@ -23,6 +23,7 @@ class ClubForumViewTestCase(TestCase):
 
     def test_get_club_forum(self):
         self.client.login(username=self.user.username, password='Password123')
+        self.club.add_member(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'forum.html')
@@ -34,6 +35,11 @@ class ClubForumViewTestCase(TestCase):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+    def test_get_club_forum_when_is_not_a_memer(self):
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
 
     def test_forum_contains_posts_by_club_members(self):
         self.client.login(username=self.user.username, password='Password123')

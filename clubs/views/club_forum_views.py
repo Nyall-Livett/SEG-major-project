@@ -4,6 +4,8 @@ from clubs.models import Club,User,Post
 from django.views.generic import ListView
 from django.views import View
 from clubs.forms import PostForm
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 
 class ClubForumView(LoginRequiredMixin, ListView):
     """View handle club forum"""
@@ -14,10 +16,12 @@ class ClubForumView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Return the club's forum."""
-        # current_user = self.request.user
+        current_user = self.request.user
         club = Club.objects.get(id=self.kwargs.get('club_id'))
         # authors = list(club.members.all()) + [current_user]
         authors = list(club.members.all())
+        if(current_user not in club.members.all()):
+            raise PermissionDenied()
         posts = Post.objects.filter(author__in=authors)
         return posts
 
