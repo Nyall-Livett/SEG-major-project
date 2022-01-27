@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 
 from clubs.models import Club, User
 
@@ -51,3 +52,68 @@ class TransferClubOwnership(LoginRequiredMixin, View):
 
     def redirect(self):
         return redirect("dashboard")
+
+
+"""Temporily stored in club_view, but this should belongs to meeting_views.py"""
+from clubs.models import Meeting
+
+from clubs.forms import MeetingForm
+
+def select_member():
+    """Geting clubs, this is an unfinished function because the clubsa and users are not inserted yet"""
+
+    member_list = club.members.objects.get()
+    size = len(member_list)//2
+    random = [random.randint(0, len(member_list)) for i in range(size)]
+    String =""
+    for i in random:
+        string += member_list[i].name +'\n'
+    return string
+
+"""def meeting_set(request):
+
+    form = MeetingForm(initial = {"member_selected": "Tom"})
+
+    if request.method == "POST":
+        form = MeetingForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("dashboard")
+    context = {
+        'form': form
+    }
+    return render(request,"set_meeting.html", context)"""
+class CreateMeetingView(LoginRequiredMixin, FormView):
+    """docstring for CreateClubView."""
+
+    template_name = "set_meeting.html"
+    form_class = MeetingForm
+
+    def form_valid(self, form):
+        meeting = form.instance
+        form.save()
+        meeting.add_member(self.request.meeting)
+        return super().form_valid(form)
+
+    def get(self, request):
+        form = MeetingForm(initial = {"member_selected": "Tom"})
+        context = {
+            'form': form
+        }
+        return render(request,"set_meeting.html", context)
+
+    def post(self, request):
+        form = MeetingForm(request.POST)
+        #form.save()
+        if form.is_valid():
+            return redirect("dashboard")
+        context = {
+            'form': form
+        }
+        #message.add_message(request, messages.ERROR, "This is invaild!")
+        return render(request,"set_meeting.html", context)
+
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse("dashboard")
