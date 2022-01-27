@@ -4,7 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from libgravatar import Gravatar
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime
+import pytz
 
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
@@ -49,17 +50,26 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
+    
 
-class Book(models.model):
+class Book(models.Model):
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
     
-
-class Meeting(models.model):
+class Meeting(models.Model):
     date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     book = models.ManyToManyField(Book, related_name="book")
+    
+    
+    def future_meetings(self):
+        utc=pytz.UTC
+        list = [] 
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) < datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
 
-
+    
 
