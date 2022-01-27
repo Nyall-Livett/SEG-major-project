@@ -7,6 +7,10 @@ from django.utils import timezone
 from datetime import date, datetime
 import pytz
 
+"""used for meeting model"""
+from django.utils import timezone
+from datetime import date
+
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
 

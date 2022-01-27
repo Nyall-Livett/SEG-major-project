@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 
 from clubs.models import Club, User
 
