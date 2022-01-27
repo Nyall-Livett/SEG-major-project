@@ -57,10 +57,12 @@ class Club(models.Model):
     
 
 class Book(models.Model):
+    """Book model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
     
 class Meeting(models.Model):
+    """Meeting model"""
     date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
