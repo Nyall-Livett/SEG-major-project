@@ -71,7 +71,7 @@ class Meeting(models.Model):
         utc=pytz.UTC
         list = [] 
         for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) < datetime.now().replace(tzinfo=utc):
+            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
 
