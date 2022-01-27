@@ -1,9 +1,10 @@
 """Models in the clubs app."""
-
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from libgravatar import Gravatar
+from django.utils import timezone
+from datetime import date
 
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
@@ -48,3 +49,17 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
+
+class Book(models.model):
+    name = models.CharField(max_length=64, unique=True, blank=False)
+    description = models.CharField(max_length=2048, blank=False)
+    
+
+class Meeting(models.model):
+    date = models.DateTimeField("date", default=timezone.now)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    members = models.ManyToManyField(User, related_name="members")
+    book = models.ManyToManyField(Book, related_name="book")
+
+
+
