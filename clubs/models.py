@@ -35,6 +35,7 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
 
+
 class Club(models.Model):
     """Club model"""
     name = models.CharField(max_length=64, unique=True, blank=False)

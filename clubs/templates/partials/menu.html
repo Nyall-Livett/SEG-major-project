@@ -10,6 +10,21 @@
       <a class="nav-link" href="{% url 'create_club' %}">Create club</a>
     </li>
 
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        My Clubs
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        {% if not user.clubs.all %}
+          <li>Join a club</li>
+        {% else %}
+          {% for club in user.clubs.all %}
+            <li><a class="dropdown-item" href="{% url 'dashboard' %}">{{ club.name }}</a></li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+
   </ul>
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
     <li class="nav-item dropdown">
