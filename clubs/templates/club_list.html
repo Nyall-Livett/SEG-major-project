@@ -13,8 +13,8 @@
             <td>
               <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
             </td>
-            <td>{{ club.name }}</td>
-            <td>{{ club.founder }}</td>
+            <td><a href="{% url 'show_club' club.id %}">{{ club.name }}</a></td>
+            <td>{{ club.leader }}</td>
           </tr>
         {% endfor %}
       </table>

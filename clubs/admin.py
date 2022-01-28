@@ -39,10 +39,4 @@ class MeetingAdmin(admin.ModelAdmin):
         'name', 'description',
     ]
 
-@admin.register(Club)
-class UserAdmin(admin.ModelAdmin):
-    """Configuration of the admin interface for users."""
 
-    list_display = [
-        'name', 'description', 'founder',
-    ]
