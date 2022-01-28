@@ -19,7 +19,7 @@
         {% if not user.clubs.all %}
           <li>No Clubs Joined</li>
         {% else %}
-          {% for club in user.clubs.all %}
+          {% for club in request.user.clubs.all %}
             <li><a class="dropdown-item" href="{% url 'show_club' club_id=club.pk %}">{{ club.name }}</a></li>
           {% endfor %}
         {% endif %}
