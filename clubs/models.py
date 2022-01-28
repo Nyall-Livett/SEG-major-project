@@ -7,6 +7,7 @@ from django.http import request
 from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
+from django.core.validators import MaxValueValidator, MinValueValidator
 import pytz
 from sqlalchemy import true
 
@@ -65,6 +66,7 @@ class Club(models.Model):
     leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
     theme = models.CharField(max_length=512, blank=False)
+    maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
     def add_member(self, user):
         if user not in self.members.all():
@@ -73,6 +75,9 @@ class Club(models.Model):
     def grant_leadership(self, user):
         self.leader = user
         self.save()
+
+    def member_count(self):
+        return f"{self.members.count()}/{self.maximum_members}"
 
     def __str__(self):
         return self.name
@@ -83,12 +88,24 @@ class Club(models.Model):
                 return True
         return False 
     
+class Post(models.Model):
+    """Post model"""
+    title = models.CharField(max_length = 64, blank=False)
+    body = models.CharField(max_length = 300, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    club = models.ForeignKey(Club,on_delete=models.CASCADE, related_name="club")
+    author = models.ForeignKey(User,on_delete=models.CASCADE, related_name="author")
+
+    class Meta:
+        """Model options."""
+
+        ordering = ['-created_at']
 
 class Book(models.Model):
     """Book model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
-    
+
 class Meeting(models.Model):
     """Meeting model"""
     date = models.DateTimeField("date", default=timezone.now)

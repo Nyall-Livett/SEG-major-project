@@ -1,18 +1,6 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-<style>
-    #outer
-    {
-      width:100%;
-      text-align: center,
-    }
-    .inner{
-      display: inline-block;
-    }
-    </style>
-
-
     <div class="container">
         <div class="main-body">
             <div class="row g-4">
@@ -32,7 +20,7 @@
                     <div class="card">
                         <div class="card-body">
                           <div class="d-flex flex-column align-items-center text-center">
-                            <p class="text-muted font-size-sm">Club leader: {{ club.leader }}</p>
+                            <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
                             </div>
                         </div>
                     </div>
@@ -46,7 +34,8 @@
 
                             <p class="text font-size-sm"> upcomming meetings: <p> </p>
                             {% for meetings in user.future_meetings %}
-                            {{ meetings.date }}
+                            {{ meetings.date }} Book: {{ meetings.book.name }}
+                            <p> </p>
                             {% endfor %}
                             </p>
                             </div>
@@ -62,7 +51,7 @@
 
                             <p class="text font-size-sm"> previous meetings: <p> </p>
                             {% for meetings in user.previous_meetings %}
-                            {{ meetings.date }}
+                            {{ meetings.date }} {{ meetings.book.name }}
                             {% endfor %}
                             </p>
                             </div>
@@ -87,16 +76,12 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                      <a href={% url 'club_forum' club.id %}>Club Forum</a>
+                    </div>
                 </div>
             </div>
         </div>
- {{ user.future_meetings }}
-   
-        
-         
-        
-        
-
 
 
 {% endblock %}

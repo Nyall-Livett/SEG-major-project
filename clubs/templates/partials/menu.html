@@ -9,11 +9,10 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'create_club' %}">Create club</a>
     </li>
-  
-
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    <li class="nav-item dropdown">
+      <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         My Clubs
+      </a>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         {% if not user.clubs.all %}
@@ -24,7 +23,7 @@
           {% endfor %}
         {% endif %}
       </ul>
-    </div>
+    </li>
   </ul>
   
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
