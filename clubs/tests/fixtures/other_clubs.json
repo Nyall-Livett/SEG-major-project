@@ -5,7 +5,8 @@
     "fields": {
       "name": "Oxford Book Club",
       "description": "This a book club based in Oxfordshire",
-      "founder": 1
+      "theme": "Horror",
+      "leader": 1
     }
   },
   {
@@ -14,7 +15,8 @@
     "fields": {
       "name": "London Book Club",
       "description": "This a book club based in London",
-      "founder": 1
+      "theme": "Romance",
+      "leader": 1
     }
   },
   {
@@ -23,7 +25,8 @@
     "fields": {
       "name": "Reading Book Club",
       "description": "This a book club based in Reading",
-      "founder": 1
+      "theme": "Horror",
+      "leader": 1
     }
   }
 ]

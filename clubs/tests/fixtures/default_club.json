@@ -5,7 +5,8 @@
     "fields": {
       "name": "Oxford Book Club",
       "description": "This a book club based in Oxfordshire",
-      "founder": 1
+      "theme": "Horror",
+      "leader": 1
     }
   }
 ]

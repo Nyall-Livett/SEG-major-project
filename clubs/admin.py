@@ -20,7 +20,7 @@ class ClubAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for clubs."""
 
     list_display = [
-        'name', 'description', 'founder',
+        'name', 'description', 'leader',
     ]
 
 @admin.register(Meeting)
@@ -28,7 +28,7 @@ class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for meetings."""
 
     list_display = [
-        'date', 
+        'date',
     ]
 
 @admin.register(Book)
@@ -38,8 +38,3 @@ class MeetingAdmin(admin.ModelAdmin):
     list_display = [
         'name', 'description',
     ]
-
-
-
-
-

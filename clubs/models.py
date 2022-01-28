@@ -42,15 +42,16 @@ class Club(models.Model):
     """Club model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
-    founder = models.ForeignKey(User, related_name="founder_of", on_delete=models.PROTECT)
+    leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
+    theme = models.CharField(max_length=512, blank=False)
 
     def add_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
 
-    def grant_ownership(self, user):
-        self.founder = user
+    def grant_leadership(self, user):
+        self.leader = user
         self.save()
 
     def __str__(self):
