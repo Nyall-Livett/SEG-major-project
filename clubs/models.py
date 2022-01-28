@@ -61,7 +61,19 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Post(models.Model):
+    """Post model"""
+    title = models.CharField(max_length = 64, blank=False)
+    body = models.CharField(max_length = 300, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    club = models.ForeignKey(Club,on_delete=models.CASCADE, related_name="club")
+    author = models.ForeignKey(User,on_delete=models.CASCADE, related_name="author")
 
+    class Meta:
+        """Model options."""
+
+        ordering = ['-created_at']
 
 class Book(models.Model):
     """Book model"""

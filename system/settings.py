@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -138,3 +139,4 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'dashboard'
 
 # Page lengths
 USERS_PER_PAGE = 10
+POSTS_PER_PAGE = 20
