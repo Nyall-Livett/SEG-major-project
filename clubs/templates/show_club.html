@@ -37,7 +37,9 @@
                         </div>
                     </div>
 
-
+                <p></p>
+                {% for i in club.members.all %}
+                {% if i == request.user  %}
                   <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
@@ -50,9 +52,31 @@
                             {% endfor %}
                             </p>
                             </div>
+
+
+                        </div>
+                    </div>
+                <p></p>
+                {% endif %}
+                {% endfor %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+
+                            <p class="text font-size-sm"> previous meetings: <p> </p>
+                            {% for meetings in club.meeting_set.all %}
+                            {% for i in meetings.previous_meetings %}
+                            {{ i.date }}
+                            {% endfor %}
+                            {% endfor %}
+                            </p>
+                            </div>
+
+                            
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-8">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -70,7 +94,10 @@
             </div>
         </div>
 
-
+        
+         
+        
+        
 
 
 

@@ -1,11 +1,14 @@
 """Models in the clubs app."""
+from pickle import TRUE
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.http import request
 from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 import pytz
+from sqlalchemy import true
 
 """used for meeting model"""
 from django.utils import timezone
@@ -56,6 +59,12 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
+
+    def is_member(self,request):
+        for i in self.members.all():
+            if request == i:
+                return True
+        return False 
     
 
 class Book(models.Model):
@@ -76,6 +85,14 @@ class Meeting(models.Model):
         list = [] 
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
+
+    def previous_meetings(self):
+        utc=pytz.UTC
+        list = [] 
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
 
