@@ -1,5 +1,5 @@
 /*Customization for the main body of the landing page*/
-.main-body{
+.home-body{
     position: fixed;
     background-color: #77C2CF;
     height: 100%;
@@ -110,4 +110,14 @@
 
 .padd{
     margin-left: 28ch;
+}
+
+/*Customization for show_club.html*/
+#outer
+{
+  width:100%;
+  text-align: center,
+}
+.inner{
+  display: inline-block;
 }
