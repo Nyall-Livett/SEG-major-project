@@ -135,8 +135,15 @@ class ClubForm(forms.ModelForm):
         """Form options."""
 
         model = Club
-        fields = ['name', 'description', 'theme']
-        widgets = {'description': forms.Textarea()}
+        fields = ['name', 'description', 'theme', 'maximum_members']
+        widgets = {
+            'description': forms.Textarea(),
+            'maximum_members': forms.NumberInput(attrs={'min': 0, 'max': 64})
+        }
+
+
+# 'hours': forms.NumberInput(attrs={'min': '0', 'class': 'yourClass', 'id': 'blah'}),
+
 
 class MeetingForm(forms.ModelForm):
     class Meta:

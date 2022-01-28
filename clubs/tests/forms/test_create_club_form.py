@@ -15,7 +15,8 @@ class ClubFormTestCase(TestCase):
         self.form_input = {
             'name': 'London Book Club',
             'description': 'Book club based in London',
-            'theme': 'Horror'
+            'theme': 'Horror',
+            'maximum_members': 3
         }
 
     # Test Form has the correct fields in the form
