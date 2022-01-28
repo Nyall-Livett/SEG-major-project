@@ -18,7 +18,8 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.form_input = {
             'name': f'{self.form_name}',
             'description': 'Book club based in oxfordshire',
-            'theme': 'Horror'
+            'theme': 'Horror',
+            'maximum_members': 2
         }
 
     # Test URL is correct

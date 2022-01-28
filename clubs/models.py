@@ -5,6 +5,7 @@ from django.db import models
 from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
+from django.core.validators import MaxValueValidator, MinValueValidator
 import pytz
 
 """used for meeting model"""
@@ -45,6 +46,7 @@ class Club(models.Model):
     leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
     theme = models.CharField(max_length=512, blank=False)
+    maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
     def add_member(self, user):
         if user not in self.members.all():
@@ -54,10 +56,12 @@ class Club(models.Model):
         self.leader = user
         self.save()
 
+    def member_count(self):
+        return f"{self.members.count()}/{self.maximum_members}"
+
     def __str__(self):
         return self.name
-
-
+    
 class Post(models.Model):
     """Post model"""
     title = models.CharField(max_length = 64, blank=False)
@@ -70,7 +74,7 @@ class Post(models.Model):
         """Model options."""
 
         ordering = ['-created_at']
-        
+
 class Book(models.Model):
     """Book model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
