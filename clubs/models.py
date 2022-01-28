@@ -46,7 +46,7 @@ class Club(models.Model):
     leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
     theme = models.CharField(max_length=512, blank=False)
-    maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(1), MinValueValidator(64)])
+    maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
     def add_member(self, user):
         if user not in self.members.all():
