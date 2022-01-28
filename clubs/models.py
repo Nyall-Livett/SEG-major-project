@@ -61,7 +61,14 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class Notification(models.Model):
+    """Notification model."""
+
+    title = models.CharField(max_length=128, blank=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
 class Post(models.Model):
     """Post model"""
     title = models.CharField(max_length = 64, blank=False)
