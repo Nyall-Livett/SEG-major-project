@@ -16,10 +16,10 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         {% if not user.clubs.all %}
-          <li>Join a club</li>
+          <li>No Clubs Joined</li>
         {% else %}
           {% for club in user.clubs.all %}
-            <li><a class="dropdown-item" href="{% url 'dashboard' %}">{{ club.name }}</a></li>
+            <li><a class="dropdown-item" href="{% url 'show_club' club_id=club.pk %}">{{ club.name }}</a></li>
           {% endfor %}
         {% endif %}
       </ul>
