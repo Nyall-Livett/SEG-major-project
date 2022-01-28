@@ -45,10 +45,8 @@
                         <div class="d-flex flex-column align-items-center text-center">
 
                             <p class="text font-size-sm"> upcomming meetings: <p> </p>
-                            {% for meetings in club.meeting_set.all %}
-                            {% for i in meetings.future_meetings %}
-                            {{ i.date }}
-                            {% endfor %}
+                            {% for meetings in user.future_meetings %}
+                            {{ meetings.date }}
                             {% endfor %}
                             </p>
                             </div>
@@ -57,17 +55,14 @@
                         </div>
                     </div>
                 <p></p>
-                {% endif %}
-                {% endfor %}
+                
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
 
                             <p class="text font-size-sm"> previous meetings: <p> </p>
-                            {% for meetings in club.meeting_set.all %}
-                            {% for i in meetings.previous_meetings %}
-                            {{ i.date }}
-                            {% endfor %}
+                            {% for meetings in user.previous_meetings %}
+                            {{ meetings.date }}
                             {% endfor %}
                             </p>
                             </div>
@@ -76,6 +71,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% endfor %}
 
                 <div class="col-md-8">
                     <div class="card mb-3">
@@ -93,7 +90,8 @@
                 </div>
             </div>
         </div>
-
+ {{ user.future_meetings }}
+   
         
          
         

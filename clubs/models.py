@@ -40,6 +40,23 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
 
+    def future_meetings(self):
+        utc=pytz.UTC
+        list = [] 
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
+
+    def previous_meetings(self):
+        utc=pytz.UTC
+        list = [] 
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
+
+
 
 class Club(models.Model):
     """Club model"""
@@ -77,24 +94,9 @@ class Meeting(models.Model):
     date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
-    book = models.ManyToManyField(Book, related_name="book")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     
     
-    def future_meetings(self):
-        utc=pytz.UTC
-        list = [] 
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
-                list.append(i)
-        return list
-
-    def previous_meetings(self):
-        utc=pytz.UTC
-        list = [] 
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
-                list.append(i)
-        return list
-
+   
     
 
