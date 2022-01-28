@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 {% block body %}
 <!-- homepage body -->
-<div class="text-center" style="background-color: #77C2CF; height: 100vh;">
+<div class="text-center main-body">
 
-  <!-- navbar of the homepage -->
-  <nav class="navbar sticky-top navbar-light home-navbar-custom">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">Sticky top</a>
-    </div>
-  </nav>
+  <!-- navbar for the homepage -->
+  {% include 'partials/homeNavbar.html' %}
 
   <!-- image of the homepage -->
   <img src="/static/images/landing-page-idea3.jpg" class="rounded" alt="main image">
+
+  <!-- quote blocks -->
+  {% include 'partials/quotes.html' %}
 
 </div>
 {% endblock %}

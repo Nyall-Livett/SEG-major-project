@@ -1,16 +1,18 @@
-#main-body{
-    background-color: #77C2CF;
-    height: 100vh;
-}
-
-#image-div{
+/*Customization for the main body of the landing page*/
+.main-body{
     position: fixed;
-    background: url('/static/images/landing-page-idea3.jpg') center center no-repeat;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    background-color: #77C2CF;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 }
 
+/*Customization for the navbar in the landing page..can be used for navbar in other pages*/
 .home-navbar-custom{
-    background-color: #a9f9f9;
+    background-color: #7796CF;
+}
+
+/*Customization for fonts for the website*/
+.fonts{
+    font-family: 'Josefin Slab';
 }
