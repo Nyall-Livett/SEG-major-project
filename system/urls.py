@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
+    #path('profile/<int:club_id>/<int:user_id>/', views.profile, name='user_profile'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -33,5 +34,7 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name='user_list'),
     #path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
-    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubOwnership.as_view(), name='transfer_ownership')
+    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
+    path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
+    path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
 ]

@@ -1,6 +1,6 @@
 """Configuration of the admin interface for clubs."""
 from django.contrib import admin
-from .models import Book, Club, Meeting, User
+from .models import Book, Club, Meeting, User, Post
 
 class MembershipInline(admin.TabularInline):
     model = Club.members.through
@@ -20,7 +20,7 @@ class ClubAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for clubs."""
 
     list_display = [
-        'name', 'description', 'founder',
+        'name', 'description', 'leader',
     ]
 
 @admin.register(Meeting)
@@ -28,18 +28,20 @@ class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for meetings."""
 
     list_display = [
-        'date', 
+        'date',
     ]
 
 @admin.register(Book)
 class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for books."""
 
+#     list_display = [
+#         'name', 'description', 'founder',
+#     ]
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    """Configuration of the admin interface for posts."""
+
     list_display = [
-        'name', 'description',
+        'club','author','title', 'body',
     ]
-
-
-
-
-

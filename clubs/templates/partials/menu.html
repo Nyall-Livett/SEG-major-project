@@ -9,9 +9,29 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'create_club' %}">Create club</a>
     </li>
+  
 
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        My Clubs
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        {% if not user.clubs.all %}
+          <li>No Clubs Joined</li>
+        {% else %}
+          {% for club in request.user.clubs.all %}
+            <li><a class="dropdown-item" href="{% url 'show_club' club_id=club.pk %}">{{ club.name }}</a></li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
   </ul>
+  
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show_user' request.user.id %}">My profile</a>
+    </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="bi-person-circle"></span>
