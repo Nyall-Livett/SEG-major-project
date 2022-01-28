@@ -17,7 +17,7 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Club)
 class ClubAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for Club"""
-    
+
     inlines = [
         MembershipInline,
     ]
@@ -27,4 +27,4 @@ class ClubAdmin(admin.ModelAdmin):
 class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for Meeting"""
 
-    list_display = ['date', 'club', 'URL' ,'member_selected', 'next_book' ,'meeting_notes',]
+    list_display = ['date', 'club', 'URL' ,'get_member', 'next_book' ,'meeting_notes',]
