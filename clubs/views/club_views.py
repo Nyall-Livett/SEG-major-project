@@ -1,4 +1,5 @@
 from re import template
+from django.conf import settings
 from django.views.generic.edit import FormView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect
+from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
@@ -54,7 +56,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
         return redirect("dashboard")
 
 class ShowClubView(LoginRequiredMixin, DetailView):
-
+    
     model = Club
     template_name = 'show_club.html'
     pk_url_kwarg = 'club_id'
@@ -68,3 +70,10 @@ class ShowClubView(LoginRequiredMixin, DetailView):
             return redirect('club_list')
 
 
+class ClubListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all users."""
+
+    model = Club
+    template_name = "club_list.html"
+    context_object_name = "clubs"
+    paginate_by = settings.USERS_PER_PAGE
