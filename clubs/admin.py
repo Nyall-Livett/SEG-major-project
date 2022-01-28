@@ -1,6 +1,6 @@
 """Configuration of the admin interface for clubs."""
 from django.contrib import admin
-from .models import User
+from .models import User,Post
 
 
 @admin.register(User)
@@ -19,3 +19,10 @@ class UserAdmin(admin.ModelAdmin):
 #     list_display = [
 #         'name', 'description', 'founder',
 #     ]
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    """Configuration of the admin interface for posts."""
+
+    list_display = [
+        'club','author','title', 'body',
+    ]
