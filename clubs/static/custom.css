@@ -1,7 +1,16 @@
-#landing-page-image{
-    background: url('/static/images/landing-page-idea3.jpg') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+#main-body{
+    background-color: #77C2CF;
+    height: 100vh;
+}
+
+#image-div{
+    position: fixed;
+    background: url('/static/images/landing-page-idea3.jpg') center center no-repeat;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.home-navbar-custom{
+    background-color: #a9f9f9;
 }

@@ -1,25 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
-<div id="landing-page-image">
-  <div class="container vh-100">
-    <div class="row h-100">
-      <div class="col-12 my-auto">
-        <div class="card cover-card offset-sm-2 offset-md-4 offset-lg-7">
-          <h1 class="cover-heading">Book Clubs</h1>
-          <p class="cover-text">The place for book clubs.</p>
-          <p>
-            <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary">
-              Sign up
-            </a>
-          </p>
-          <p>
-            <a href='{% url 'log_in' %}' class="btn btn-lg btn-secondary">
-              Log in
-            </a>
-          </p>
-        </div>
-      </div>
+<!-- homepage body -->
+<div class="text-center" style="background-color: #77C2CF; height: 100vh;">
+
+  <!-- navbar of the homepage -->
+  <nav class="navbar sticky-top navbar-light home-navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}">Sticky top</a>
     </div>
-  </div>
+  </nav>
+
+  <!-- image of the homepage -->
+  <img src="/static/images/landing-page-idea3.jpg" class="rounded" alt="main image">
+
 </div>
 {% endblock %}
