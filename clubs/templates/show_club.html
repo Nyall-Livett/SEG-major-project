@@ -11,8 +11,8 @@
       display: inline-block;
     }
     </style>
-    
-    
+
+
     <div class="container">
         <div class="main-body">
             <div class="row g-4">
@@ -31,16 +31,16 @@
                     <p> </p>
                     <div class="card">
                         <div class="card-body">
-                          <div class="d-flex flex-column align-items-center text-center">  
-                            <p class="text-muted font-size-sm">Club founder: {{ club.founder }}</p>
+                          <div class="d-flex flex-column align-items-center text-center">
+                            <p class="text-muted font-size-sm">Club leader: {{ club.leader }}</p>
                             </div>
                         </div>
                     </div>
-                
+
 
                   <div class="card">
                     <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">  
+                        <div class="d-flex flex-column align-items-center text-center">
 
                             <p class="text font-size-sm"> upcomming meetings: <p> </p>
                             {% for meetings in club.meeting_set.all %}
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div class="col-md-8">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     <p>{{club.description}} </p>
-                                </div>                        
+                                </div>
                             </div>
                         </div>
                     </div>

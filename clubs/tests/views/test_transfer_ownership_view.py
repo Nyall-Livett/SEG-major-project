@@ -34,21 +34,21 @@ class TransferOwnershipTestCase(TestCase, LogInTester):
     def test_transfer_ownership_to_new_user(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
-        self.assertEqual(self.default_user, self.default_club.founder)
+        self.assertEqual(self.default_user, self.default_club.leader)
         response = self.client.post(self.url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.default_club.refresh_from_db()
-        self.assertEqual(self.secondary_user, self.default_club.founder)
+        self.assertEqual(self.secondary_user, self.default_club.leader)
 
-    # Test for correct exception when current user is not the club founder
-    def test_exception_when_not_founder(self):
+    # Test for correct exception when current user is not the club leader
+    def test_exception_when_not_leader(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
-        self.assertEqual(self.default_user, self.default_club.founder)
+        self.assertEqual(self.default_user, self.default_club.leader)
         response = self.client.post(self.url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.default_club.refresh_from_db()
-        self.assertEqual(self.secondary_user, self.default_club.founder)
+        self.assertEqual(self.secondary_user, self.default_club.leader)
         response = self.client.post(self.url, follow=True)
         self.assertEqual(response.status_code, 403)
 
@@ -68,5 +68,5 @@ class TransferOwnershipTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, follow=True)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
-        self.assertEqual(str(messages_list[0]), f"You have successfully passed ownership of {self.default_club.name} to {self.secondary_user.full_name()}.")
+        self.assertEqual(str(messages_list[0]), f"You have successfully passed leadership of {self.default_club.name} to {self.secondary_user.full_name()}.")
         self.assertEqual(messages_list[0].level, messages.SUCCESS)

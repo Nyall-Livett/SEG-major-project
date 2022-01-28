@@ -33,5 +33,5 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name='user_list'),
     #path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
-    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubOwnership.as_view(), name='transfer_ownership')
+    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership')
 ]

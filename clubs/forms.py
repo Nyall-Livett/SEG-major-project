@@ -135,7 +135,7 @@ class ClubForm(forms.ModelForm):
         """Form options."""
 
         model = Club
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'theme']
         widgets = {'description': forms.Textarea()}
 
 class MeetingForm(forms.ModelForm):

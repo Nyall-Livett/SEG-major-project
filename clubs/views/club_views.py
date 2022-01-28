@@ -11,9 +11,6 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
 from clubs.models import Club, User
-
-
-
 from clubs.forms import ClubForm
 
 
@@ -25,7 +22,7 @@ class CreateClubView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         club = form.instance
-        club.founder = self.request.user
+        club.leader = self.request.user
         club.save()
         club.add_member(self.request.user)
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
@@ -35,8 +32,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         """Return redirect URL after successful update."""
         return reverse("dashboard")
 
-class TransferClubOwnership(LoginRequiredMixin, View):
-    """docstring for TransferClubOwnership."""
+class TransferClubLeadership(LoginRequiredMixin, View):
+    """docstring for TransferClubLeadership."""
     http_method_names = ['post']
 
     def setup(self, request, user_id, club_id, *args, **kwargs):
@@ -45,10 +42,10 @@ class TransferClubOwnership(LoginRequiredMixin, View):
         super().setup(request, user_id, club_id, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        if self.request.user.id is self.club.founder.id:
-            self.club.grant_ownership(self.new_owner)
+        if self.request.user.id is self.club.leader.id:
+            self.club.grant_leadership(self.new_owner)
             messages.add_message(self.request, messages.SUCCESS,
-                f"You have successfully passed ownership of {self.club.name} to {self.new_owner.full_name()}.")
+                f"You have successfully passed leadership of {self.club.name} to {self.new_owner.full_name()}.")
 
             return self.redirect()
         raise PermissionDenied()
