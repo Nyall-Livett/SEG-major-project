@@ -22,7 +22,7 @@ class ClubForumView(LoginRequiredMixin, ListView):
         authors = list(club.members.all())
         if(current_user not in club.members.all()):
             raise PermissionDenied()
-        posts = Post.objects.filter(author__in=authors)
+        posts = Post.objects.filter(author__in=authors, club = club)
         return posts
 
     def get_context_data(self, **kwargs):
