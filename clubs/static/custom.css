@@ -1,0 +1,7 @@
+#landing-page-image{
+    background: url('/static/images/landing-page-idea3.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
