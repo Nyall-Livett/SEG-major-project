@@ -143,5 +143,5 @@ class MeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'club', 'URL', 'member_selected', 'meeting_notes', 'next_book']
+        fields = ['date', 'club', 'members', 'book']
         widgets = {'next_book': forms.Textarea()}
