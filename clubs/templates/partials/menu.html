@@ -9,8 +9,6 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'create_club' %}">Create club</a>
     </li>
-  
-
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         My Clubs
@@ -26,12 +24,26 @@
       </ul>
     </div>
   </ul>
-  
-  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
     <li class="nav-item">
       <a class="nav-link" href="{% url 'show_user' request.user.id %}">My profile</a>
     </li>
+
+    <li class="dropdown">
+      <button type="button" class="btn position-relative dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        Notifications
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{user.notification_count}}
+          <span class="visually-hidden">unread messages</span>
+        </span>
+      </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+      {% for notification in user.get_unread_notifications %}
+        <li><a class="dropdown-item" href="#">{{notification.title}}</a></li>
+      {% endfor %}
+    </ul>
+  </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="bi-person-circle"></span>
@@ -44,4 +56,4 @@
       </ul>
     </li>
   </ul>
-</div>
+  </div>
