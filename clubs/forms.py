@@ -150,8 +150,9 @@ class MeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'club', 'members', 'book']
-        widgets = {'next_book': forms.Textarea()}
+        #fields = ['date', 'club', 'members', 'book']
+        fields = ['date', 'club']
+        #widgets = {'next_book': forms.Textarea()}
 
 class PostForm(forms.ModelForm):
     class Meta:

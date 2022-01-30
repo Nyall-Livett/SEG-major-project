@@ -104,6 +104,11 @@ class Meeting(models.Model):
     members = models.ManyToManyField(User, related_name="members")
     book = models.ManyToManyField(Book, related_name="book")
 
+    def add_meeting(self, meeting):
+        if meeting not in self.meeting.all():
+            meeting.meeting_members.add(self)
+
+
     def future_meetings(self):
         utc=pytz.UTC
         list = []

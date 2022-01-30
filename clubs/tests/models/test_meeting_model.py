@@ -24,21 +24,9 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting.date = ''
         self._assert_meeting_is_invalid()
 
-    def test_notes_can_be_3000_characters_long(self):
-        self.default_meeting.meeting_notes = 'x' * 64
-        self._assert_meeting_is_valid()
-
-    def test_club_cannot_be_over_64_characters_long(self):
-        self.default_meeting.club = 'x' * 65
+    def test_meeting_must_have_club(self):
+        self.default_meeting.club = None
         self._assert_meeting_is_invalid()
-
-    def test_notes_may_contain_numbers(self):
-        self.default_meeting.club= '2022'
-        self._assert_meeting_is_valid()
-
-    def test_members_may_contain_3000_characters(self):
-        self.default_meeting.member_selected = 'x' * 2048
-        self._assert_meeting_is_valid()
 
     def test_date_must_not_be_blank(self):
         self.default_meeting.date = ''
