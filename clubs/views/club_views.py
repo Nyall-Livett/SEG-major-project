@@ -12,8 +12,9 @@ from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
-from clubs.models import Club, User
+from clubs.models import Club, User, Notification
 from clubs.forms import ClubForm
+from clubs.factories.notification_factory import CreateNotification, NotificationType
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -27,6 +28,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         club.leader = self.request.user
         club.save()
         club.add_member(self.request.user)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club_name': club.name})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
         return super().form_valid(form)
 
@@ -56,7 +59,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
         return redirect("dashboard")
 
 class ShowClubView(LoginRequiredMixin, DetailView):
-    
+
     model = Club
     template_name = 'show_club.html'
     pk_url_kwarg = 'club_id'

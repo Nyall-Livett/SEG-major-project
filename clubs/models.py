@@ -38,6 +38,13 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=60)
 
+    def notification_count(self):
+        return self.notification_set.filter(read=False).count()
+
+    def get_unread_notifications(self):
+        return self.notification_set.filter(read=False)
+
+
 
 class Club(models.Model):
     """Club model"""
@@ -61,7 +68,16 @@ class Club(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
+class Notification(models.Model):
+    """Notification model."""
+    title = models.CharField(max_length=128, blank=False)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
 class Post(models.Model):
     """Post model"""
     title = models.CharField(max_length = 64, blank=False)
@@ -72,13 +88,14 @@ class Post(models.Model):
 
     class Meta:
         """Model options."""
-
         ordering = ['-created_at']
+
 
 class Book(models.Model):
     """Book model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
+
 
 class Meeting(models.Model):
     """Meeting model"""
@@ -86,7 +103,6 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     book = models.ManyToManyField(Book, related_name="book")
-
 
     def future_meetings(self):
         utc=pytz.UTC
