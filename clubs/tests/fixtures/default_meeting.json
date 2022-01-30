@@ -5,7 +5,7 @@
     "pk": 1,
     "fields": {
     "date": "2022-01-27 11:00:00",
-          "club": "Book First",
+          "club": 1,
           "URL": "https://www.meetingbest.com/",
           "member_selected": "Tom",
           "meeting_notes": "The first meeting begins",
