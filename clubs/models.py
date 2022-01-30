@@ -73,7 +73,7 @@ class Club(models.Model):
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
-    reciever = models.ForeignKey(User, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
