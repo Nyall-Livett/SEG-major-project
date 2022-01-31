@@ -11,9 +11,9 @@
         {% for book in books %}
           <tr>
             <td>
-              <img src="{{ book.image_url_s }}" alt=" image of {{ book.image_url_s }}" >
+              <img src="{{ book.image_url_s }}" alt="Image not found" >
             </td>
-            <td>{{ book.name }}</a></td>
+            <td><a href="{% url 'show_book' book.id %}">{{ book.name }}</a></td>
             <td>{{ book.author }}</a></td>
             <td>{{ book.isbn }}</a></td>
           </tr>

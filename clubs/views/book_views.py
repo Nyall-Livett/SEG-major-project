@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm
+from django.views.generic.detail import DetailView
 
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -66,7 +67,7 @@ class UploadBooksView(LoginRequiredMixin, FormView):
 class ShowBookView(LoginRequiredMixin, DetailView):
 
     model = Book
-    template_name = 'Show_book.html'
+    template_name = 'show_book.html'
     pk_url_kwarg = 'book_id'
 
     def get(self, request, *args, **kwargs):
