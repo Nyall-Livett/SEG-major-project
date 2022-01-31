@@ -56,6 +56,11 @@ class User(AbstractUser):
             if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
+    def notification_count(self):
+        return self.notification_set.filter(read=False).count()
+
+    def get_unread_notifications(self):
+        return self.notification_set.filter(read=False)
 
 
 
@@ -88,6 +93,15 @@ class Club(models.Model):
                 return True
         return False 
     
+
+class Notification(models.Model):
+    """Notification model."""
+    title = models.CharField(max_length=128, blank=False)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+
 class Post(models.Model):
     """Post model"""
     title = models.CharField(max_length = 64, blank=False)
@@ -98,13 +112,14 @@ class Post(models.Model):
 
     class Meta:
         """Model options."""
-
         ordering = ['-created_at']
+
 
 class Book(models.Model):
     """Book model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
+
 
 class Meeting(models.Model):
     """Meeting model"""

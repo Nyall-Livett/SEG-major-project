@@ -45,3 +45,5 @@ class PostAdmin(admin.ModelAdmin):
     list_display = [
         'club','author','title', 'body',
     ]
+
+

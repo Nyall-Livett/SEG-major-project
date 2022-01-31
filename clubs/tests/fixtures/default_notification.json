@@ -1,0 +1,11 @@
+[
+  {
+    "model": "clubs.notification",
+    "pk": 1,
+    "fields": {
+      "title": "Some one has added you as a friend",
+      "receiver": 1,
+      "created_on": "2022-01-27 11:00:00"
+    }
+  }
+]

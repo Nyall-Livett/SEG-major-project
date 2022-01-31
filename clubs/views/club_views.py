@@ -1,4 +1,5 @@
 from re import template
+from django.conf import settings
 from django.views.generic.edit import FormView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,11 +8,13 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect
+from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
-from clubs.models import Club, User
+from clubs.models import Club, User, Notification
 from clubs.forms import ClubForm
+from clubs.factories.notification_factory import CreateNotification, NotificationType
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -25,6 +28,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         club.leader = self.request.user
         club.save()
         club.add_member(self.request.user)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club_name': club.name})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
         return super().form_valid(form)
 
@@ -68,3 +73,10 @@ class ShowClubView(LoginRequiredMixin, DetailView):
             return redirect('club_list')
 
 
+class ClubListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all users."""
+
+    model = Club
+    template_name = "club_list.html"
+    context_object_name = "clubs"
+    paginate_by = settings.USERS_PER_PAGE
