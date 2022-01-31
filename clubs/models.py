@@ -94,9 +94,6 @@ class User(AbstractUser):
             self.follow(user)
     
 
-
-
-
 class Club(models.Model):
     """Club model"""
     name = models.CharField(max_length=64, unique=True, blank=False)

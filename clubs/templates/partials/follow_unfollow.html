@@ -1,0 +1,9 @@
+<a href="" style="color: azure; text-decoration: none;">{{ user.followers_count }} Followers</a>
+&nbsp; &nbsp; &nbsp;
+{% if user.followees_count %}
+<a href="" style="color: azure; text-decoration: none;">{{ user.followees_count }} Following</a>
+{% else %}
+<a href="" style="color: azure; text-decoration: none;">0 Following</a>
+{% endif %}
+<br><br>
+<!-- <button class="btn btn-secondary">Follow</button> -->
