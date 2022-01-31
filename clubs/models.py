@@ -51,6 +51,10 @@ class Club(models.Model):
     def add_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
+    
+    def remove_member(self, user):
+        if user in self.members.all():
+            user.clubs.remove(self)
 
     def grant_leadership(self, user):
         self.leader = user
