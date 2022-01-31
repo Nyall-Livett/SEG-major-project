@@ -30,7 +30,6 @@ class ClubViewTest(TestCase, LogInTester):
 
     def test_club_url(self):
         self.assertEqual(self.url, f'/club/{self.club.id}')
-
     
     def test_redirect_when_not_logged_in(self):
         redirect_url = reverse_with_next('log_in', self.profile_url)
