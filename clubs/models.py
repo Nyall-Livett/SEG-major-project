@@ -9,7 +9,6 @@ from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 import pytz
-from sqlalchemy import true
 
 """used for meeting model"""
 from django.utils import timezone
