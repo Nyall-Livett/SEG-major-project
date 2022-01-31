@@ -9,7 +9,6 @@ from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 import pytz
-from sqlalchemy import true
 
 """used for meeting model"""
 from django.utils import timezone
@@ -23,6 +22,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
     bio = models.CharField(max_length=520, blank=True)
+    followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
 
     class Meta:
         """Model options."""
@@ -61,6 +61,28 @@ class User(AbstractUser):
 
     def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
+
+    def add_follower(self, user):
+        """ add other users as followers to self """
+        self.followers.add(user)
+
+    def follow_other_user(self, user):
+        """ follow other user """
+        self.followees.add(user)
+
+    def followers_count(self):
+        """ number of followers self has """
+        return self.followers.count()
+
+    def followees_count(self):
+        """ number of users self follows """
+        return self.followees.count()
+
+    def is_following(self, user):
+        """ returns if self follows a given user """
+        return user in self.followees.all()
+    
+
 
 
 
