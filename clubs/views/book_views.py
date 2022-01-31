@@ -62,3 +62,17 @@ class UploadBooksView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse("book_list")
+
+class ShowBookView(LoginRequiredMixin, DetailView):
+
+    model = Book
+    template_name = 'Show_book.html'
+    pk_url_kwarg = 'book_id'
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to book_list if book_id is invalid."""
+
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            return redirect('book_list')
