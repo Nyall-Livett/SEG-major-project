@@ -1,5 +1,6 @@
 """Models in the clubs app."""
 from pickle import TRUE
+from re import T
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -127,6 +128,8 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    notes = models.CharField(max_length=300, blank=True)
+    
     
     
    
