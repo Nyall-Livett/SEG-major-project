@@ -120,11 +120,12 @@ class Post(models.Model):
 #     name = models.CharField(max_length=64, unique=True, blank=False)
 #     description = models.CharField(max_length=2048, blank=False)
 
+# Default fields used because there are previous migrations without all fields
 class Book(models.Model):
     """Book model"""
-    isbn = models.CharField(max_length=13, unique=True, blank=False)
-    name = models.CharField(max_length=64, blank=False)
-    author = models.CharField(max_length=64, blank=False)
+    isbn = models.CharField(max_length=13, unique=True, blank=False, default ="")
+    name = models.CharField(max_length=64, blank=False, default ="")
+    author = models.CharField(max_length=64, blank=False, default ="")
     publication_year = models.CharField(max_length=4, default ="")
     publisher = models.CharField(max_length=64, default ="")
     image_url_s = models.URLField(max_length=200, default ="")
