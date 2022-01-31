@@ -86,12 +86,12 @@ class ClubListView(LoginRequiredMixin, ListView):
 
 @login_required
 def join_club(request, user_id,club_id):
-    current_club = Club.objects.get(id=club_id)
+    club = Club.objects.get(id=club_id)
     try:
         user = User.objects.get(id=user_id)
-        current_club.add_member(user)
+        club.add_member(user)
         messages.add_message(request, messages.SUCCESS,
-                f"You have successfully joined {current_club.name} ")
+                f"You have successfully joined {club.name} ")
         return redirect('club_list')
     except ObjectDoesNotExist:
         return redirect('club_list')
@@ -100,12 +100,12 @@ def join_club(request, user_id,club_id):
 
 @login_required
 def leave_club(request, user_id,club_id):
-    current_club = Club.objects.get(id=club_id)
+    club = Club.objects.get(id=club_id)
     try:
         user = User.objects.get(id=user_id)
-        current_club.remove_member(user)
+        club.remove_member(user)
         messages.add_message(request, messages.SUCCESS,
-                f"You have left {current_club.name} ")
+                f"You have left {club.name} ")
         return redirect('club_list')
     except ObjectDoesNotExist:
         return redirect('club_list')
