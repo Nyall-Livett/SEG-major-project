@@ -129,9 +129,12 @@ class Meeting(models.Model):
     members = models.ManyToManyField(User, related_name="members")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     notes = models.CharField(max_length=300, blank=True)
-    
-    
+
+
+    def add_meeting(self, meeting):
+        if meeting not in self.meeting.all():
+            meeting.meeting_members.add(self)
+
+
     
    
-    
-
