@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Club, Meeting, Post
+from .models import User, Club, Meeting, Post, Book
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -162,3 +162,6 @@ class PostForm(forms.ModelForm):
         widgets = {
             'body': forms.Textarea()
         }
+
+class UploadBooksForm(forms.Form):
+    file = forms.FileField()

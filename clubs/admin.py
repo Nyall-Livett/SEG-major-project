@@ -46,4 +46,10 @@ class PostAdmin(admin.ModelAdmin):
         'club','author','title', 'body',
     ]
 
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    """Configuration of the admin interface for books."""
 
+    list_display = [
+        'isbn', 'name', 'author',
+    ]

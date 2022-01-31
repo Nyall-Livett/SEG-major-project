@@ -43,7 +43,7 @@ class User(AbstractUser):
 
     def future_meetings(self):
         utc=pytz.UTC
-        list = [] 
+        list = []
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
                 list.append(i)
@@ -51,7 +51,7 @@ class User(AbstractUser):
 
     def previous_meetings(self):
         utc=pytz.UTC
-        list = [] 
+        list = []
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
@@ -91,8 +91,8 @@ class Club(models.Model):
         for i in self.members.all():
             if request == i:
                 return True
-        return False 
-    
+        return False
+
 
 class Notification(models.Model):
     """Notification model."""
@@ -115,11 +115,25 @@ class Post(models.Model):
         ordering = ['-created_at']
 
 
+# class Book(models.Model):
+#     """Book model"""
+#     name = models.CharField(max_length=64, unique=True, blank=False)
+#     description = models.CharField(max_length=2048, blank=False)
+
 class Book(models.Model):
     """Book model"""
-    name = models.CharField(max_length=64, unique=True, blank=False)
-    description = models.CharField(max_length=2048, blank=False)
+    isbn = models.CharField(max_length=13, unique=True, blank=False)
+    name = models.CharField(max_length=64, blank=False)
+    author = models.CharField(max_length=64, blank=False)
+    publication_year = models.CharField(max_length=4, default ="")
+    publisher = models.CharField(max_length=64, default ="")
+    image_url_s = models.URLField(max_length=200, default ="")
+    image_url_m = models.URLField(max_length=200, default ="")
+    image_url_l = models.URLField(max_length=200, default ="")
 
+    class Meta:
+        """Model options."""
+        ordering = ['isbn']
 
 class Meeting(models.Model):
     """Meeting model"""
@@ -127,8 +141,3 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    
-    
-   
-    
-

@@ -39,4 +39,7 @@ urlpatterns = [
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
     path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
+    path('books/', views.BookListView.as_view(), name='book_list'),
+    path('upload_books/', views.UploadBooksView.as_view(), name='upload_books'),
+
 ]
