@@ -66,9 +66,13 @@ class User(AbstractUser):
         """ add other users as followers to self """
         self.followers.add(user)
 
-    def follow_other_user(self, user):
-        """ follow other user """
+    def follow(self, user):
+        """ follow user """
         self.followees.add(user)
+
+    def unfollow(self, user):
+        """ unfollow user self is following """
+        self.followees.remove(user)
 
     def followers_count(self):
         """ number of followers self has """
@@ -81,6 +85,13 @@ class User(AbstractUser):
     def is_following(self, user):
         """ returns if self follows a given user """
         return user in self.followees.all()
+
+    def toggle_follow(self, user):
+        """ unfollows if self follows the user, follows if self does not follow the user """
+        if self.is_following(user):
+            self.unfollow(user)
+        else:
+            self.follow(user)
     
 
 
