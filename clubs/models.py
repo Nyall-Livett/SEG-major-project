@@ -63,6 +63,12 @@ class User(AbstractUser):
     def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
 
+    def clubBooks(self):
+        list = [] 
+        for i in Book.objects.all():
+                list.append(i)
+        return len(list) > 0
+
 
 
 class Club(models.Model):
@@ -121,6 +127,8 @@ class Book(models.Model):
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
 
+    def __str__(self):
+        return self.name
 
 class Meeting(models.Model):
     """Meeting model"""

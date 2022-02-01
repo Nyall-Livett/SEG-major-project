@@ -11,8 +11,10 @@ from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
+from clubs.forms import MeetingForm
+from clubs.forms import BookForm
 
-from clubs.models import Club, User, Notification
+from clubs.models import Book, Club, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification, NotificationType
 
@@ -81,10 +83,30 @@ class ClubListView(LoginRequiredMixin, ListView):
     context_object_name = "clubs"
     paginate_by = settings.USERS_PER_PAGE
 
-"""Temporily stored in club_view, but this should belongs to meeting_views.py"""
-from clubs.models import Meeting
 
-from clubs.forms import MeetingForm
+
+class CreateBookView(LoginRequiredMixin, FormView):
+
+    model = Book
+    template_name = "set_book.html"
+    form_class = BookForm
+
+
+    def form_valid(self, form):
+        book = form.instance
+        book.save()
+        return super().form_valid(form)
+
+    def get(self, request):
+        form2 = BookForm()
+        context = {
+            'form': form2
+        }
+        return render(request,"set_book.html", context)
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse("book")
 
 
 class CreateMeetingView(LoginRequiredMixin, FormView):
@@ -100,23 +122,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def get(self, request):
-        """user = User.objects.get(username = request.user)
-        clubs = Club.objects.all()
-
-        #c = None
-        club_name = ""
-        for c in clubs:
-            if c.leader == user.username:
-                club_name = c.name"""
-
-        #function was created for select random_members but somehow doesn't work
-        """size = len(member_list)//2
-        random = [random.randint(0, len(member_list)) for i in range(size)]
-        random_members =""
-        for i in random:
-            random_members += member_list[i].name +'\n'
-        return random_members"""
-
 
         form = MeetingForm()
         context = {

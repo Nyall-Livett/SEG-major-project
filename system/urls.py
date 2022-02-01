@@ -33,8 +33,8 @@ urlpatterns = [
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
+    path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
-
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
