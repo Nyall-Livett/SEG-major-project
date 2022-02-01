@@ -36,22 +36,25 @@ class UploadBooksView(LoginRequiredMixin, FormView):
 
         data = csv_file.read().decode('ISO-8859-1')
         io_string = io.StringIO(data)
-        next(io_string)
+
+
+
 
         for book in csv.reader(io_string, delimiter = ';', quotechar='"'):
-            try:
-                _, created = Book.objects.update_or_create(
-                    isbn = book[0].strip('"'),
-                    name = book[1].strip('"'),
-                    author = book[2].strip('"'),
-                    publication_year = book[3].strip('"'),
-                    publisher = book[4].strip('"'),
-                    image_url_s = book[5].strip('"'),
-                    image_url_m = book[6].strip('"'),
-                    image_url_l = book[7].strip('"')
-                )
-            except ValueError:
-                messages.add_message(self.request, messages.WARNING, f"{self.book.name} could not be added to the system.")
+            if(book[0] != 'ISBN'):
+                try:
+                    _, created = Book.objects.update_or_create(
+                        isbn = book[0].strip('"'),
+                        name = book[1].strip('"'),
+                        author = book[2].strip('"'),
+                        publication_year = book[3].strip('"'),
+                        publisher = book[4].strip('"'),
+                        image_url_s = book[5].strip('"'),
+                        image_url_m = book[6].strip('"'),
+                        image_url_l = book[7].strip('"')
+                    )
+                except ValueError:
+                    messages.add_message(self.request, messages.WARNING, f"{self.book.name} could not be added to the system.")
 
         return super().form_valid(form)
 
