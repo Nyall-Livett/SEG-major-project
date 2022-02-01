@@ -13,8 +13,11 @@
             <td>
               <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
             </td>
-            <td><a href="{% url 'show_club' club.id %}">{{ club.name }}</a></td>
+            <td>{{ club.name }}</td>
             <td>{{ club.leader }}</td>
+            <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-primary">view</button></a></td>
+            <td><a href="{% url 'join_club' user.id club.id %}"><button type="button" class="btn btn-primary">join</button></a></td>
+            <td><a href="{% url 'leave_club' user.id club.id %}"><button type="button" class="btn btn-primary">leave</button></a></td>
           </tr>
         {% endfor %}
       </table>

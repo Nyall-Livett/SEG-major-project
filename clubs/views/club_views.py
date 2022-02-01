@@ -10,6 +10,8 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from clubs.forms import MeetingForm
 from clubs.forms import BookForm
@@ -143,3 +145,32 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         }
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
+    
+
+@login_required
+def join_club(request, user_id,club_id):
+    club = Club.objects.get(id=club_id)
+    try:
+        user = User.objects.get(id=user_id)
+        club.add_member(user)
+        messages.add_message(request, messages.SUCCESS,
+                f"You have successfully joined {club.name} ")
+        return redirect('club_list')
+    except ObjectDoesNotExist:
+        return redirect('club_list')
+    else:
+        return redirect('club_list', user_id=user_id)
+
+@login_required
+def leave_club(request, user_id,club_id):
+    club = Club.objects.get(id=club_id)
+    try:
+        user = User.objects.get(id=user_id)
+        club.remove_member(user)
+        messages.add_message(request, messages.SUCCESS,
+                f"You have left {club.name} ")
+        return redirect('club_list')
+    except ObjectDoesNotExist:
+        return redirect('club_list')
+    else:
+        return redirect('club_list', user_id=user_id)
