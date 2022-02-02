@@ -9,37 +9,24 @@ class MeetingTestCase(TestCase, LogInTester):
 
     fixtures = [
         'clubs/tests/fixtures/default_user.json',
-        'clubs/tests/fixtures/default_meeting.json',
+        #'clubs/tests/fixtures/default_meeting.json',
         ]
 
     def setUp(self):
         self.url = reverse('set_meeting')
         self.default_user = User.objects.get(username='johndoe')
-        self.default_meeting = Meeting.objects.get(date='2022-01-27 11:00:00')
+        #self.default_meeting = Meeting.objects.get(date='2022-01-27 11:00:00')
         self.form_input = {
             'date': '2022-01-29 11:00:00',
-            'club': 'Book Second',
-            'URL': 'https://www.meeting.com/',
-            'member_selected': 'Tom',
-            'meeting_notes': 'The first meeting begins',
-            'next_book': 'War and Peace'
+            'club': 1
         }
 
-        self.form_input2 = {
-            "date": "2022-01-27 11:00:00",
-            "club": "Book First",
-            "URL": "https://www.meetingbest.com/",
-            "member_selected": "Tom",
-            "meeting_notes": "The first meeting begins",
-            "next_book": "War and Peace"
-
-        }
 
     # Test URL is correct
     def test_set_meeting_url(self):
         self.assertEqual(self.url,'/set_meeting/')
 
-    # Test new meeting has been created
+    # Test new meeting has been created mark 1
     """def test_create_new_meeting(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
@@ -67,7 +54,7 @@ class MeetingTestCase(TestCase, LogInTester):
         meeting = Meeting.objects.get(name=self.form_name)
         self.assertEqual(meeting.founder, self.default_user)"""
 
-    # Test new club has current user as member
+    # Test new club has current user as member mark 2
     """def test_current_user_is_in_club_members_after_creating(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
@@ -86,12 +73,12 @@ class MeetingTestCase(TestCase, LogInTester):
         form = response.context['form']
         self.assertFalse(form.is_bound)
 
-    # Test the form is bound after submitting an invalid form
+    # Test the form is bound after submitting an invalid form mark3
     def test_form_is_bound_after_being_invalid(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
-        self.form_input2['date'] = ""
-        response = self.client.post(self.url, self.form_input2, follow=True)
+        self.form_input['date'] = ""
+        response = self.client.post(self.url, self.form_input, follow=True)
         form = response.context['form']
         self.assertTrue(form.is_bound)
 

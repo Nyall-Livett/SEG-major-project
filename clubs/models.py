@@ -1,5 +1,6 @@
 """Models in the clubs app."""
 from pickle import TRUE
+from re import T
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -60,6 +61,12 @@ class User(AbstractUser):
 
     def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
+
+    def clubBooks(self):
+        list = [] 
+        for i in Book.objects.all():
+                list.append(i)
+        return len(list) > 0
 
 
 
@@ -132,6 +139,8 @@ class Book(models.Model):
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
 
+    def __str__(self):
+        return self.name
 
 class Meeting(models.Model):
     """Meeting model"""
@@ -139,8 +148,13 @@ class Meeting(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    
+    notes = models.CharField(max_length=300, blank=True)
+
+
+    def add_meeting(self, meeting):
+        if meeting not in self.meeting.all():
+            meeting.meeting_members.add(self)
+
+
     
    
-    
-
