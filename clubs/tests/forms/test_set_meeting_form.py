@@ -10,24 +10,21 @@ class MeetingFormTestCase(TestCase):
     def setUp(self):
         self.form_input = {
             'date': '2022-01-27 11:00:00',
-            'club': 'Book First',
-            'URL': 'https://www.meetingbest.com/',
-            'member_selected': 'Tom',
-            'meeting_notes': 'The first meeting begins',
-            'next_book': 'War and Peace'
+            'club': 1,
+            #'members': 'Tom',
+            #'book': 'War and Peace'
         }
 
     # Test Form has the correct fields in the form
     def test_form_contains_required_fields(self):
         form = MeetingForm(self.form_input)
         self.assertIn('club', form.fields)
-        self.assertIn('URL', form.fields)
-        self.assertIn('member_selected', form.fields)
-        self.assertIn('meeting_notes', form.fields)
-        self.assertIn('next_book', form.fields)
+        #self.assertIn('members', form.fields)
+        #self.assertIn('book', form.fields)
 
     # Test the form accepts valid input
     def test_form_accepts_valid_input(self):
+        print()
         form = MeetingForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
@@ -45,9 +42,9 @@ class MeetingFormTestCase(TestCase):
 
     # Test the form error message for blank next_book
     def test_form_error_message_for_blank_book(self):
-        self.form_input['next_book'] = ''
+        self.form_input['date'] = ''
         form = MeetingForm(data=self.form_input)
-        self.assertEqual(form.errors["next_book"], ["This field is required."])
+        self.assertEqual(form.errors["date"], ["This field is required."])
 
     # Test the form error message for blank club
     def test_form_error_message_for_blank_club(self):

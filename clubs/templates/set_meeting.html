@@ -3,6 +3,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
+      {% if user.clubBooks %}
       <h1>meeting</h1>
       <form action="{% url 'set_meeting' %}" method="post">
         {% csrf_token %}
@@ -13,4 +14,9 @@
     </div>
   </div>
 </div>
+{%else%}
+<h1> Add a book to be able to create a meeting</h1> 
+<a href={% url 'book' %}>add book</a>
+
+{%endif%}
 {% endblock %}
