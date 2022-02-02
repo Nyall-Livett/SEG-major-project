@@ -127,7 +127,6 @@ class User(AbstractUser):
         if self.has_request(user):
             self.follow_requests.remove(user)
 
-            
 
 class Club(models.Model):
     """Club model"""

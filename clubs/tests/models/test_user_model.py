@@ -183,3 +183,46 @@ class UserModelTestCase(TestCase):
         self.user.toggle_follow(jane)
         self.assertFalse(self.user.is_following(jane))
 
+
+    """ Tests for Accepting/Rejecting follow requests """
+
+    def test_sending_follow_request_increases_number_of_sent_requests(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        self.user.send_follow_request(jane)
+        self.assertTrue(self.user.is_request_sent(jane))
+        self.assertTrue(jane.has_request(self.user))
+        self.assertEqual(self.user.sent_requests.count(), 1) 
+        self.assertEqual(jane.follow_requests.count(), 1)
+        self.user.send_follow_request(petra)
+        self.assertTrue(self.user.is_request_sent(petra))
+        self.assertTrue(petra.has_request(self.user))
+        self.assertEqual(self.user.sent_requests.count(), 2)
+        self.assertEqual(petra.follow_requests.count(), 1)
+
+    def test_accepting_follow_request_increases_number_of_followers(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        jane.send_follow_request(self.user)
+        self.user.accept_request(jane)
+        self.assertEqual(self.user.followers_count(), 1)
+        self.assertEqual(self.user.follow_requests.count(), 0)
+        self.assertEqual(jane.sent_requests.count(), 0)
+        petra.send_follow_request(self.user)
+        self.user.accept_request(petra)
+        self.assertEqual(self.user.followers_count(), 2)
+        self.assertEqual(self.user.follow_requests.count(), 0)
+        self.assertEqual(petra.sent_requests.count(), 0)
+
+    def test_rejecting_follow_request_has_no_effect_on_number_of_followers(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        jane.send_follow_request(self.user)
+        self.user.accept_request(jane)
+        previous_followers = self.user.followers_count()
+        petra.send_follow_request(self.user)
+        self.user.reject_request(petra)
+        after_reject_followers = self.user.followers_count()
+        self.assertEqual(previous_followers, after_reject_followers)
+        self.assertFalse(self.user.has_request(petra))
+        self.assertFalse(petra.is_request_sent(self.user))
