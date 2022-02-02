@@ -153,10 +153,12 @@ def join_club(request, user_id,club_id):
     try:
         if club.members.count() >= club.maximum_members:
             messages.add_message(request, messages.WARNING,
-                f" Member capacity of {club.name} has been reached")
+                f" Cannot join {club.name}. Member capacity has been reached")
             return redirect('club_list')
         else:
             club.add_member(user)
+            notifier = CreateNotification()
+            notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
             messages.add_message(request, messages.SUCCESS,
                 f"You have successfully joined {club.name} ")
             return redirect('club_list')
