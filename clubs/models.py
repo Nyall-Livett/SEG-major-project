@@ -129,13 +129,13 @@ class Book(models.Model):
     """Book model"""
     isbn = models.CharField(max_length=13, unique=True, blank=False)
     name = models.CharField(max_length=64, blank=False)
-    description = models.CharField(max_length=2048)
+    description = models.CharField(max_length=2048, blank=True)
     author = models.CharField(max_length=64, blank=False)
-    publication_year = models.CharField(max_length=4)
-    publisher = models.CharField(max_length=64)
-    image_url_s = models.URLField(max_length=200)
-    image_url_m = models.URLField(max_length=200)
-    image_url_l = models.URLField(max_length=200)
+    publication_year = models.CharField(max_length=4, blank=True)
+    publisher = models.CharField(max_length=64, blank=True)
+    image_url_s = models.URLField(max_length=200, blank=True)
+    image_url_m = models.URLField(max_length=200, blank=True)
+    image_url_l = models.URLField(max_length=200, blank=True)
 
     class Meta:
         """Model options."""
