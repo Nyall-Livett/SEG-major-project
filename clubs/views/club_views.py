@@ -86,30 +86,6 @@ class ClubListView(LoginRequiredMixin, ListView):
     paginate_by = settings.USERS_PER_PAGE
 
 
-class CreateBookView(LoginRequiredMixin, FormView):
-
-    model = Book
-    template_name = "set_book.html"
-    form_class = BookForm
-
-
-    def form_valid(self, form):
-        book = form.instance
-        book.save()
-        return super().form_valid(form)
-
-    def get(self, request):
-        form2 = BookForm()
-        context = {
-            'form': form2
-        }
-        return render(request,"set_book.html", context)
-
-    def get_success_url(self):
-        """Return redirect URL after successful update."""
-        return reverse("book")
-
-
 class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
 
@@ -144,7 +120,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         }
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
-    
+
 
 @login_required
 def join_club(request, user_id,club_id):

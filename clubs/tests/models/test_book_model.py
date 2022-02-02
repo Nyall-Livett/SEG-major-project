@@ -58,6 +58,14 @@ class BookModelTestCase(TestCase):
         self.book.author = ''
         self._assert_book_is_invalid()
 
+    def test_description_can_be_2048_characters_long(self):
+        self.book.description = 'x' * 2048
+        self._assert_book_is_valid()
+
+    def test_name_cannot_be_over_2049_characters_long(self):
+        self.book.description = 'x' * 2049
+        self._assert_book_is_invalid()
+
     def test_publication_year_can_be_4_characters_long(self):
         self.book.publication_year = 'x' * 4
         self._assert_book_is_valid()

@@ -11,7 +11,7 @@ from clubs.models import Book
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from clubs.forms import UploadBooksForm
+from clubs.forms import UploadBooksForm, BookForm
 from django.views.generic.detail import DetailView
 
 class BookListView(LoginRequiredMixin, ListView):
@@ -80,3 +80,26 @@ class ShowBookView(LoginRequiredMixin, DetailView):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('book_list')
+
+class CreateBookView(LoginRequiredMixin, FormView):
+
+    model = Book
+    template_name = "set_book.html"
+    form_class = BookForm
+
+
+    def form_valid(self, form):
+        book = form.instance
+        book.save()
+        return super().form_valid(form)
+
+    def get(self, request):
+        form2 = BookForm()
+        context = {
+            'form': form2
+        }
+        return render(request,"set_book.html", context)
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse("book_list")
