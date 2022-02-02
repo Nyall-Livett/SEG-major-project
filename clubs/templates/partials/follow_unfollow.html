@@ -1,9 +1,16 @@
 <a href="" style="color: azure; text-decoration: none;">{{ user.followers_count }} Followers</a>
-&nbsp; &nbsp; &nbsp;
+<br>
 {% if user.followees_count %}
 <a href="" style="color: azure; text-decoration: none;">{{ user.followees_count }} Following</a>
 {% else %}
 <a href="" style="color: azure; text-decoration: none;">0 Following</a>
 {% endif %}
-<br><br>
 <!-- <button class="btn btn-secondary">Follow</button> -->
+<!-- <p>{{ user.pk }}</p> -->
+<!-- <p>{{ request.user.pk }}</p> -->
+<br><br>
+{% if following %}
+    <button class="btn btn-secondary">Unfollow</button>
+{% else %}
+    <button class="btn btn-success">Follow</button>
+{% endif %} 

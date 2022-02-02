@@ -30,3 +30,9 @@ class ShowUserView(LoginRequiredMixin, DetailView):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('user_list')
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        user = self.get_object()
+        context['following'] = self.request.user.is_following(user)
+        return context
