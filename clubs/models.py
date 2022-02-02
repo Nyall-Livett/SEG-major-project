@@ -83,6 +83,15 @@ class Club(models.Model):
     def grant_leadership(self, user):
         self.leader = user
         self.save()
+    
+    def toggle_join(self, user):
+        if self.is_member(user):
+            self.remove_member(user)
+        else:
+            self.add_member(user)
+    
+    def is_joined(self, user):
+        return user in self.members.all()
 
     def member_count(self):
         return f"{self.members.count()}/{self.maximum_members}"

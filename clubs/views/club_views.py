@@ -82,6 +82,7 @@ class ClubListView(LoginRequiredMixin, ListView):
     template_name = "club_list.html"
     context_object_name = "clubs"
     paginate_by = settings.USERS_PER_PAGE
+    pk_url_kwarg = 'user_id' , 'club_id'
     
 
 @login_required
@@ -91,7 +92,7 @@ def join_club(request, user_id,club_id):
         user = User.objects.get(id=user_id)
         club.add_member(user)
         messages.add_message(request, messages.SUCCESS,
-                f"You have successfully joined {club.name} ")
+            f"You have successfully joined {club.name} ")
         return redirect('club_list')
     except ObjectDoesNotExist:
         return redirect('club_list')
