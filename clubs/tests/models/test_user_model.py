@@ -182,3 +182,4 @@ class UserModelTestCase(TestCase):
         self.assertTrue(self.user.is_following(jane))
         self.user.toggle_follow(jane)
         self.assertFalse(self.user.is_following(jane))
+

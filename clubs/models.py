@@ -24,6 +24,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     bio = models.CharField(max_length=520, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
+    follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
 
     class Meta:
         """Model options."""
@@ -64,15 +65,16 @@ class User(AbstractUser):
     def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
 
-    def add_follower(self, user):
-        """ add other users as followers to self """
-        self.followers.add(user)
-
     def clubBooks(self):
         list = [] 
         for i in Book.objects.all():
                 list.append(i)
         return len(list) > 0
+
+    """ methods relating to follow system """
+    def add_follower(self, user):
+        """ add other users as followers to self """
+        self.followers.add(user)
 
     def follow(self, user):
         """ follow user """
@@ -100,7 +102,32 @@ class User(AbstractUser):
             self.unfollow(user)
         else:
             self.follow(user)
+
+    """ methods relating to follow requests """
+    def send_follow_request(self, user):
+        """ send follow requests to a user """
+        self.sent_requests.add(user)
+
+    def is_request_sent(self, user):
+        """ returns if a follow request to a user has already been sent """
+        return user in self.sent_requests.all()
+
+    def has_request(self, user):
+        """ returns if a follow request has been sent by a user """
+        return user in self.follow_requests.all()
     
+    def accept_request(self, user):
+        """ accepts a follow request from a user """
+        if self.has_request(user):
+            self.follow_requests.remove(user)
+            self.add_follower(user)
+
+    def reject_request(self, user):
+        """ rejects a follow request from a user """
+        if self.has_request(user):
+            self.follow_requests.remove(user)
+
+            
 
 class Club(models.Model):
     """Club model"""
