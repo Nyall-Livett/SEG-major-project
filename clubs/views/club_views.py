@@ -10,9 +10,13 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from clubs.forms import MeetingForm
+from clubs.forms import BookForm
 
-from clubs.models import Club, User, Notification
+from clubs.models import Book, Club, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification, NotificationType
 
@@ -80,3 +84,92 @@ class ClubListView(LoginRequiredMixin, ListView):
     template_name = "club_list.html"
     context_object_name = "clubs"
     paginate_by = settings.USERS_PER_PAGE
+
+
+class CreateBookView(LoginRequiredMixin, FormView):
+
+    model = Book
+    template_name = "set_book.html"
+    form_class = BookForm
+
+
+    def form_valid(self, form):
+        book = form.instance
+        book.save()
+        return super().form_valid(form)
+
+    def get(self, request):
+        form2 = BookForm()
+        context = {
+            'form': form2
+        }
+        return render(request,"set_book.html", context)
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse("book")
+
+
+class CreateMeetingView(LoginRequiredMixin, FormView):
+    """docstring for CreateMeetingView."""
+
+    template_name = "set_meeting.html"
+    form_class = MeetingForm
+
+    def form_valid(self, form):
+        meeting = form.instance
+        form.save()
+        meeting.add_meeting(self.request.meeting)
+        return super().form_valid(form)
+
+    def get(self, request):
+
+        form = MeetingForm()
+        context = {
+            'form': form
+        }
+        return render(request,"set_meeting.html", context)
+
+
+    def post(self, request):
+        form = MeetingForm(request.POST)
+        form.save()
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+        else:
+            print(form.errors)
+        context = {
+            'form': form
+        }
+        #message.add_message(request, messages.ERROR, "This is invaild!")
+        return render(request,"set_meeting.html", context)
+    
+
+@login_required
+def join_club(request, user_id,club_id):
+    club = Club.objects.get(id=club_id)
+    try:
+        user = User.objects.get(id=user_id)
+        club.add_member(user)
+        messages.add_message(request, messages.SUCCESS,
+            f"You have successfully joined {club.name} ")
+        return redirect('club_list')
+    except ObjectDoesNotExist:
+        return redirect('club_list')
+    else:
+        return redirect('club_list', user_id=user_id)
+
+@login_required
+def leave_club(request, user_id,club_id):
+    club = Club.objects.get(id=club_id)
+    try:
+        user = User.objects.get(id=user_id)
+        club.remove_member(user)
+        messages.add_message(request, messages.SUCCESS,
+                f"You have left {club.name} ")
+        return redirect('club_list')
+    except ObjectDoesNotExist:
+        return redirect('club_list')
+    else:
+        return redirect('club_list', user_id=user_id)

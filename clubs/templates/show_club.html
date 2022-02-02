@@ -14,7 +14,7 @@
                                     <h4>{{club.name}}</h4>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                     </div>
                     <p> </p>
                     <div class="card">
@@ -24,8 +24,17 @@
                             </div>
                         </div>
                     </div>
-
                 <p></p>
+                <div>
+       
+        
+                {% for i in club.members.all %}
+                {% if i != request.user  %}
+                </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                    
                 {% for i in club.members.all %}
                 {% if i == request.user  %}
                   <div class="card">
@@ -39,8 +48,6 @@
                             {% endfor %}
                             </p>
                             </div>
-
-
                         </div>
                     </div>
                 <p></p>
@@ -56,12 +63,13 @@
                             </p>
                             </div>
 
-                            
+                    </div>
                         </div>
                     </div>
                 </div>
                 {% endif %}
                 {% endfor %}
+                
 
                 <div class="col-md-8">
                     <div class="card mb-3">
@@ -77,11 +85,17 @@
                         </div>
                     </div>
                     <div>
-                      <a href={% url 'club_forum' club.id %}>Club Forum</a>
+                      
                     </div>
                 </div>
             </div>
         </div>
 
-
+        <a href={% url 'club_forum' club.id %}>Club Forum</a>
+                      {% for i in request.user.leader_of.all  %}
+                      {% if i.id == club.id %}
+                      <a href={% url 'set_meeting' %}>Arrange a meeting</a>
+                      <a href={% url 'book' %}>add book</a>
+                      {% endif %}
+                      {% endfor %}
 {% endblock %}
