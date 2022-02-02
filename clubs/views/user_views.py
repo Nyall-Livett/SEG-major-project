@@ -36,3 +36,7 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         user = self.get_object()
         context['following'] = self.request.user.is_following(user)
         return context
+
+
+def follow_toggle(request):
+    return redirect('home')

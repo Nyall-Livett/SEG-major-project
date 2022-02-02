@@ -31,6 +31,7 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
+    path('follow_toggle/<int:user_id>',views.follow_toggle, name ='follow_toggle'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     #path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
