@@ -157,7 +157,7 @@ class BookForm(forms.ModelForm):
     class Meta:
 
         model = Book
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'isbn', 'author', 'publisher', 'publication_year', 'image_url_s', 'image_url_m', 'image_url_l']
 
 class PostForm(forms.ModelForm):
     class Meta:
