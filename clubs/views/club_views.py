@@ -149,12 +149,17 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 @login_required
 def join_club(request, user_id,club_id):
     club = Club.objects.get(id=club_id)
+    user = User.objects.get(id=user_id)
     try:
-        user = User.objects.get(id=user_id)
-        club.add_member(user)
-        messages.add_message(request, messages.SUCCESS,
-            f"You have successfully joined {club.name} ")
-        return redirect('club_list')
+        if club.members.count() >= club.maximum_members:
+            messages.add_message(request, messages.WARNING,
+                f" Member capacity of {club.name} has been reached")
+            return redirect('club_list')
+        else:
+            club.add_member(user)
+            messages.add_message(request, messages.SUCCESS,
+                f"You have successfully joined {club.name} ")
+            return redirect('club_list')
     except ObjectDoesNotExist:
         return redirect('club_list')
     else:
@@ -163,11 +168,11 @@ def join_club(request, user_id,club_id):
 @login_required
 def leave_club(request, user_id,club_id):
     club = Club.objects.get(id=club_id)
+    user = User.objects.get(id=user_id)
     try:
-        user = User.objects.get(id=user_id)
         club.remove_member(user)
         messages.add_message(request, messages.SUCCESS,
-                f"You have left {club.name} ")
+            f"You have left {club.name} ")
         return redirect('club_list')
     except ObjectDoesNotExist:
         return redirect('club_list')
