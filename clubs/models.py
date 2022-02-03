@@ -137,13 +137,12 @@ class Club(models.Model):
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
-    def add_member(self, user):
+    def add_or_remove_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
-    
-    def remove_member(self, user):
-        if user in self.members.all():
+        else:
             user.clubs.remove(self)
+    
 
     def grant_leadership(self, user):
         self.leader = user
