@@ -18,13 +18,15 @@
             <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
             <td>
                 {% if user in club.members.all %}
-                  <a href="{% url 'leave_club' user.id club.id %}">
-                    <button type="button" class="btn btn-secondary">Leave</button>
-                  </a>
+                <form action="{% url 'join_club' user.id club.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Leave</button>
+              </form>
                 {% else %}
-                  <a href="{% url 'join_club' user.id club.id %}">
-                    <button type="button" class="btn btn-primary">Join</button>
-                  </a>
+                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Join</button>
+                  </form>
                 {% endif %}
             </td>
           </tr>
