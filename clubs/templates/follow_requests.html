@@ -17,10 +17,10 @@
         <td>{{ user.full_name }}</td>
         <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
         <td>
-            <a href=""><b class="btn btn-success">Accept</b></a>
+            <a href="{% url 'accept_request' user.id %}"><b class="btn btn-success">Accept</b></a>
         </td>
         <td>
-            <a href=""><b class="btn btn-danger">Reject</b></a>
+            <a href="{% url 'reject_request' user.id %}"><b class="btn btn-danger">Reject</b></a>
         </td>
         </tr>
       {% endfor %}

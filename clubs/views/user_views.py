@@ -74,3 +74,25 @@ def follow_request(request, user_id):
         return redirect('user_list')
     else:
         return redirect('show_user', user_id=user_id)
+
+@login_required
+def accept_request(request, user_id):
+    logged_in_user = request.user
+    try:
+        followee_request = User.objects.get(id=user_id)
+        logged_in_user.accept_request(followee_request)
+    except ObjectDoesNotExist:
+        return redirect('follow_requests_page')
+    else:
+        return redirect('show_user', user_id=user_id)
+
+@login_required
+def reject_request(request, user_id):
+    logged_in_user = request.user
+    try:
+        followee_request = User.objects.get(id=user_id)
+        logged_in_user.reject_request(followee_request)
+    except ObjectDoesNotExist:
+        return redirect('follow_requests_page')
+    else:
+        return redirect('follow_requests_page')
