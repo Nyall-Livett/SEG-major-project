@@ -1,0 +1,36 @@
+{% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Follow Requests</h1>
+      {% if follow_requests %}
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      <table class="table">       
+      {% for user in follow_requests %}
+        <tr>
+        <td>
+        <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+        </td>
+        <td>{{ user.full_name }}</td>
+        <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
+        <td>
+            <a href=""><b class="btn btn-success">Accept</b></a>
+        </td>
+        <td>
+            <a href=""><b class="btn btn-danger">Reject</b></a>
+        </td>
+        </tr>
+      {% endfor %}
+      </table>
+      {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      {% else %}
+        No Follow Requests at the moment
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
@@ -17,6 +17,19 @@ class UserListView(LoginRequiredMixin, ListView):
     template_name = "user_list.html"
     context_object_name = "users"
     paginate_by = settings.USERS_PER_PAGE
+
+class FollowRequestsListView(LoginRequiredMixin, ListView):
+    """View that show a list of all follow requests."""
+
+    model = User
+    template_name = "follow_requests.html"
+    context_object_name = "follow_requests"
+    paginate_by = settings.USERS_PER_PAGE
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        context['follow_requests'] = self.request.user.follow_requests.all()
+        return context
 
 class ShowUserView(LoginRequiredMixin, DetailView):
     """View that shows individual user details."""
@@ -39,7 +52,6 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         context['following'] = self.request.user.is_following(user)
         context['request_sent'] = self.request.user.is_request_sent(user)
         return context
-
 
 @login_required
 def follow_toggle(request, user_id):
