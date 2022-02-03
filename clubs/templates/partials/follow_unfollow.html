@@ -1,17 +1,22 @@
-<form action="{% url 'follow_toggle' user_id=user.id %}" method="get">
-    <a href="" style="color: azure; text-decoration: none;">{{ user.followers_count }} Followers</a>
-    <br>
-    {% if user.followees_count %}
-    <a href="" style="color: azure; text-decoration: none;">{{ user.followees_count }} Following</a>
-    {% else %}
-    <a href="" style="color: azure; text-decoration: none;">0 Following</a>
-    {% endif %}
-    <br><br>
-    {% if not request.user.id == user.id %}
-    {% if following %}
-        <button class="btn btn-secondary">Unfollow</button>
-    {% else %}
+<a href="" style="color: azure; text-decoration: none;">{{ user.followers_count }} Followers</a>
+<br>
+{% if user.followees_count %}
+<a href="" style="color: azure; text-decoration: none;">{{ user.followees_count }} Following</a>
+{% else %}
+<a href="" style="color: azure; text-decoration: none;">0 Following</a>
+{% endif %}
+<br><br>
+
+{% if not request.user.id == user.id %}
+{% if request_sent %}
+    <button class="btn btn-success" disabled>Request Sent</button>
+{% elif not following %}
+    <form action="{% url 'follow_request' user_id=user.id %}">
         <button class="btn btn-success">Follow</button>
-    {% endif %} 
-    {% endif %}
-</form>
+    </form>
+{% else %}
+    <form action="{% url 'follow_toggle' user_id=user.id %}">
+        <button class="btn btn-secondary">Unfollow</button>
+    </form>
+{% endif %}
+{% endif %}

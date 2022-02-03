@@ -37,6 +37,7 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(*arg, **kwargs)
         user = self.get_object()
         context['following'] = self.request.user.is_following(user)
+        context['request_sent'] = self.request.user.is_request_sent(user)
         return context
 
 
@@ -46,6 +47,17 @@ def follow_toggle(request, user_id):
     try:
         followee = User.objects.get(id=user_id)
         logged_in_user.toggle_follow(followee)
+    except ObjectDoesNotExist:
+        return redirect('user_list')
+    else:
+        return redirect('show_user', user_id=user_id)
+
+@login_required
+def follow_request(request, user_id):
+    logged_in_user = request.user
+    try:
+        followee_request = User.objects.get(id=user_id)
+        logged_in_user.send_follow_request(followee_request)
     except ObjectDoesNotExist:
         return redirect('user_list')
     else:

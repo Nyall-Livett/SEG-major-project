@@ -20,13 +20,13 @@
                                               <button type="button" class="btn btn-primary">Edit profile</button>
                                           </a>
                                           <br><br>
-                                          {% include 'partials/follow_unfollow.html' with following=following %}
+                                          {% include 'partials/follow_unfollow.html' with following=following request_sent=request_sent %}
                                       </div>
                                   </div>
 
                                   {% else %}
                                     <h3 class="f-w-600">{{user.first_name}} {{user.last_name}}</h3>      
-                                    {% include 'partials/follow_unfollow.html' with following=following %}
+                                    {% include 'partials/follow_unfollow.html' with following=following request_sent=request_sent %}
                                   {% endif %}
                               </div>
                           </div>
