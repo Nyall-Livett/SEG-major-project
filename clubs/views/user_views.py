@@ -7,6 +7,8 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
 from clubs.models import User
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 class UserListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -30,3 +32,21 @@ class ShowUserView(LoginRequiredMixin, DetailView):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('user_list')
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        user = self.get_object()
+        context['following'] = self.request.user.is_following(user)
+        return context
+
+
+@login_required
+def follow_toggle(request, user_id):
+    logged_in_user = request.user
+    try:
+        followee = User.objects.get(id=user_id)
+        logged_in_user.toggle_follow(followee)
+    except ObjectDoesNotExist:
+        return redirect('user_list')
+    else:
+        return redirect('show_user', user_id=user_id)

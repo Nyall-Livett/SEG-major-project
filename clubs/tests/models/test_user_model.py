@@ -135,3 +135,50 @@ class UserModelTestCase(TestCase):
     def _assert_user_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.user.full_clean()
+
+
+    """ Tests for following/unfollowing User """
+
+    def test_adding_follower_increases_the_number_of_followers(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        peter = User.objects.get(username='peterpickles')
+        self.user.add_follower(jane)
+        self.assertEqual(self.user.followers_count(), 1)
+        self.user.add_follower(petra)
+        self.assertEqual(self.user.followers_count(), 2)
+        self.user.add_follower(peter)
+        self.assertEqual(self.user.followers_count(), 3)
+
+    def test_following_users_increases_the_number_of_followees(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        peter = User.objects.get(username='peterpickles')
+        self.user.follow(jane)
+        self.assertEqual(self.user.followees_count(), 1)
+        self.user.follow(petra)
+        self.assertEqual(self.user.followees_count(), 2)
+        self.user.follow(peter)
+        self.assertEqual(self.user.followees_count(), 3)
+
+    def test_unfollowing_users_decreases_the_number_of_followees(self):
+        jane = User.objects.get(username='janedoe')
+        petra = User.objects.get(username='petrapickles')
+        peter = User.objects.get(username='peterpickles')
+        self.user.follow(jane)
+        self.user.follow(petra)
+        self.user.follow(peter)
+        self.assertEqual(self.user.followees_count(), 3)
+        self.user.unfollow(jane)
+        self.assertEqual(self.user.followees_count(), 2)
+        self.user.unfollow(petra)
+        self.assertEqual(self.user.followees_count(), 1)
+        self.user.unfollow(peter)
+        self.assertEqual(self.user.followees_count(), 0)
+
+    def test_toggle_follow_users(self):
+        jane = User.objects.get(username='janedoe')
+        self.user.toggle_follow(jane)
+        self.assertTrue(self.user.is_following(jane))
+        self.user.toggle_follow(jane)
+        self.assertFalse(self.user.is_following(jane))
