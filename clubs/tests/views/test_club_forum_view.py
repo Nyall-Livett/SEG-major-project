@@ -23,7 +23,7 @@ class ClubForumViewTestCase(TestCase):
 
     def test_get_club_forum(self):
         self.client.login(username=self.user.username, password='Password123')
-        self.club.add_member(self.user)
+        self.club.add_or_remove_member(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'forum.html')
@@ -46,9 +46,9 @@ class ClubForumViewTestCase(TestCase):
         jane = User.objects.get(username='janedoe')
         petra = User.objects.get(username='petrapickles')
         peter = User.objects.get(username='peterpickles')
-        self.club.add_member(self.user)
-        self.club.add_member(jane)
-        self.club.add_member(petra)
+        self.club.add_or_remove_member(self.user)
+        self.club.add_or_remove_member(jane)
+        self.club.add_or_remove_member(petra)
         create_posts(self.user, self.club, 100, 103)
         create_posts(jane, self.club, 200, 203)
         create_posts(petra, self.club, 300, 303)
@@ -71,8 +71,8 @@ class ClubForumViewTestCase(TestCase):
     def test_club_forum_with_pagination(self):
         self.client.login(username=self.user.username, password='Password123')
         jane = User.objects.get(username='janedoe')
-        self.club.add_member(self.user)
-        self.club.add_member(jane)
+        self.club.add_or_remove_member(self.user)
+        self.club.add_or_remove_member(jane)
         create_posts(self.user,self.club, 100, 100+settings.POSTS_PER_PAGE+2)
         create_posts(jane, self.club, 100, 100+settings.POSTS_PER_PAGE+2)
         response = self.client.get(self.url)
