@@ -1,0 +1,48 @@
+{% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
+{% block content %}
+
+  <div class="container" style="padding: 0px">
+
+    <div class="row">
+      <div class="container">
+        <h2>Notifications</h2>
+      </div>
+    </div>
+
+    {% for notification in object_list %}
+    <div class="row notification-card">
+      <div class="col-1 notification-image" style="height:100px; background-color:#d1d1d1">
+        image
+      </div>
+      <div class="col-9 notification-body">
+        <div class="row">
+          <div class="col-12">
+            <h5>{{notification.type}}</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <p>{{notification.title}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <small>{{notification.created_on}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 new-group">
+        <a href="#" class="notification-button"><i class="bi bi-check-square notification-icon" style="color:#00c100"></i></a>
+        <a href="#" class="notification-button"><i class="bi bi-dash-square notification-icon" style="color:red"></i></a>
+      </div>
+    </div>
+
+    {% empty %}
+
+      <p>Sorry, you do not have any notifications.</p>
+
+    {% endfor %}
+
+  </div>
+{% endblock %}

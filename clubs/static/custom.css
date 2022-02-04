@@ -11,6 +11,7 @@
 .home-navbar-custom{
     background-color: #7796CF;
     margin-bottom: 20px;
+    box-shadow: 0px 4px 5px #cfcfcf;
 }
 
 /*Customization for fonts for the website*/
@@ -121,4 +122,44 @@
 }
 .inner{
   display: inline-block;
+}
+
+/* Notifications */
+
+
+.notification-card {
+  min-height: 100px;
+  border-radius: 6px;
+  margin-top: 24px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.notification-image {
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.notification-button{
+  margin-left: 8px;
+}
+
+.notification-icon {
+  font-size: 40px;
+}
+
+
+.new-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+
+}
+
+.notification-body{
+  padding-top: 4px;
 }
