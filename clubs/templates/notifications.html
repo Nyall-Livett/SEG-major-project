@@ -1,0 +1,13 @@
+{% extends 'base_content.html' %}
+{% load bootstrap_pagination %}
+{% block content %}
+
+<ul>
+{% for notification in object_list %}
+  <li>{{ notification.title }}</li>
+{% empty %}
+  <li>Sorry, you have no notifications.</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
