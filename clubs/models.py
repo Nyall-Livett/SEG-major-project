@@ -45,7 +45,7 @@ class User(AbstractUser):
 
     def future_meetings(self):
         utc=pytz.UTC
-        list = [] 
+        list = []
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
                 list.append(i)
@@ -53,12 +53,12 @@ class User(AbstractUser):
 
     def previous_meetings(self):
         utc=pytz.UTC
-        list = [] 
+        list = []
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
-        
+
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
 
@@ -66,7 +66,7 @@ class User(AbstractUser):
         return self.notification_set.filter(read=False)
 
     def clubBooks(self):
-        list = [] 
+        list = []
         for i in Book.objects.all():
                 list.append(i)
         return len(list) > 0
@@ -115,7 +115,7 @@ class User(AbstractUser):
     def has_request(self, user):
         """ returns if a follow request has been sent by a user """
         return user in self.follow_requests.all()
-    
+
     def accept_request(self, user):
         """ accepts a follow request from a user """
         if self.has_request(user):
@@ -142,7 +142,7 @@ class Club(models.Model):
             user.clubs.add(self)
         else:
             user.clubs.remove(self)
-    
+
 
     def grant_leadership(self, user):
         self.leader = user
@@ -158,12 +158,13 @@ class Club(models.Model):
         for i in self.members.all():
             if request == i:
                 return True
-        return False 
-    
+        return False
+
 
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
+    type = models.CharField(max_length=128, blank=False)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -202,7 +203,3 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
-
-
-    
-   

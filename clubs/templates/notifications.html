@@ -2,12 +2,48 @@
 {% load bootstrap_pagination %}
 {% block content %}
 
-<ul>
-{% for notification in object_list %}
-  <li>{{ notification.title }}</li>
-{% empty %}
-  <li>Sorry, you have no notifications.</li>
-{% endfor %}
-</ul>
+<div class="container" style="padding: 0px">
+
+  <div class="row" style="padding-bottom:18px;">
+    <div class="container">
+      <h2>Notifications</h2>
+    </div>
+  </div>
+
+  {% for notification in object_list %}
+    <div class="notification-card card">
+      <div class="row">
+        <div class="col-1 notification-image">
+        image
+        </div>
+
+        <div class="col-8" style="background-color:white;">
+          <div class="row">
+              <div class="col-12" style="padding-top:4px;">
+                <h5>{{notification.type}}</h5>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              {{ notification.title }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-1 notification-button-group">
+          <a href="#" class="notification-button">accept</a>
+          <a href="#" class="notification-button">reject</a>
+        </div>
+      </div>
+
+    </div>
+
+  {% empty %}
+
+  <p>Sorry, you do not have any notifications.</p>
+
+  {% endfor %}
+
+</div>
 
 {% endblock %}
