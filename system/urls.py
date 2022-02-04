@@ -44,5 +44,6 @@ urlpatterns = [
     path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
-    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('notifications/', views.NotificationListView.as_view(), name='notifications')
+
 ]

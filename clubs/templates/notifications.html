@@ -2,48 +2,47 @@
 {% load bootstrap_pagination %}
 {% block content %}
 
-<div class="container" style="padding: 0px">
+  <div class="container" style="padding: 0px">
 
-  <div class="row" style="padding-bottom:18px;">
-    <div class="container">
-      <h2>Notifications</h2>
+    <div class="row">
+      <div class="container">
+        <h2>Notifications</h2>
+      </div>
     </div>
-  </div>
 
-  {% for notification in object_list %}
-    <div class="notification-card card">
-      <div class="row">
-        <div class="col-1 notification-image">
+    {% for notification in object_list %}
+    <div class="row notification-card">
+      <div class="col-1 notification-image" style="height:100px; background-color:#d1d1d1">
         image
-        </div>
-
-        <div class="col-8" style="background-color:white;">
-          <div class="row">
-              <div class="col-12" style="padding-top:4px;">
-                <h5>{{notification.type}}</h5>
-              </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              {{ notification.title }}
-            </div>
+      </div>
+      <div class="col-9 notification-body">
+        <div class="row">
+          <div class="col-12">
+            <h5>{{notification.type}}</h5>
           </div>
         </div>
-
-        <div class="col-1 notification-button-group">
-          <a href="#" class="notification-button">accept</a>
-          <a href="#" class="notification-button">reject</a>
+        <div class="row">
+          <div class="col-12">
+            <p>{{notification.title}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <small>{{notification.created_on}}</small>
+          </div>
         </div>
       </div>
-
+      <div class="col-2 new-group">
+        <a href="#" class="notification-button"><i class="bi bi-check-square notification-icon" style="color:#00c100"></i></a>
+        <a href="#" class="notification-button"><i class="bi bi-dash-square notification-icon" style="color:red"></i></a>
+      </div>
     </div>
 
-  {% empty %}
+    {% empty %}
 
-  <p>Sorry, you do not have any notifications.</p>
+      <p>Sorry, you do not have any notifications.</p>
 
-  {% endfor %}
+    {% endfor %}
 
-</div>
-
+  </div>
 {% endblock %}
