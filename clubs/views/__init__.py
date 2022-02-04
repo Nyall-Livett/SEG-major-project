@@ -7,3 +7,4 @@ from .club_views import *
 from .club_forum_views import *
 from .post_views import *
 from .book_views import *
+from .notification_views import *

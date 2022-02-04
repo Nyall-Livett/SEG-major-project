@@ -47,7 +47,7 @@ class NewPostTest(TestCase):
     def test_successful_new_post(self):
         self.client.login(username=self.user.username, password="Password123")
         user_count_before = Post.objects.count()
-        self.club.add_member(self.user)
+        self.club.add_or_remove_member(self.user)
         response = self.client.post(self.url, self.data, follow=True)
         user_count_after = Post.objects.count()
         self.assertEqual(user_count_after, user_count_before+1)
@@ -61,21 +61,23 @@ class NewPostTest(TestCase):
         )
         self.assertTemplateUsed(response, 'forum.html')
 
-    # def test_unsuccessful_new_post(self):
-    #     self.client.login(username=self.user.username, password='Password123')
-    #     self.club.add_member(self.user)
-    #     self.data['title'] = ''
-    #     user_count_before = Post.objects.count()
-    #     response = self.client.post(self.url, self.data, follow=True)
-    #     user_count_after = Post.objects.count()
-    #     self.assertEqual(user_count_after, user_count_before)
-    #     self.assertTemplateUsed(response, 'forum.html')
+    def test_unsuccessful_new_post(self):
+        self.client.login(username=self.user.username, password='Password123')
+        self.club.add_or_remove_member(self.user)
+        self.data['title'] = ''
+        user_count_before = Post.objects.count()
+        response = self.client.post(self.url, self.data, follow=True)
+        user_count_after = Post.objects.count()
+        self.assertEqual(user_count_after, user_count_before)
+        redirect_url = reverse('club_forum', kwargs = {'club_id' : self.club.id})
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertTemplateUsed(response, 'forum.html')
 
     def test_cannot_create_post_for_other_user(self):
         self.client.login(username=self.user.username, password='Password123')
         other_user = User.objects.get(username='janedoe')
-        self.club.add_member(self.user)
-        self.club.add_member(other_user)
+        self.club.add_or_remove_member(self.user)
+        self.club.add_or_remove_member(other_user)
         self.data['author'] = other_user.id
         user_count_before = Post.objects.count()
         response = self.client.post(self.url, self.data, follow=True)

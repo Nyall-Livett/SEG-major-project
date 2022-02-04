@@ -40,25 +40,25 @@ class CreateNotification:
 
     def _create_club(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(title= title.value.format(club=club_name), receiver=receiver)
+        Notification.objects.create(type="Club created", title= title.value.format(club=club_name), receiver=receiver)
 
     def _club_accepted(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(title= title.value.format(club=club_name), receiver=receiver)
+        Notification.objects.create(type="Accepted into club", title= title.value.format(club=club_name), receiver=receiver)
 
     def _club_rejected(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(title= title.value.format(club=club_name), receiver=receiver)
+        Notification.objects.create(type="Rejected from club", title= title.value.format(club=club_name), receiver=receiver)
 
     def _club_transferred(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
         user_name = kwargs['user_name']
-        Notification.objects.create(title= title.value.format(club=club_name, user=user_name), receiver=receiver)
+        Notification.objects.create(type="Club transfer", title= title.value.format(club=club_name, user=user_name), receiver=receiver)
 
     def _friend_request(self, title, receiver, **kwargs):
         user_name = kwargs['user_name']
-        Notification.objects.create(title= title.value.format(user=user_name), receiver=receiver)
+        Notification.objects.create(type="Friend request", title= title.value.format(user=user_name), receiver=receiver)
 
     def _meeting_soon(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(title= title.value.format(club=club_name), receiver=receiver)
+        Notification.objects.create(type="Meeting reminder", title= title.value.format(club=club_name), receiver=receiver)

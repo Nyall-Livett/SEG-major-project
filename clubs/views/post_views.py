@@ -15,13 +15,17 @@ class NewPostView(LoginRequiredMixin, CreateView):
     form_class = PostForm
     http_method_names = ['post']
 
+    def form_invalid(self, form):
+        redirect_url = reverse('club_forum', kwargs = {'club_id' : self.kwargs.get('club_id')})
+        return(redirect(redirect_url))
+
     def form_valid(self, form):
         """Process a valid form."""
         form.instance.author = self.request.user
         form.instance.club = Club.objects.get(id=self.kwargs.get('club_id'))
         if(form.instance.author not in form.instance.club.members.all()):
             raise PermissionDenied()
-        messages.add_message(self.request, messages.SUCCESS, f"You have successfully add a new post to forums.")
+        messages.add_message(self.request, messages.SUCCESS, f"You have successfully add a new post to the forum.")
         return super().form_valid(form)
 
     def get_success_url(self):

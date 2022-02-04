@@ -23,6 +23,8 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
     bio = models.CharField(max_length=520, blank=True)
+    followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
+    follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
 
     class Meta:
         """Model options."""
@@ -56,6 +58,7 @@ class User(AbstractUser):
             if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
+
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
 
@@ -68,6 +71,61 @@ class User(AbstractUser):
                 list.append(i)
         return len(list) > 0
 
+    """ methods relating to follow system """
+    def add_follower(self, user):
+        """ add other users as followers to self """
+        self.followers.add(user)
+
+    def follow(self, user):
+        """ follow user """
+        self.followees.add(user)
+
+    def unfollow(self, user):
+        """ unfollow user self is following """
+        self.followees.remove(user)
+
+    def followers_count(self):
+        """ number of followers self has """
+        return self.followers.count()
+
+    def followees_count(self):
+        """ number of users self follows """
+        return self.followees.count()
+
+    def is_following(self, user):
+        """ returns if self follows a given user """
+        return user in self.followees.all()
+
+    def toggle_follow(self, user):
+        """ unfollows if self follows the user, follows if self does not follow the user """
+        if self.is_following(user):
+            self.unfollow(user)
+        else:
+            self.follow(user)
+
+    """ methods relating to follow requests """
+    def send_follow_request(self, user):
+        """ send follow requests to a user """
+        self.sent_requests.add(user)
+
+    def is_request_sent(self, user):
+        """ returns if a follow request to a user has already been sent """
+        return user in self.sent_requests.all()
+
+    def has_request(self, user):
+        """ returns if a follow request has been sent by a user """
+        return user in self.follow_requests.all()
+
+    def accept_request(self, user):
+        """ accepts a follow request from a user """
+        if self.has_request(user):
+            self.follow_requests.remove(user)
+            self.add_follower(user)
+
+    def reject_request(self, user):
+        """ rejects a follow request from a user """
+        if self.has_request(user):
+            self.follow_requests.remove(user)
 
 
 class Club(models.Model):
@@ -79,13 +137,12 @@ class Club(models.Model):
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
-    def add_member(self, user):
+    def add_or_remove_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
-
-    def remove_member(self, user):
-        if user in self.members.all():
+        else:
             user.clubs.remove(self)
+
 
     def grant_leadership(self, user):
         self.leader = user
@@ -107,6 +164,7 @@ class Club(models.Model):
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
+    type = models.CharField(max_length=128, blank=False)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

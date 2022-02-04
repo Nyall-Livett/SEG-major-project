@@ -28,14 +28,16 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
+    path('follow_requests/', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
+    path('follow_toggle/<int:user_id>',views.follow_toggle, name ='follow_toggle'),
+    path('follow_request/<int:user_id>',views.follow_request, name ='follow_request'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
-    path('join_club/<int:user_id><int:club_id>', views.join_club, name='join_club'),
-    path('leave_club/<int:user_id><int:club_id>', views.leave_club, name='leave_club'),
+    path('join_club/<int:user_id><int:club_id>', views.JoinRemoveClubView.as_view(), name='join_club'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
@@ -43,5 +45,9 @@ urlpatterns = [
     path('books/', views.BookListView.as_view(), name='book_list'),
     path('upload_books/', views.UploadBooksView.as_view(), name='upload_books'),
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
+    path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
+    path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
+    path('notifications/', views.NotificationListView.as_view(), name='notifications')
+
 
 ]
