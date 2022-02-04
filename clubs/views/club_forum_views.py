@@ -18,7 +18,6 @@ class ClubForumView(LoginRequiredMixin, ListView):
         """Return the club's forum."""
         current_user = self.request.user
         club = Club.objects.get(id=self.kwargs.get('club_id'))
-        # authors = list(club.members.all()) + [current_user]
         authors = list(club.members.all())
         if(current_user not in club.members.all()):
             raise PermissionDenied()

@@ -61,15 +61,17 @@ class NewPostTest(TestCase):
         )
         self.assertTemplateUsed(response, 'forum.html')
 
-    # def test_unsuccessful_new_post(self):
-    #     self.client.login(username=self.user.username, password='Password123')
-    #     self.club.add_or_remove_member(self.user)
-    #     self.data['title'] = ''
-    #     user_count_before = Post.objects.count()
-    #     response = self.client.post(self.url, self.data, follow=True)
-    #     user_count_after = Post.objects.count()
-    #     self.assertEqual(user_count_after, user_count_before)
-    #     self.assertTemplateUsed(response, 'forum.html')
+    def test_unsuccessful_new_post(self):
+        self.client.login(username=self.user.username, password='Password123')
+        self.club.add_or_remove_member(self.user)
+        self.data['title'] = ''
+        user_count_before = Post.objects.count()
+        response = self.client.post(self.url, self.data, follow=True)
+        user_count_after = Post.objects.count()
+        self.assertEqual(user_count_after, user_count_before)
+        redirect_url = reverse('club_forum', kwargs = {'club_id' : self.club.id})
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertTemplateUsed(response, 'forum.html')
 
     def test_cannot_create_post_for_other_user(self):
         self.client.login(username=self.user.username, password='Password123')
