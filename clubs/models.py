@@ -62,9 +62,9 @@ class User(AbstractUser):
         return list
 
     def notification_count(self):
-        return self.notification_set.filter(read=False).count()
+        return self.notification_set.filter(acknowledged=False).count()
 
-    def get_unread_ations(self):
+    def get_unread_notifcations(self):
         return self.notification_set.filter(read=False)
 
     def clubBooks(self):
@@ -172,6 +172,9 @@ class Notification(models.Model):
     read = models.BooleanField(default=False)
     acknowledged = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    associated_user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name="associated_user" )
+    associated_club = models.ForeignKey(Club, blank=True, null=True, on_delete=models.CASCADE, related_name="associated_club")
+
 
 
 class Post(models.Model):
