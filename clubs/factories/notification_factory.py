@@ -1,14 +1,6 @@
-from enum import Enum
 from clubs.models import Notification
+from clubs.enums import NotificationType
 
-class NotificationType(Enum):
-    FRIEND_REQUEST = "You have recieved a friend request from {user}"
-    MEETING_SOON = "You have a meeting starting soon"
-    CLUB_CREATED = "You have created the {club}."
-    CLUB_ACCEPTED = "You have joined {club}"
-    CLUB_REJECTED = "You have been rejected from {club}"
-    CLUB_TRANSFERRED = "You have transferred {club} to {user}"
-    CLUB_RECEIVED = "You have transferred {club} to {user}"
 
 class CreateNotification:
 
@@ -40,25 +32,70 @@ class CreateNotification:
 
     def _create_club(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(type="Club created", title= title.value.format(club=club_name), receiver=receiver)
+        description = "You have created the {club}.".format(club=club_name)
+        Notification.objects.create(
+            type=NotificationType.CLUB_CREATED,
+            title = NotificationType.CLUB_CREATED.label,
+            description= description, receiver=receiver
+        )
+
 
     def _club_accepted(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(type="Accepted into club", title= title.value.format(club=club_name), receiver=receiver)
+        description = "You have been accepted into {club}.".format(club=club_name)
+        Notification.objects.create(
+            type=NotificationType.CLUB_ACCEPTED,
+            title = NotificationType.CLUB_ACCEPTED.label,
+            description= description, receiver=receiver
+        )
+
 
     def _club_rejected(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        Notification.objects.create(type="Rejected from club", title= title.value.format(club=club_name), receiver=receiver)
+        description = "You have been rejected from {club}.".format(club=club_name)
+        Notification.objects.create(
+            type=NotificationType.CLUB_REJECTED,
+            title = NotificationType.CLUB_REJECTED.label,
+            description= description, receiver=receiver
+        )
+
 
     def _club_transferred(self, title, receiver, **kwargs):
         club_name = kwargs['club_name']
-        user_name = kwargs['user_name']
-        Notification.objects.create(type="Club transfer", title= title.value.format(club=club_name, user=user_name), receiver=receiver)
+        username = kwargs['username']
+        description = "You have transferred {club} to {user}".format(club=club_name, user=username)
+        Notification.objects.create(
+            type=NotificationType.CLUB_TRANSFERRED,
+            title = NotificationType.CLUB_TRANSFERRED.label,
+            description= description, receiver=receiver
+        )
 
-    def _friend_request(self, title, receiver, **kwargs):
-        user_name = kwargs['user_name']
-        Notification.objects.create(type="Friend request", title= title.value.format(user=user_name), receiver=receiver)
+
+    def _club_received(self, title, receiver, **kwargs):
+        club_name = kwargs['club_name']
+        description = "You have gained leadership of {club}".format(club=club_name)
+        Notification.objects.create(
+            type=NotificationType.CLUB_RECEIVED,
+            title = NotificationType.CLUB_RECEIVED.label,
+            description= description, receiver=receiver
+        )
+
+
+    def _follow_request(self, title, receiver, **kwargs):
+        username = kwargs['username']
+        description = "You have received a follow request from {user}, click to accept or reject".format(user=username)
+        Notification.objects.create(
+            type=NotificationType.FOLLOW_REQUEST,
+            title = NotificationType.FOLLOW_REQUEST.label,
+            description= description, receiver=receiver
+        )
+
 
     def _meeting_soon(self, title, receiver, **kwargs):
-        club_name = kwargs['club_name']
-        Notification.objects.create(type="Meeting reminder", title= title.value.format(club=club_name), receiver=receiver)
+        club_name = kwargs['username']
+        description = "You have transferred {club} to {user}".format(club=club_name, user=username)
+        Notification.objects.create(
+            type=NotificationType.FOLLOW_REQUEST,
+            title = NotificationType.FOLLOW_REQUEST.label,
+            description= description, receiver=receiver
+        )
