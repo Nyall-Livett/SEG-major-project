@@ -9,7 +9,7 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.factories.notification_factory import NotificationType
+from clubs.enums import NotificationType
 
 import pytz
 
@@ -64,7 +64,7 @@ class User(AbstractUser):
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
 
-    def get_unread_notifications(self):
+    def get_unread_ations(self):
         return self.notification_set.filter(read=False)
 
     def clubBooks(self):
@@ -167,8 +167,10 @@ class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
     type = models.IntegerField(blank=False, default = NotificationType.DEFAULT, choices = NotificationType.choices)
+    description = models.CharField(max_length=256, blank=False)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
+    acknowledged = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
 
