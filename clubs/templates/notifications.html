@@ -7,14 +7,16 @@
   <div class="container" style="padding: 0px">
 
     <div class="row">
-      <div class="container">
-        <h2>Notifications</h2>
+      <div class="container notification-options-panel">
+        <h2>{{object_list.count}} Notifications</h2>
+        <p class="notification-option-button"><b>Options:</b></p>
+        <p class="notification-option-button">Mark all as <a href="#">read</a> <a href="#">unread</a> <b>|</b> Order by <a href="#">newest</a> <a href="#">type</a></p>
       </div>
     </div>
 
     {% for notification in object_list %}
     <div class="row notification-card">
-      <div class="col-1 unread-indicator-parent">
+      <div class="col-1 unread-indicator-parent ">
 
         {% if notification.read %}
           <div class="unread-indicator"></div>
@@ -27,7 +29,7 @@
       <div class="col-9 notification-body">
         <div class="row">
           <div class="col-12">
-            <h5 style="color:#464646">{{notification.title}}</h5>
+            <h5 style="color:#464646; font-size:18px;">{{notification.title}}</h5>
           </div>
         </div>
         <div class="row">

@@ -184,13 +184,12 @@
   }
 }
 
+.notification-options-panel{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline
+}
 
-
-
-
-
-
-/*
-
-
- */
+.notification-option-button{
+  margin-left: 16px;
+}
