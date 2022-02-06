@@ -48,9 +48,19 @@ class Migration(migrations.Migration):
             name='Book',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=64, unique=True)),
+                ('isbn', models.CharField(max_length=13, unique=True)),
+                ('name', models.CharField(max_length=64)),
                 ('description', models.CharField(max_length=2048)),
+                ('author', models.CharField(max_length=64)),
+                ('publication_year', models.CharField(max_length=4)),
+                ('publisher', models.CharField(max_length=64)),
+                ('image_url_s', models.URLField()),
+                ('image_url_m', models.URLField()),
+                ('image_url_l', models.URLField()),
             ],
+            options={
+                'ordering': ['isbn'],
+            },
         ),
         migrations.CreateModel(
             name='Club',

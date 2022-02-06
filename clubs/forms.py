@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import Book, User, Club, Meeting, Post
+from .models import User, Club, Meeting, Post, Book
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -151,13 +151,13 @@ class MeetingForm(forms.ModelForm):
 
         model = Meeting
         fields = ['date', 'club','notes', 'book', 'members']
-        
+
 
 class BookForm(forms.ModelForm):
     class Meta:
 
         model = Book
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'isbn', 'author', 'publisher', 'publication_year', 'image_url_s', 'image_url_m', 'image_url_l']
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -168,3 +168,6 @@ class PostForm(forms.ModelForm):
         widgets = {
             'body': forms.Textarea()
         }
+
+class UploadBooksForm(forms.Form):
+    file = forms.FileField()

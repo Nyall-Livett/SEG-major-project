@@ -42,8 +42,12 @@ urlpatterns = [
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
     path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
+    path('books/', views.BookListView.as_view(), name='book_list'),
+    path('upload_books/', views.UploadBooksView.as_view(), name='upload_books'),
+    path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
     path('notifications/', views.NotificationListView.as_view(), name='notifications')
+
 
 ]

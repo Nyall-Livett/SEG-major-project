@@ -182,11 +182,22 @@ class Post(models.Model):
         """Model options."""
         ordering = ['-created_at']
 
-
+# default values are used for any existing instances of books.
 class Book(models.Model):
     """Book model"""
-    name = models.CharField(max_length=64, unique=True, blank=False)
-    description = models.CharField(max_length=2048, blank=False)
+    isbn = models.CharField(max_length=13, unique=True, blank=False, default= "")
+    name = models.CharField(max_length=64, blank=False, default= "")
+    description = models.CharField(max_length=2048, blank=True, default= "")
+    author = models.CharField(max_length=64, blank=False, default= "")
+    publication_year = models.CharField(max_length=4, blank=True, default= "")
+    publisher = models.CharField(max_length=64, blank=True, default= "")
+    image_url_s = models.URLField(max_length=200, blank=True, default= "")
+    image_url_m = models.URLField(max_length=200, blank=True, default= "")
+    image_url_l = models.URLField(max_length=200, blank=True, default= "")
+
+    class Meta:
+        """Model options."""
+        ordering = ['isbn']
 
     def __str__(self):
         return self.name
