@@ -133,13 +133,14 @@
   margin-top: 24px;
   overflow: hidden;
   background-color: white;
+  box-shadow: 0px 4px 5px #cfcfcf;
 }
 
 .notification-image {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  border-right: solid 1px lightblue;
 }
 
 .notification-button{
@@ -147,18 +148,49 @@
 }
 
 .notification-icon {
-  font-size: 40px;
+  font-size: 24px;
 }
-
 
 .new-group {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-
 }
 
 .notification-body{
   padding-top: 4px;
 }
+
+.unread-indicator-parent {
+  position: relative;
+}
+
+.unread-indicator{
+  height: 10px;
+  width: 10px;
+  background-color: #60ff60;
+  z-index: 500;
+  border-radius: 25px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  50% {
+    opacity: 0;
+  }
+}
+
+
+
+
+
+
+
+/*
+
+
+ */

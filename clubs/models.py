@@ -64,7 +64,7 @@ class User(AbstractUser):
     def notification_count(self):
         return self.notification_set.filter(acknowledged=False).count()
 
-    def get_unread_notifcations(self):
+    def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
 
     def clubBooks(self):

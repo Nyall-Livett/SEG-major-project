@@ -26,7 +26,6 @@
         {% endif %}
       </ul>
     </li>
-  </li>
   <li class="nav-item">
     <a class="nav-link" href = "{% url 'book_list' %}">Books</a>
   </li>
@@ -51,7 +50,7 @@
       </button>
     <ul class="dropdown-menu  dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
       {% for notification in user.get_unread_notifications %}
-        <li><a class="dropdown-item" href="#">{{notification.title}}</a></li>
+        <li><a class="dropdown-item" href="#"> {{notification.title}}</a></li>
       {% empty %}
         <li><a class="dropdown-item" style="pointer-events: none" href="#"><b>No new notifications</b></a></li>
       {% endfor %}

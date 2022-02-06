@@ -1,6 +1,8 @@
 {% extends 'base_content.html' %}
 {% load bootstrap_pagination %}
 {% block content %}
+{% load notification_extras %}
+{% load humanize %}
 
   <div class="container" style="padding: 0px">
 
@@ -12,37 +14,41 @@
 
     {% for notification in object_list %}
     <div class="row notification-card">
-      <div class="col-1 notification-image" style="height:100px; background-color:#d1d1d1">
-        image
+      <div class="col-1 unread-indicator-parent">
+
+        {% if notification.read %}
+          <div class="unread-indicator"></div>
+        {% endif %}
+
+        <div class="notification-image" style="height:100px;">
+          <i class="bi {{notification.type|render_icon}}" style="color:lightblue; font-size:40px"></i>
+        </div>
       </div>
       <div class="col-9 notification-body">
         <div class="row">
           <div class="col-12">
-            <h5>{{notification.type}}</h5>
+            <h5 style="color:#464646">{{notification.title}}</h5>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <p>{{notification.title}}</p>
+            <p style="color:#7a7a7a">{{notification.description}}</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
-            <small>{{notification.created_on}}</small>
+          <div class="col-12" style="color:#7a7a7a">
+            <small>{{notification.created_on|naturaltime}}</small>
           </div>
         </div>
       </div>
-      <div class="col-2 new-group">
-        <a href="#" class="notification-button"><i class="bi bi-check-square notification-icon" style="color:#00c100"></i></a>
-        <a href="#" class="notification-button"><i class="bi bi-dash-square notification-icon" style="color:red"></i></a>
-      </div>
+      {% if notification.type|render_buttons:0 %}
+        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user %}
+      {% else  %}
+        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club %}
+      {% endif  %}
     </div>
-
     {% empty %}
-
       <p>Sorry, you do not have any notifications.</p>
-
     {% endfor %}
-
   </div>
 {% endblock %}
