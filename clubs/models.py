@@ -9,6 +9,8 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
+from clubs.factories.notification_factory import NotificationType
+
 import pytz
 
 """used for meeting model"""
@@ -164,7 +166,7 @@ class Club(models.Model):
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
-    type = models.CharField(max_length=128, blank=False)
+    type = models.IntegerField(blank=False, default = NotificationType.DEFAULT, choices = NotificationType.choices)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
