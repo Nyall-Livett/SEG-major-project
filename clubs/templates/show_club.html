@@ -11,42 +11,35 @@
                                 <img src="https://cdn.vectorstock.com/images/1000x1000/66/09/29666609.jpg"
                                     alt="Logo" class="rounded-circle" width="200">
                                 <div class="mt-1">
+                                    <p></p>
                                     <h4>{{club.name}}</h4>
                                 </div>
+                                <p></p>
+                                <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
                             </div>
+                            
                         </div>    
                     </div>
-                    <p> </p>
-                    <div class="card">
-                        <div class="card-body">
-                          <div class="d-flex flex-column align-items-center text-center">
-                            <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
-                            </div>
-                        </div>
-                    </div>
-                <p></p>
-                <div>
-       
-        
-                {% for i in club.members.all %}
-                {% if i != request.user  %}
-                </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-                    
+                <!-- write here to be added beneath club leader card -->
                 {% for i in club.members.all %}
                 {% if i == request.user  %}
                   <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
 
-                            <p class="text font-size-sm"> upcomming meetings: <p> </p>
+                            <p class="text font-size-sm"> Next meetings: <p> </p>
                             {% for meetings in user.future_meetings %}
-                            {{ meetings.date }} Book: {{ meetings.book.name }}
-                            <p> </p>
-                            {% endfor %}
-                            </p>
+
+
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <h5 class="card-title">Date: {{ meetings.date }} </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ meetings.book.name }}</h6>   
+                                  Meeting notes: <p></p>{{ meetings.notes }}
+                                  <p></p>
+                                </div>
+                              </div>
+                              {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -58,44 +51,51 @@
 
                             <p class="text font-size-sm"> previous meetings: <p> </p>
                             {% for meetings in user.previous_meetings %}
-                            {{ meetings.date }} {{ meetings.book.name }}
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <h5 class="card-title">Date: {{ meetings.date }} </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ meetings.book.name }}</h6>   
+                                  Meeting notes: <p></p>{{ meetings.notes }}
+                                  <p></p>
+                                </div>
+                              </div>
                             {% endfor %}
                             </p>
-                            </div>
-
-                    </div>
                         </div>
-                    </div>
+                    </div>  
                 </div>
                 {% endif %}
                 {% endfor %}
-                
-
-                <div class="col-md-8">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">About us:</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <p>{{club.description}} </p>
-                                </div>
-                            </div>
+            </div>
+            
+         
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">About us:</h6>
                         </div>
-                    </div>
-                    <div>
-                      
+                        <div class="col-sm-9 text-secondary">
+                            <p>{{club.description}} </p>
+                            
+                        </div>
+                        <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
                     </div>
                 </div>
             </div>
+            <!-- write here to be added beneath about us  -->
         </div>
-
+        </div>
+        
+ 
+               
+<!--                 
         <a href={% url 'club_forum' club.id %}>Club Forum</a>
                       {% for i in request.user.leader_of.all  %}
                       {% if i.id == club.id %}
                       <a href={% url 'set_meeting' %}>Arrange a meeting</a>
                       <a href={% url 'book' %}>add book</a>
                       {% endif %}
-                      {% endfor %}
+                      {% endfor %} -->
 {% endblock %}
