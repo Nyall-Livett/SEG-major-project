@@ -210,6 +210,7 @@ class Meeting(models.Model):
     members = models.ManyToManyField(User, related_name="members")
     chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    URL = models.CharField(max_length=300, blank=True)
     notes = models.CharField(max_length=300, blank=True)
 
 
