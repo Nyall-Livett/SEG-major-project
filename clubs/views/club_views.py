@@ -20,6 +20,8 @@ from clubs.models import Book, Club, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification, NotificationType
 
+#from random import randint
+
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""
@@ -94,6 +96,10 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         meeting = form.instance
+        #schedule = form.save(commit=False)
+        #count = User.objects.count()
+        #schedule.chosen_member = User.objects.all()[randint(0, count - 1)]
+        #schedule.save()
         form.save()
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
@@ -124,12 +130,12 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
-    
+
     def setup(self, request, user_id, club_id, *args, **kwargs):
         super().setup(self, request, user_id, club_id, *args, **kwargs)
         self.club = Club.objects.get(id=club_id)
         self.user = User.objects.get(id=user_id)
-    
+
     def post(self, request, user_id, club_id, *args, **kwargs ):
         if self.club.members.count() >= self.club.maximum_members:
             messages.add_message(request, messages.WARNING,
@@ -148,7 +154,7 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                     f"You have successfully joined {self.club.name} ")
             # return redirect('club_list')
         return self.redirect()
-    
+
     def redirect(self):
         return redirect('club_list')
 
@@ -168,8 +174,8 @@ def join_club(request, user_id,club_id):
             messages.add_message(request, messages.SUCCESS,
                 f"You have successfully joined {club.name} ")
             return redirect('club_list')
-            
-            
+
+
     except ObjectDoesNotExist:
         return redirect('club_list')
     else:
