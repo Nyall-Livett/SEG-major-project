@@ -49,7 +49,7 @@ class User(AbstractUser):
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
                 list.append(i)
-        
+
         return list
 
     def previous_meetings(self):
@@ -208,6 +208,7 @@ class Meeting(models.Model):
     date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
+    chosen_member = models.ForeignKey(User)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     notes = models.CharField(max_length=300, blank=True)
 
