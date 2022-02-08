@@ -3,7 +3,8 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
 from clubs.models import User
@@ -29,6 +30,24 @@ class FollowRequestsListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
         context['follow_requests'] = self.request.user.follow_requests.all()
+        return context
+
+class FollowersListView(LoginRequiredMixin, ListView):
+    """View that show a list of all followers."""
+
+    model = User
+    template_name = "followers.html"
+    context_object_name = "followers"
+    paginate_by = settings.USERS_PER_PAGE
+
+    def setup(self, request, user_id, *args, **kwargs):
+        self.user = User.objects.get(pk=user_id)
+        self.followers = self.user.followers.all()
+        super().setup(request, user_id, *args, **kwargs)
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        context['followers'] = self.followers
         return context
 
 class ShowUserView(LoginRequiredMixin, DetailView):

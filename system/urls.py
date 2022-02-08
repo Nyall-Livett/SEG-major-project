@@ -47,7 +47,8 @@ urlpatterns = [
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
-    path('notifications/', views.NotificationListView.as_view(), name='notifications')
+    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('show_followers/<int:user_id>', views.FollowersListView.as_view(), name='show_followers'),
 
 
 ]

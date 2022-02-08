@@ -1,4 +1,4 @@
-<a href="" style="color: azure; text-decoration: none;">
+<a href="{% url 'show_followers' user_id=user.id %}" style="color: azure; text-decoration: none;">
     {{ user.followers_count }} Followers
 </a>
 <br>
