@@ -9,10 +9,14 @@ class MembershipInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users."""
 
-    inlines = [
-        MembershipInline,
-        ]
-    exclude = ('password',)
+    #inlines = [
+        #MembershipInline,
+        #]
+    #exclude = ('password',)
+
+    list_display = [
+        'id', 'username', 'first_name', 'last_name', 'email',
+    ]
 
 
 @admin.register(Club)
@@ -20,7 +24,7 @@ class ClubAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for clubs."""
 
     list_display = [
-        'name', 'description', 'leader',
+        'id', 'name', 'description', 'leader',
     ]
 
 @admin.register(Meeting)
@@ -28,7 +32,7 @@ class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for meetings."""
 
     list_display = [
-        'date',
+        'id', 'date', 'club',
     ]
 
 # @admin.register(Book)

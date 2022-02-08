@@ -20,6 +20,8 @@ from clubs.models import Book, Club, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification, NotificationType
 
+#from random import randint
+
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""
@@ -94,6 +96,10 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         meeting = form.instance
+        #schedule = form.save(commit=False)
+        #count = User.objects.count()
+        #schedule.chosen_member = User.objects.all()[randint(0, count - 1)]
+        #schedule.save()
         form.save()
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)

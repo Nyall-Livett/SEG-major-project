@@ -28,9 +28,21 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting.club = None
         self._assert_meeting_is_invalid()
 
+    def test_meeting_must_have_book(self):
+        self.default_meeting.book = None
+        self._assert_meeting_is_invalid()
+
     def test_date_must_not_be_blank(self):
         self.default_meeting.date = ''
         self._assert_meeting_is_invalid()
+
+    def test_notes_may_be_blank(self):
+        self.default_meeting.notes = ''
+        self._assert_meeting_is_valid()
+
+    def test_URL_may_be_blank(self):
+        self.default_meeting.URL = ''
+        self._assert_meeting_is_valid()
 
     def _assert_meeting_is_valid(self):
         try:
