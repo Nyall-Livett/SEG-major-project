@@ -156,7 +156,11 @@ class Club(models.Model):
         if user not in self.applicants.all():
             user.applicants.add(self)
 
-    def reject_application(self, user):
+    def acceptmembership(self, user):
+        user.applicants.remove(self)
+        user.clubs.add(self)
+
+    def rejectmembership(self,user):
         user.applicants.remove(self)
 
     def grant_leadership(self, user):
