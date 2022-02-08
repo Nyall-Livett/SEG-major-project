@@ -16,7 +16,7 @@ from django.shortcuts import render
 from clubs.forms import MeetingForm
 from clubs.forms import BookForm
 
-from clubs.models import Book, Club, User, Notification
+from clubs.models import Book, Club, Meeting, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification, NotificationType
 
@@ -62,6 +62,22 @@ class TransferClubLeadership(LoginRequiredMixin, View):
     def redirect(self):
         return redirect("dashboard")
 
+class pending_requests(LoginRequiredMixin, ListView):
+    model = Club
+    template_name = 'pending_requests.html'
+    pk_url_kwarg = 'club_id'
+    
+
+    def get(self, request,  *args, **kwargs):
+        return render(request, 'pending_requests.html')
+
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
+
 class ShowClubView(LoginRequiredMixin, DetailView):
 
     model = Club
@@ -76,6 +92,13 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         except Http404:
             return redirect('club_list')
 
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        
+        return context
 
 class ClubListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -143,14 +166,28 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.WARNING,
                     f"You have left {self.club.name} ")
             else:
-                self.club.add_or_remove_member(self.user)
+                self.club.applicant_manager(self.user)
                 messages.add_message(request, messages.SUCCESS,
-                    f"You have successfully joined {self.club.name} ")
+                    f"You have applied to join {self.club.name} ")
             # return redirect('club_list')
         return self.redirect()
     
     def redirect(self):
         return redirect('club_list')
+
+class acceptClubapplication(LoginRequiredMixin, View):
+    http_method_names = ['get', 'post']
+
+    def setup(self, request, user_id, club_id, *args, **kwargs):
+        super().setup(self, request, user_id, club_id, *args, **kwargs)
+        self.club = Club.objects.get(id=club_id)
+        self.user = User.objects.get(id=user_id)
+
+    def post(self, request, user_id, club_id, *args, **kwargs ):
+        self.club.reject_application(self.user)
+        
+
+        return redirect('show_club', club_id = self.club.id)
 
 """@login_required
 def join_club(request, user_id,club_id):

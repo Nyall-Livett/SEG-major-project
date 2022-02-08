@@ -31,13 +31,6 @@ class MeetingAdmin(admin.ModelAdmin):
         'date',
     ]
 
-# @admin.register(Book)
-# class MeetingAdmin(admin.ModelAdmin):
-#     """Configuration of the admin interface for books."""
-
-#     list_display = [
-#         'name', 'description', 'founder',
-#     ]
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for posts."""

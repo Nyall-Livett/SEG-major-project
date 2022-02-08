@@ -10,6 +10,7 @@ from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 import pytz
+import random
 
 """used for meeting model"""
 from django.utils import timezone
@@ -49,7 +50,6 @@ class User(AbstractUser):
         for i in Meeting.objects.all():
             if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
                 list.append(i)
-        
         return list
 
     def previous_meetings(self):
@@ -59,6 +59,13 @@ class User(AbstractUser):
             if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
                 list.append(i)
         return list
+
+    def now(self):
+        utc=pytz.UTC
+        return datetime.now().replace(tzinfo=utc)
+
+    #def applicants(self):
+
 
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
@@ -135,6 +142,7 @@ class Club(models.Model):
     description = models.CharField(max_length=2048, blank=False)
     leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
+    applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
@@ -144,6 +152,12 @@ class Club(models.Model):
         else:
             user.clubs.remove(self)
 
+    def applicant_manager(self, user):
+        if user not in self.applicants.all():
+            user.applicants.add(self)
+
+    def reject_application(self, user):
+        user.applicants.remove(self)
 
     def grant_leadership(self, user):
         self.leader = user
@@ -206,7 +220,7 @@ class Book(models.Model):
 class Meeting(models.Model):
     """Meeting model"""
     date = models.DateTimeField("date", default=timezone.now)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
     members = models.ManyToManyField(User, related_name="members")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     notes = models.CharField(max_length=300, blank=True)
@@ -215,3 +229,9 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
+
+    def get_random_member(self):
+        list = []
+        for i in self.members.all():
+            list.append(i)
+        return random.choice(list)

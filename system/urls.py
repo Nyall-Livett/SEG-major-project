@@ -38,6 +38,7 @@ urlpatterns = [
     path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
     path('join_club/<int:user_id><int:club_id>', views.JoinRemoveClubView.as_view(), name='join_club'),
+    path('acceptmembership/<int:user_id><int:club_id>', views.acceptClubapplication.as_view() ,name = 'acceptmembership'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
     path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
@@ -47,7 +48,6 @@ urlpatterns = [
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
-    path('notifications/', views.NotificationListView.as_view(), name='notifications')
-
-
+    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('pending_requests/<int:club_id>', views.pending_requests.as_view(), name = 'pending_requests')
 ]

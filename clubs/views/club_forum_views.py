@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from clubs.models import Club,User,Post
+from clubs.models import Club, Meeting,User,Post
 from django.views.generic import ListView
 from django.views import View
 from clubs.forms import PostForm
@@ -29,5 +29,7 @@ class ClubForumView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        club = Club.objects.get(id=self.kwargs.get('club_id'))
         context['form'] = PostForm()
+        context['meeting'] = Meeting.objects.filter(club = club)
         return context
