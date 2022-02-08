@@ -137,19 +137,22 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
         self.user = User.objects.get(id=user_id)
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
-        if self.club.members.count() >= self.club.maximum_members:
-            messages.add_message(request, messages.WARNING,
-                f" Cannot join {self.club.name}. Member capacity has been reached")
-            return redirect('club_list')
+        if self.user in self.club.members.all():
+            if self.user.id is self.club.leader.id:
+                messages.add_message(request, messages.WARNING,
+                    f" Club leader cannot leave club ")
+            else:
+                    self.club.add_or_remove_member(self.user)
+                    messages.add_message(request, messages.WARNING,
+                        f"You have left {self.club.name} ")
         else:
-            if self.user in self.club.members.all():
+            if self.club.members.count() >= self.club.maximum_members:
+                messages.add_message(request, messages.WARNING,
+                    f" Cannot join {self.club.name}. Member capacity has been reached")
+            else:
                 self.club.add_or_remove_member(self.user)
                 notifier = CreateNotification()
                 notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': self.club.name})
-                messages.add_message(request, messages.WARNING,
-                    f"You have left {self.club.name} ")
-            else:
-                self.club.add_or_remove_member(self.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have successfully joined {self.club.name} ")
             # return redirect('club_list')
