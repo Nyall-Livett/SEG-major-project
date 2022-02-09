@@ -40,14 +40,20 @@ class FollowersListView(LoginRequiredMixin, ListView):
     context_object_name = "followers"
     paginate_by = settings.USERS_PER_PAGE
 
-    def setup(self, request, user_id, *args, **kwargs):
-        self.user = User.objects.get(pk=user_id)
-        self.followers = self.user.followers.all()
-        super().setup(request, user_id, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=self.kwargs['user_id'])
+        except ObjectDoesNotExist:
+            return redirect('user_list')
+        else:
+            return super(FollowersListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
-        context['followers'] = self.followers
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(pk=user_id)
+        followers = user.followers.all()
+        context['followers'] = followers
         return context
 
 class FollowingListView(LoginRequiredMixin, ListView):
@@ -57,15 +63,21 @@ class FollowingListView(LoginRequiredMixin, ListView):
     template_name = "followee.html"
     context_object_name = "followees"
     paginate_by = settings.USERS_PER_PAGE
-
-    def setup(self, request, user_id, *args, **kwargs):
-        self.user = User.objects.get(pk=user_id)
-        self.followees = self.user.followees.all()
-        super().setup(request, user_id, *args, **kwargs)
+    
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=self.kwargs['user_id'])
+        except ObjectDoesNotExist:
+            return redirect('user_list')
+        else:
+            return super(FollowingListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
-        context['followees'] = self.followees
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(pk=user_id)
+        followees = user.followees.all()
+        context['followees'] = followees
         return context
 
 class ShowUserView(LoginRequiredMixin, DetailView):
