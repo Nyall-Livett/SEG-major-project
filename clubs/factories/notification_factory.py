@@ -35,7 +35,7 @@ class CreateNotification:
             title = NotificationType.CLUB_CREATED.label,
             description= description,
             receiver=receiver,
-            associated_club = club
+            associated_club = club.id
         )
 
 
@@ -47,7 +47,7 @@ class CreateNotification:
             title = NotificationType.CLUB_JOINED.label,
             description= description,
             receiver=receiver,
-            associated_club = club
+            associated_club = club.id
         )
 
 
@@ -60,8 +60,8 @@ class CreateNotification:
             title = NotificationType.CLUB_RECEIVED.label,
             description= description,
             receiver=receiver,
-            associated_club = club,
-            associated_user = user
+            associated_club = club.id,
+            associated_user = user.id
         )
 
 
@@ -73,7 +73,7 @@ class CreateNotification:
             title = NotificationType.CLUB_RECEIVED.label,
             description= description,
             receiver=receiver,
-            associated_club = club
+            associated_club = club.id
 
         )
 
@@ -86,7 +86,7 @@ class CreateNotification:
             title = NotificationType.FOLLOW_REQUEST.label,
             description= description,
             receiver=receiver,
-            associated_user = user
+            associated_user = user.id
         )
 
 
@@ -96,5 +96,7 @@ class CreateNotification:
         Notification.objects.create(
             type=NotificationType.MEETING_SOON,
             title = NotificationType.MEETING_SOON.label,
-            description= description, receiver=receiver
+            description= description,
+            receiver=receiver,
+            associated_club = club.id
         )
