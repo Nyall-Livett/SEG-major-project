@@ -8,10 +8,12 @@
       <div class="container notification-options-panel">
         <h2>{{object_list.count}} Notifications</h2>
         <p class="notification-option-button"><b>Options:</b></p>
-        <p class="notification-option-button">Mark as <a href="" onclick="updateSelected(event, true, removeClass)">read</a>
-            <a href="#" onclick="updateSelected(event, false, addClass)">unread</a> <b>|
-             </b> <a href="#" onclick="deleteSelected(event, removeDeletedNotification)">delete</a> </p> <span id="updated-tag">Updated</span>
-             <span id="none-selected-tag">Please select a notification</span>
+        <p class="notification-option-button">Mark as
+            <a href="" onclick="updateSelected(event, true, removeClass)">read</a>
+            <a href="#" onclick="updateSelected(event, false, addClass)">unread</a> <b> | </b>
+            <a href="#" onclick="deleteSelected(event, removeDeletedNotification)">delete</a> </p>
+            <span id="updated-tag">Updated</span>
+            <span id="none-selected-tag">Please select a notification</span>
       </div>
     </div>
 
@@ -105,6 +107,8 @@
     const updateSelectedNumber = () => {
       selected_count.innerHTML = selectedCount
     }
+
+    
 
     const deleteSelected = (event, callback) => {
       event.preventDefault()
