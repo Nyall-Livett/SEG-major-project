@@ -140,7 +140,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: solid 1px lightblue;
 }
 
 .notification-button{
@@ -160,6 +159,7 @@
 
 .notification-body{
   padding-top: 4px;
+  border-left: solid 1px lightblue;
 }
 
 .unread-indicator-parent {
@@ -184,12 +184,49 @@
   }
 }
 
-.notification-options-panel{
+.notification-options-panel {
     display: flex;
     flex-direction: row;
     align-items: baseline
 }
 
-.notification-option-button{
+.notification-option-button {
   margin-left: 16px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  width: 50px
+}
+
+.notification-checkbox {
+  margin-top: 24px;
+}
+
+.updated-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+#updated-tag {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px 10px 20px;
+  background-color: lightgreen;
+  margin-left: 24px;
+  color: white;
+  border-radius: 10px;
+  display: none;
+}
+
+#none-selected-tag {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px 10px 20px;
+  background-color: lightblue;
+  margin-left: 24px;
+  color: white;
+  border-radius: 10px;
+  display: none;
 }
