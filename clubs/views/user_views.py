@@ -50,6 +50,24 @@ class FollowersListView(LoginRequiredMixin, ListView):
         context['followers'] = self.followers
         return context
 
+class FollowingListView(LoginRequiredMixin, ListView):
+    """View that show a list of all followers."""
+
+    model = User
+    template_name = "followee.html"
+    context_object_name = "followees"
+    paginate_by = settings.USERS_PER_PAGE
+
+    def setup(self, request, user_id, *args, **kwargs):
+        self.user = User.objects.get(pk=user_id)
+        self.followees = self.user.followees.all()
+        super().setup(request, user_id, *args, **kwargs)
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        context['followees'] = self.followees
+        return context
+
 class ShowUserView(LoginRequiredMixin, DetailView):
     """View that shows individual user details."""
 

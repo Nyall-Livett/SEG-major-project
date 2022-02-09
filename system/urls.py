@@ -49,6 +49,5 @@ urlpatterns = [
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
     path('notifications/', views.NotificationListView.as_view(), name='notifications'),
     path('show_followers/<int:user_id>', views.FollowersListView.as_view(), name='show_followers'),
-
-
+    path('show_following/<int:user_id>', views.FollowingListView.as_view(), name='show_following'),
 ]
