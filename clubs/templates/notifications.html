@@ -108,12 +108,12 @@
       selected_count.innerHTML = selectedCount
     }
 
-    
+
 
     const deleteSelected = (event, callback) => {
       event.preventDefault()
       ids = getSelectedIds()
-      if (ids.length < 1) showNoneSelectedTag(); return;
+      if (ids.length < 1) {showNoneSelectedTag(); return;}
       $.ajax({
         type: 'POST',
         data: {
