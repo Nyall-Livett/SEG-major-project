@@ -1,4 +1,4 @@
-/*Customization for the main body of the landing page*/
+5*Customization for the main body of the landing page*/
 .home-body{
     position: fixed;
     background-color: #77C2CF;
@@ -212,7 +212,7 @@
 #updated-tag {
   display: flex;
   align-items: center;
-  padding: 10px 20px 10px 20px;
+  padding: 5px 20px 5px 20px;
   background-color: lightgreen;
   margin-left: 24px;
   color: white;
@@ -223,7 +223,7 @@
 #none-selected-tag {
   display: flex;
   align-items: center;
-  padding: 10px 20px 10px 20px;
+  padding: 5px 20px 5px 20px;
   background-color: lightblue;
   margin-left: 24px;
   color: white;
