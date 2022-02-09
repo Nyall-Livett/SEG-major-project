@@ -2,47 +2,152 @@
 {% load bootstrap_pagination %}
 {% block content %}
 
-  <div class="container" style="padding: 0px">
+  <div class="container" style="padding:0px; padding-bottom:28px">
 
     <div class="row">
-      <div class="container">
-        <h2>Notifications</h2>
+      <div class="container notification-options-panel">
+        <h2>{{object_list.count}} Notifications</h2>
+        <p class="notification-option-button"><b>Options:</b></p>
+        <p class="notification-option-button">Mark as
+            <a href="" onclick="updateSelected(event, true, removeClass)">read</a>
+            <a href="#" onclick="updateSelected(event, false, addClass)">unread</a> <b> | </b>
+            <a href="#" onclick="deleteSelected(event, removeDeletedNotification)">delete</a> </p>
+            <span id="updated-tag">Updated</span>
+            <span id="none-selected-tag">Please select a notification</span>
       </div>
     </div>
 
+    <div class="updated-wrapper"> <h5>Selected: <span id="selected-count">0</span></h5> </div>
+
+    <input type="checkbox" id='select-all-checkbox' onchange='selectAllNotifications(this.checked);'> Select all
     {% for notification in object_list %}
-    <div class="row notification-card">
-      <div class="col-1 notification-image" style="height:100px; background-color:#d1d1d1">
-        image
-      </div>
-      <div class="col-9 notification-body">
-        <div class="row">
-          <div class="col-12">
-            <h5>{{notification.type}}</h5>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <p>{{notification.title}}</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <small>{{notification.created_on}}</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-2 new-group">
-        <a href="#" class="notification-button"><i class="bi bi-check-square notification-icon" style="color:#00c100"></i></a>
-        <a href="#" class="notification-button"><i class="bi bi-dash-square notification-icon" style="color:red"></i></a>
-      </div>
-    </div>
-
+      {% include 'partials/notification_card.html' with notification=notification %}
     {% empty %}
-
-      <p>Sorry, you do not have any notifications.</p>
-
+      {% include 'partials/empty_notification_card.html'%}
     {% endfor %}
 
   </div>
+
+
+{% endblock %}
+{% block javascript %}
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      selected = []
+      selectedCount = 0
+      checkboxes = Array.from(document.getElementsByClassName('notification-checkbox'))
+      selected_count = $('#selected-count')[0]
+    })
+
+    const updateSelectedCheckbox = (checkbox) => {
+      if (selected.includes(checkbox)) {
+        selected = selected.filter(value => value != checkbox)
+        selectedCount--
+      } else {
+        selected.push(checkbox)
+        selectedCount++
+      }
+      updateSelectedNumber()
+    }
+
+    const selectAllNotifications = (checked) => {
+      checkboxes.forEach((item, i) => {
+        if (checked != item.checked) {
+          item.checked = checked
+          updateSelectedCheckbox(item)
+        }
+      });
+    }
+
+    const getSelectedIds = () => {
+      ids = []
+      selected.forEach( (item, i ) => {
+        ids.push(item.id)
+      })
+      return ids
+    }
+
+    const resetPage = () => {
+      selectAllNotifications(false)
+      $('#select-all-checkbox')[0].checked = false
+      selected_count.innerHTML = "0"
+      selected = []
+    }
+
+    const addClass = () => {
+      getSelectedIds().forEach((item, i) => {
+        $(`#unread-indicator-${item}`).addClass('unread-indicator')
+      })
+    }
+
+    const removeClass = () => {
+      getSelectedIds().forEach((item, i) => {
+        $(`#unread-indicator-${item}`).removeClass('unread-indicator')
+      })
+    }
+
+    const showUpdatedTag = () => {
+      $('#updated-tag').show().fadeOut(2500)
+    }
+
+    const showNoneSelectedTag = () => {
+      $('#none-selected-tag').show().fadeOut(2500)
+    }
+
+    const removeDeletedNotification = () => {
+      getSelectedIds().forEach((item, i) => {
+        $(`#notification-card-${item}`).fadeOut(() => {
+          $(`#notification-card-${item}`).remove()
+        })
+      })
+    }
+
+    const updateSelectedNumber = () => {
+      selected_count.innerHTML = selectedCount
+    }
+
+    
+
+    const deleteSelected = (event, callback) => {
+      event.preventDefault()
+      ids = getSelectedIds()
+      if (ids.length < 1) showNoneSelectedTag(); return;
+      $.ajax({
+        type: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          notifications: JSON.stringify(ids)
+        },
+        url: {% url 'notification_delete' %},
+        dataType: "JSON",
+        success: callback()
+      }).done((data) => {
+        showUpdatedTag()
+        resetPage()
+      })
+    }
+
+    const updateSelected = (event, seenValue, callback) => {
+      event.preventDefault()
+      ids = getSelectedIds()
+      if (ids.length < 1) {showNoneSelectedTag(); return;}
+      url = seenValue ? {% url 'notification_mark_all_seen' %} : {% url 'notification_mark_all_unseen' %}
+      $.ajax({
+        type: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          notifications: JSON.stringify(ids)
+        },
+        url: url,
+        dataType: "JSON",
+        success: callback()
+      }).done((data) => {
+        showUpdatedTag()
+        resetPage()
+      })
+    }
+
+  </script>
 {% endblock %}

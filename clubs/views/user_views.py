@@ -9,6 +9,8 @@ from django.views.generic.list import MultipleObjectMixin
 from clubs.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from clubs.factories.notification_factory import CreateNotification, NotificationType
+
 
 class UserListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -70,6 +72,8 @@ def follow_request(request, user_id):
     try:
         followee_request = User.objects.get(id=user_id)
         logged_in_user.send_follow_request(followee_request)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.FOLLOW_REQUEST, followee_request, {'user': request.user})
     except ObjectDoesNotExist:
         return redirect('user_list')
     else:

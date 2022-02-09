@@ -35,7 +35,7 @@ class CreateClubView(LoginRequiredMixin, FormView):
         club.save()
         club.add_or_remove_member(self.request.user)
         notifier = CreateNotification()
-        notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club_name': club.name})
+        notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club': club})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
         return super().form_valid(form)
 
@@ -160,40 +160,3 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
 
     def redirect(self):
         return redirect('club_list')
-
-"""@login_required
-def join_club(request, user_id,club_id):
-    club = Club.objects.get(id=club_id)
-    user = User.objects.get(id=user_id)
-    try:
-        if club.members.count() >= club.maximum_members:
-            messages.add_message(request, messages.WARNING,
-                f" Cannot join {club.name}. Member capacity has been reached")
-            return redirect('club_list')
-        else:
-            club.add_or_remove_member(user)
-            notifier = CreateNotification()
-            notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
-            messages.add_message(request, messages.SUCCESS,
-                f"You have successfully joined {club.name} ")
-            return redirect('club_list')
-
-
-    except ObjectDoesNotExist:
-        return redirect('club_list')
-    else:
-        return redirect('club_list', user_id=user_id)
-
-@login_required
-def leave_club(request, user_id,club_id):
-    club = Club.objects.get(id=club_id)
-    user = User.objects.get(id=user_id)
-    try:
-        club.add_or_remove_member(user)
-        messages.add_message(request, messages.SUCCESS,
-            f"You have left {club.name} ")
-        return redirect('club_list')
-    except ObjectDoesNotExist:
-        return redirect('club_list')
-    else:
-        return redirect('club_list', user_id=user_id)"""
