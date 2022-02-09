@@ -10,7 +10,6 @@ def render_buttons(value, arg):
 
 @register.filter(name='render_icon')
 def render_icon(value):
-    print(value)
     if  value == 0:
         return "bi-people"
     elif  value == 1:
