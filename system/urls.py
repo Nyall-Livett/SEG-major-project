@@ -47,7 +47,8 @@ urlpatterns = [
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
-    path('notifications/', views.NotificationListView.as_view(), name='notifications')
-
-
+    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('notification_mark_all_seen/', views.NotificationMarkAllSeen.as_view(), name='notification_mark_all_seen'),
+    path('notification_mark_all_unseen/', views.NotificationMarkAllUnseen.as_view(), name='notification_mark_all_unseen'),
+    path('notification_delete/', views.NotificationDelete.as_view(), name='notification_delete')
 ]
