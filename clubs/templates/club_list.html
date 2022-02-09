@@ -5,7 +5,9 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
+      <a class="btn btn-primary" style="float: right;" href="{% url 'create_club' %}">Create Club</a>
       <h1>Clubs</h1>
+      <br>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
         {% for club in clubs %}
@@ -20,7 +22,7 @@
                 {% if user in club.members.all %}
                 <form action="{% url 'join_club' user.id club.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-primary">Leave</button>
+                  <button type="submit" class="btn btn-secondary">Leave</button>
               </form>
                 {% else %}
                   <form action="{% url 'join_club' user.id club.id %}" method="post">
