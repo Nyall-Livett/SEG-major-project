@@ -70,8 +70,11 @@ class pending_requests(LoginRequiredMixin, ListView):
     pk_url_kwarg = 'club_id'
     
 
-    def get(self, request,  *args, **kwargs):
-        return render(request, 'pending_requests.html')
+    def setup(self, request, *args, **kwargs):
+       
+        super().setup(request, *args, **kwargs)
+
+
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
@@ -176,8 +179,8 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 self.club.applicant_manager(self.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
-            # return redirect('club_list')
-        return self.redirect()
+            return redirect('club_list')
+        
 
 class acceptClubapplication(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
