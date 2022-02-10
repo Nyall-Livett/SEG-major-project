@@ -1,4 +1,4 @@
-/*Customization for the main body of the landing page*/
+5*Customization for the main body of the landing page*/
 .home-body{
     position: fixed;
     background-color: #77C2CF;
@@ -133,14 +133,13 @@
   margin-top: 24px;
   overflow: hidden;
   background-color: white;
+  box-shadow: 0px 4px 5px #cfcfcf;
 }
 
 .notification-image {
-  background-color: red;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .notification-button{
@@ -148,18 +147,86 @@
 }
 
 .notification-icon {
-  font-size: 40px;
+  font-size: 24px;
 }
-
 
 .new-group {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-
 }
 
 .notification-body{
   padding-top: 4px;
+  border-left: solid 1px lightblue;
+}
+
+.unread-indicator-parent {
+  position: relative;
+}
+
+.unread-indicator{
+  height: 10px;
+  width: 10px;
+  background-color: #60ff60;
+  z-index: 500;
+  border-radius: 25px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  50% {
+    opacity: 0;
+  }
+}
+
+.notification-options-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline
+}
+
+.notification-option-button {
+  margin-left: 16px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  width: 50px
+}
+
+.notification-checkbox {
+  margin-top: 24px;
+}
+
+.updated-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+#updated-tag {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px 5px 20px;
+  background-color: lightgreen;
+  margin-left: 24px;
+  color: white;
+  border-radius: 10px;
+  display: none;
+}
+
+#none-selected-tag {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px 5px 20px;
+  background-color: lightblue;
+  margin-left: 24px;
+  color: white;
+  border-radius: 10px;
+  display: none;
 }

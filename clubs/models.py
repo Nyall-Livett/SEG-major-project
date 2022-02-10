@@ -9,6 +9,8 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
+from clubs.enums import NotificationType
+
 import pytz
 
 """used for meeting model"""
@@ -65,6 +67,9 @@ class User(AbstractUser):
 
     def get_unread_notifications(self):
         return self.notification_set.filter(read=False)
+
+    def notifications_not_acted_upon_count(self):
+        return self.notification_set.filter(acted_upon=False).count()
 
     def clubBooks(self):
         list = []
@@ -165,10 +170,15 @@ class Club(models.Model):
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
-    type = models.CharField(max_length=128, blank=False)
+    type = models.IntegerField(blank=False, default = NotificationType.DEFAULT, choices = NotificationType.choices)
+    description = models.CharField(max_length=256, blank=False)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
+    acted_upon = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    associated_user = models.IntegerField(blank=True, null=True)
+    associated_club = models.IntegerField(blank=True, null=True)
+
 
 
 class Post(models.Model):

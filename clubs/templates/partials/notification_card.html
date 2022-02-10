@@ -1,0 +1,52 @@
+{% load notification_extras %}
+
+{% load humanize %}
+
+<div class="row" id="notification-card-{{notification.id}}">
+  <!-- input -->
+  <div class="checkbox-wrapper">
+    <input type="checkbox" id={{notification.id}} onchange="updateSelectedCheckbox(this)" class="notification-checkbox">
+  </div>
+
+  <!-- notification card -->
+  <div class="col-11">
+    <div class="row notification-card">
+
+
+      <div class="col-1 unread-indicator-parent">
+        {% if not notification.acted_upon %}
+          <div class="unread-indicator" id="unread-indicator-{{notification.id}}"></div>
+        {% else %}
+          <div id="unread-indicator-{{notification.id}}"></div>
+        {% endif %}
+
+        <div class="notification-image" style="height:100px;">
+          <i class="bi {{notification.type|render_icon}}" style="color:lightblue; font-size:40px"></i>
+        </div>
+      </div>
+
+      <div class="col-9 notification-body">
+        <div class="row">
+          <div class="col-12">
+            <h5 style="color:#464646; font-size:18px;">{{notification.title}}</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <p style="color:#7a7a7a">{{notification.description}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" style="color:#7a7a7a">
+            <small>{{notification.created_on|naturaltime}}</small>
+          </div>
+        </div>
+      </div>
+      {% if notification.type|render_buttons:0 %}
+        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user %}
+      {% else  %}
+        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club %}
+      {% endif  %}
+    </div>
+  </div>
+</div>

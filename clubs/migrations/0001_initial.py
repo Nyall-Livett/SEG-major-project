@@ -93,8 +93,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=128)),
-                ('type', models.CharField(max_length=128)),
+                ('type', models.IntegerField(choices=[(0, 'Follow request'), (1, 'Meeting reminder'), (2, 'Club created'), (3, 'Club joined'), (4, 'Club rejection'), (5, 'Club transfer'), (6, 'Received club'), (7, 'New notification')], default=7)),
+                ('description', models.CharField(max_length=256)),
                 ('read', models.BooleanField(default=False)),
+                ('acknowledged', models.BooleanField(default=False)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('receiver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
