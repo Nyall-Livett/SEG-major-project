@@ -16,8 +16,9 @@
                                 </div>
                                 <p></p>
                                 <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
+                                <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
+                                
                             </div>
-                            
                         </div>    
                     </div>
                 <!-- write here to be added beneath club leader card -->
@@ -28,17 +29,20 @@
                         <div class="d-flex flex-column align-items-center text-center">
 
                             <p class="text font-size-sm"> Next meetings: <p> </p>
-                            {% for meetings in user.future_meetings %}
+                            {% for i in  club.meetings.all %}
+                            {% if user.now < i.date %}
 
 
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
-                                  <h5 class="card-title">Date: {{ meetings.date }} </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ meetings.book.name }}</h6>   
-                                  Meeting notes: <p></p>{{ meetings.notes }}
+                                  <h5 class="card-title">Date: {{ i.date }} </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>   
+                                  Meeting notes: <p></p>{{ i.notes }}
+                                  Meeting members: {{ i.get_random_member }}
                                   <p></p>
                                 </div>
                               </div>
+                              {% endif %}
                               {% endfor %}
                             </div>
                         </div>
@@ -50,15 +54,17 @@
                         <div class="d-flex flex-column align-items-center text-center">
 
                             <p class="text font-size-sm"> previous meetings: <p> </p>
-                            {% for meetings in user.previous_meetings %}
+                            {% for i in  club.meetings.all %}
+                            {% if user.now >= i.date %}
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
-                                  <h5 class="card-title">Date: {{ meetings.date }} </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ meetings.book.name }}</h6>   
-                                  Meeting notes: <p></p>{{ meetings.notes }}
+                                  <h5 class="card-title">Date: {{ i.date }} </h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>   
+                                  Meeting notes: <p></p>{{ i.notes }}
                                   <p></p>
                                 </div>
                               </div>
+                              {% endif %}
                             {% endfor %}
                             </p>
                         </div>
@@ -66,8 +72,31 @@
                 </div>
                 {% endif %}
                 {% endfor %}
+           
+
+            <div class="card">
+                <div class="card-body">
+                    
+                        <p class="text font-size-sm"> Club requests: <p> </p>
+                        {% for i in club.applicants.all %}
+                        <td>
+                        <a href="{% url 'show_user' i.id %}">{{ i.username }}
+                        <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-success">accept</button>
+                          </form>
+                          <form action="{% url 'rejectMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">reject</button>
+                          </form></a>
+                        </td>
+                        {% endfor %}
+                        
+                </div>
             </div>
-            
+        </div>
+
+    
          
         <div class="col-md-8">
             <div class="card mb-3">
@@ -86,16 +115,9 @@
             </div>
             <!-- write here to be added beneath about us  -->
         </div>
-        </div>
-        
+        </div>        
+
  
+        
                
-<!--                 
-        <a href={% url 'club_forum' club.id %}>Club Forum</a>
-                      {% for i in request.user.leader_of.all  %}
-                      {% if i.id == club.id %}
-                      <a href={% url 'set_meeting' %}>Arrange a meeting</a>
-                      <a href={% url 'book' %}>add book</a>
-                      {% endif %}
-                      {% endfor %} -->
 {% endblock %}

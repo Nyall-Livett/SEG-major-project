@@ -16,7 +16,7 @@ from django.shortcuts import render
 from clubs.forms import MeetingForm
 from clubs.forms import BookForm
 
-from clubs.models import Book, Club, User, Notification
+from clubs.models import Book, Club, Meeting, User, Notification
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
@@ -66,6 +66,25 @@ class TransferClubLeadership(LoginRequiredMixin, View):
     def redirect(self):
         return redirect("dashboard")
 
+class pending_requests(LoginRequiredMixin, ListView):
+    model = Club
+    template_name = 'pending_requests.html'
+    pk_url_kwarg = 'club_id'
+    
+
+    def setup(self, request, *args, **kwargs):
+       
+        super().setup(request, *args, **kwargs)
+
+
+
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
+
 class ShowClubView(LoginRequiredMixin, DetailView):
 
     model = Club
@@ -80,6 +99,13 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         except Http404:
             return redirect('club_list')
 
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        
+        return context
 
 class ClubListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -152,13 +178,71 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.WARNING,
                     f" Cannot join {self.club.name}. Member capacity has been reached")
             else:
-                self.club.add_or_remove_member(self.user)
-                notifier = CreateNotification()
-                notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': self.club.name})
+                self.club.applicant_manager(self.user)
                 messages.add_message(request, messages.SUCCESS,
-                    f"You have successfully joined {self.club.name} ")
-            # return redirect('club_list')
-        return self.redirect()
+                    f"You have applied to join {self.club.name} ")
+            return redirect('club_list')
+        
 
-    def redirect(self):
-        return redirect('club_list')
+class acceptClubapplication(LoginRequiredMixin, View):
+    http_method_names = ['get', 'post']
+
+    def setup(self, request, user_id, club_id, *args, **kwargs):
+        super().setup(self, request, user_id, club_id, *args, **kwargs)
+        self.club = Club.objects.get(id=club_id)
+        self.user = User.objects.get(id=user_id)
+
+    def post(self, request, user_id, club_id, *args, **kwargs ):
+        self.club.acceptmembership(self.user)
+        
+        return redirect('show_club', club_id = self.club.id)
+
+class rejectMembership(LoginRequiredMixin, View):
+    http_method_names = ['get', 'post']
+
+    def setup(self, request, user_id, club_id, *args, **kwargs):
+        super().setup(self, request, user_id, club_id, *args, **kwargs)
+        self.club = Club.objects.get(id=club_id)
+        self.user = User.objects.get(id=user_id)
+
+    def post(self, request, user_id, club_id, *args, **kwargs ):
+        self.club.rejectmembership(self.user)
+        
+        return redirect('show_club', club_id = self.club.id)
+
+
+# """@login_required
+# def join_club(request, user_id,club_id):
+#     club = Club.objects.get(id=club_id)
+#     user = User.objects.get(id=user_id)
+#     try:
+#         if club.members.count() >= club.maximum_members:
+#             messages.add_message(request, messages.WARNING,
+#                 f" Cannot join {club.name}. Member capacity has been reached")
+#             return redirect('club_list')
+#         else:
+#             club.add_or_remove_member(user)
+#             notifier = CreateNotification()
+#             notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
+#             messages.add_message(request, messages.SUCCESS,
+#                 f"You have successfully joined {club.name} ")
+#             return redirect('club_list')
+            
+            
+#     except ObjectDoesNotExist:
+#         return redirect('club_list')
+#     else:
+#         return redirect('club_list', user_id=user_id)
+
+# @login_required
+# def leave_club(request, user_id,club_id):
+#     club = Club.objects.get(id=club_id)
+#     user = User.objects.get(id=user_id)
+#     try:
+#         club.add_or_remove_member(user)
+#         messages.add_message(request, messages.SUCCESS,
+#             f"You have left {club.name} ")
+#         return redirect('club_list')
+#     except ObjectDoesNotExist:
+#     def redirect(self):
+#         return redirect('club_list')
