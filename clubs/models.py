@@ -13,9 +13,6 @@ from clubs.enums import NotificationType
 
 import pytz
 
-"""used for meeting model"""
-from django.utils import timezone
-from datetime import date
 
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
@@ -175,7 +172,7 @@ class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     acted_upon = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     associated_user = models.IntegerField(blank=True, null=True)
     associated_club = models.IntegerField(blank=True, null=True)
 
@@ -215,7 +212,7 @@ class Book(models.Model):
 
 class Meeting(models.Model):
     """Meeting model"""
-    date = models.DateTimeField("date", default=timezone.now)
+    date = models.DateTimeField("da te", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name="members")
     chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)

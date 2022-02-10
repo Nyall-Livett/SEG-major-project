@@ -1,0 +1,37 @@
+[
+  {
+    "model": "clubs.notification",
+    "pk": 1,
+    "fields": {
+      "type": 0,
+      "title": "Follow request",
+      "description": "You have received a follow request from default_user, click to accept or reject",
+      "receiver": 1,
+      "associated_user": 2
+
+    }
+  },
+  {
+    "model": "clubs.notification",
+    "pk": 2,
+    "fields": {
+      "type": 1,
+      "title": "Follow request",
+      "description": "You have received a follow request from default_user, click to accept or reject",
+      "receiver": 1,
+      "associated_user": 2
+
+    }
+  },
+  {
+    "model": "clubs.notification",
+    "pk": 3,
+    "fields": {
+      "type": 2,
+      "title": "Club created",
+      "description": "You have created the Oxford Book Club",
+      "receiver": 1,
+      "associated_club": 1
+    }
+  }
+]
