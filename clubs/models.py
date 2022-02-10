@@ -172,7 +172,7 @@ class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     acted_upon = models.BooleanField(default=False)
-    created_on = models.DateTimeField(default=timezone.now)
+    created_on = models.DateTimeField(default=timezone.now, blank=False)
     associated_user = models.IntegerField(blank=True, null=True)
     associated_club = models.IntegerField(blank=True, null=True)
 
