@@ -1,7 +1,7 @@
 [
   {
     "model": "clubs.notification",
-    "pk": 1,
+    "pk": 2,
     "fields": {
       "type": 0,
       "title": "Follow request",
@@ -13,7 +13,7 @@
   },
   {
     "model": "clubs.notification",
-    "pk": 2,
+    "pk": 3,
     "fields": {
       "type": 1,
       "title": "Follow request",
@@ -25,7 +25,7 @@
   },
   {
     "model": "clubs.notification",
-    "pk": 3,
+    "pk": 4,
     "fields": {
       "type": 2,
       "title": "Club created",
