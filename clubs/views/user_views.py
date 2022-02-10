@@ -3,12 +3,15 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
 from clubs.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from clubs.factories.notification_factory import CreateNotification, NotificationType
+
 
 class UserListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -29,6 +32,54 @@ class FollowRequestsListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
         context['follow_requests'] = self.request.user.follow_requests.all()
+        return context
+
+class FollowersListView(LoginRequiredMixin, ListView):
+    """View that show a list of all followers."""
+
+    model = User
+    template_name = "followers.html"
+    context_object_name = "followers"
+    paginate_by = settings.USERS_PER_PAGE
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=self.kwargs['user_id'])
+        except ObjectDoesNotExist:
+            return redirect('user_list')
+        else:
+            return super(FollowersListView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(pk=user_id)
+        followers = user.followers.all()
+        context['followers'] = followers
+        return context
+
+class FollowingListView(LoginRequiredMixin, ListView):
+    """View that show a list of all followers."""
+
+    model = User
+    template_name = "followee.html"
+    context_object_name = "followees"
+    paginate_by = settings.USERS_PER_PAGE
+    
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=self.kwargs['user_id'])
+        except ObjectDoesNotExist:
+            return redirect('user_list')
+        else:
+            return super(FollowingListView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        user_id = self.kwargs['user_id']
+        user = User.objects.get(pk=user_id)
+        followees = user.followees.all()
+        context['followees'] = followees
         return context
 
 class ShowUserView(LoginRequiredMixin, DetailView):
@@ -70,6 +121,8 @@ def follow_request(request, user_id):
     try:
         followee_request = User.objects.get(id=user_id)
         logged_in_user.send_follow_request(followee_request)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.FOLLOW_REQUEST, followee_request, {'user': request.user})
     except ObjectDoesNotExist:
         return redirect('user_list')
     else:

@@ -1,16 +1,7 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item">
-      <a class="nav-link" href = "{% url 'user_list' %}">Users</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'dashboard' %}">dashboard</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href = "{% url 'club_list' %}">Clubs</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'create_club' %}">Create club</a>
+      <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,12 +17,14 @@
         {% endif %}
       </ul>
     </li>
+  <li class="nav-item">
+    <a class="nav-link" href = "{% url 'club_list' %}">Clubs</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href = "{% url 'user_list' %}">Users</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href = "{% url 'book_list' %}">Books</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href = "{% url 'upload_books' %}">Upload Books</a>
   </li>
 
   <li class="nav-item">
@@ -39,7 +32,7 @@
                       {% if i.id == club.id %}
                       <a class="nav-link" href = {% url 'set_meeting' %}>Arrange a meeting</a>
                       {% endif %}
-                      {% endfor %} 
+                      {% endfor %}
   </li>
 
   <li class="nav-item">
@@ -47,7 +40,7 @@
                         {% if i.id == club.id %}
                         <a class="nav-link" href = {% url 'book' %}>add book</a>
                         {% endif %}
-                        {% endfor %} 
+                        {% endfor %}
     </li>
 
     <li class="nav-item">
@@ -60,35 +53,34 @@
   </ul>
 
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'show_user' request.user.id %}">My profile</a>
-    </li>
-
     <li class="dropdown">
       <button type="button" class="btn position-relative dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-bell"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          {{user.notification_count}}
+          {{user.notifications_not_acted_upon_count}}
           <span class="visually-hidden">unread messages</span>
         </span>
       </button>
     <ul class="dropdown-menu  dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
       {% for notification in user.get_unread_notifications %}
-        <li><a class="dropdown-item" href="#">{{notification.title}}</a></li>
+        <li><a class="dropdown-item" href="#"> {{notification.title}}</a></li>
       {% empty %}
         <li><a class="dropdown-item" style="pointer-events: none" href="#"><b>No new notifications</b></a></li>
       {% endfor %}
         <li><a class="dropdown-item" href="{% url 'notifications' %}">View all notifications</a></li>
     </ul>
+
   </li>
     <li class="nav-item dropdown">
       <a class="nav-link" href="#" id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="bi-person-circle"></span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-account-dropdown">
-        <li><a class="dropdown-item" href="{% url 'profile' %}">Change profile</a></li>
-        <li><a class="dropdown-item" href="{% url 'password' %}">Change password</a></li>
+        <li><a class="dropdown-item" href="{% url 'show_user' request.user.id %}">My profile</a></li>
         <li><a class="dropdown-item" href="{% url 'follow_requests_page' %}">Follow Requests</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{% url 'profile' %}">Edit profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'password' %}">Change password</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="{% url 'log_out' %}">Log out</a></li>
       </ul>
