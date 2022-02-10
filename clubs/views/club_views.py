@@ -18,7 +18,9 @@ from clubs.forms import BookForm
 
 from clubs.models import Book, Club, User, Notification
 from clubs.forms import ClubForm
-from clubs.factories.notification_factory import CreateNotification, NotificationType
+from clubs.factories.notification_factory import CreateNotification
+from clubs.enums import NotificationType
+
 
 #from random import randint
 
