@@ -133,7 +133,7 @@
       event.preventDefault()
       ids = getSelectedIds()
       if (ids.length < 1) {showNoneSelectedTag(); return;}
-      url = seenValue ? {% url 'notification_mark_all_seen' %} : {% url 'notification_mark_all_unseen' %}
+      url = seenValue ? {% url 'notification_mark_all_acted_upon' %} : {% url 'notification_mark_all_not_acted_upon' %}
       $.ajax({
         type: 'POST',
         data: {
