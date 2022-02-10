@@ -26,7 +26,7 @@ class NotificationMarkAllSeen(LoginRequiredMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []
@@ -43,7 +43,7 @@ class NotificationMarkAllUnseen(LoginRequiredMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []
@@ -60,7 +60,7 @@ class NotificationDelete(LoginRequiredMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []
