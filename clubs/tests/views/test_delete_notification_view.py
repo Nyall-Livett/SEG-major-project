@@ -18,7 +18,7 @@ class DeleteNotificationTestCase(TestCase, LogInTester):
         self.url = reverse('notification_delete')
         self.default_user = User.objects.get(pk = 1)
 
-    def test_log_in_url(self):
+    def test_url(self):
         self.assertEqual(self.url,'/notification_delete/')
 
     def test_get_access_for_unauthenticated(self):
