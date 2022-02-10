@@ -21,12 +21,12 @@ class NotificationListView(LoginRequiredMixin, ListView):
         query_set = self.request.user.notification_set.all()
         return query_set.order_by('-created_on')
 
-class NotificationMarkAllSeen(LoginRequiredMixin, View):
+class NotificationMarkAllActedUpon(LoginRequiredMixin, View):
 
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []
@@ -38,12 +38,12 @@ class NotificationMarkAllSeen(LoginRequiredMixin, View):
             Notification.objects.bulk_update(notificationArray, ['acted_upon'])
             return JsonResponse({}, status=200)
 
-class NotificationMarkAllUnseen(LoginRequiredMixin, View):
+class NotificationMarkAllNotActedUpon(LoginRequiredMixin, View):
 
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []
@@ -60,7 +60,7 @@ class NotificationDelete(LoginRequiredMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             notifications = request.POST.get('notifications')
             parsedIds = json.loads(notifications)
             notificationArray = []

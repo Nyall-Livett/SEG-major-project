@@ -3,10 +3,12 @@
     "model": "clubs.notification",
     "pk": 1,
     "fields": {
-      "type": "Friend request",
-      "title": "Some one has added you as a friend",
+      "type": 0,
+      "title": "Follow request",
+      "description": "You have received a follow request from default_user, click to accept or reject",
       "receiver": 1,
-      "created_on": "2022-01-27 11:00:00"
+      "associated_user": 2
+
     }
   }
 ]

@@ -53,7 +53,7 @@ urlpatterns = [
     path('pending_requests/<int:club_id>', views.pending_requests.as_view(), name = 'pending_requests'),
     path('show_followers/<int:user_id>', views.FollowersListView.as_view(), name='show_followers'),
     path('show_following/<int:user_id>', views.FollowingListView.as_view(), name='show_following'),
-    path('notification_mark_all_seen/', views.NotificationMarkAllSeen.as_view(), name='notification_mark_all_seen'),
-    path('notification_mark_all_unseen/', views.NotificationMarkAllUnseen.as_view(), name='notification_mark_all_unseen'),
+    path('notification_mark_all_acted_upon/', views.NotificationMarkAllActedUpon.as_view(), name='notification_mark_all_acted_upon'),
+    path('notification_mark_all_not_acted_upon/', views.NotificationMarkAllNotActedUpon.as_view(), name='notification_mark_all_not_acted_upon'),
     path('notification_delete/', views.NotificationDelete.as_view(), name='notification_delete'),
 ]

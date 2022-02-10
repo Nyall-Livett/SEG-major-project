@@ -20,7 +20,7 @@ class TransferOwnershipTestCase(TestCase, LogInTester):
         self.url = reverse('transfer_ownership', args=[self.secondary_user.pk, self.default_club.pk])
 
     # Test URL is correct
-    def test_log_in_url(self):
+    def test_url(self):
         self.assertEqual(self.url, '/transfer_ownership/2/1')
 
     # Test post access case for users

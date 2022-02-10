@@ -50,21 +50,6 @@ class CreateNotification:
             associated_club = club.id
         )
 
-
-    def _club_received(self, title, receiver, **kwargs):
-        club = kwargs['club']
-        user = kwargs['user']
-        description = "You have received {club} from {user}".format(club=club.name, user=user.username)
-        Notification.objects.create(
-            type=NotificationType.CLUB_RECEIVED,
-            title = NotificationType.CLUB_RECEIVED.label,
-            description= description,
-            receiver=receiver,
-            associated_club = club.id,
-            associated_user = user.id
-        )
-
-
     def _club_received(self, title, receiver, **kwargs):
         club = kwargs['club']
         description = "You have gained leadership of {club}".format(club=club.name)
