@@ -70,10 +70,10 @@ class pending_requests(LoginRequiredMixin, ListView):
     model = Club
     template_name = 'pending_requests.html'
     pk_url_kwarg = 'club_id'
-    
+
 
     def setup(self, request, *args, **kwargs):
-       
+
         super().setup(request, *args, **kwargs)
 
 
@@ -104,7 +104,7 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-        
+
         return context
 
 class ClubListView(LoginRequiredMixin, ListView):
@@ -121,7 +121,7 @@ class PreviousMeetingView(LoginRequiredMixin, ListView):
     template_name = 'previous_meetings.html'
     context_object_name = "meetings"
     paginate_by = settings.MEETINGS_PER_PAGE
-    
+
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
@@ -197,7 +197,7 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
             return redirect('club_list')
-        
+
 
 class acceptClubapplication(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
@@ -209,7 +209,7 @@ class acceptClubapplication(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
-        
+
         return redirect('show_club', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
@@ -222,9 +222,39 @@ class rejectMembership(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.rejectmembership(self.user)
-        
+
         return redirect('show_club', club_id = self.club.id)
 
+class DeleteClub(LoginRequiredMixin, DeleteView):
+    """View that allows a user to delete their club"""
+
+    model = User
+    template_name = "delete_club.html"
+    pk_url_kwarg = 'club_id'
+
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+
+        return context
+
+    def delete(self, request, *args, **kwargs):
+            self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+            self.user = request.user
+            club_leader = self.club.leader.id
+
+
+            if self.user.id is club_leader:
+
+                return super(DeleteClub, self).delete(
+                    request, *args, **kwargs)
+            else:
+                raise Http404("Object you are looking for doesn't exist")
+
+    def get_success_url(self):
+        return reverse('club_list')
 
 # """@login_required
 # def join_club(request, user_id,club_id):
@@ -242,8 +272,8 @@ class rejectMembership(LoginRequiredMixin, View):
 #             messages.add_message(request, messages.SUCCESS,
 #                 f"You have successfully joined {club.name} ")
 #             return redirect('club_list')
-            
-            
+
+
 #     except ObjectDoesNotExist:
 #         return redirect('club_list')
 #     else:
