@@ -1,0 +1,14 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>This will permenantly delete your account</h1>
+      <form method="post">{% csrf_token %}
+        <p>Are you sure you want to delete your account?</p>
+        <input type="submit" value="Confirm">
+      </form>
+      <br>
+    </div>
+</div>
+{% endblock %}

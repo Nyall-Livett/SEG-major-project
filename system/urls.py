@@ -28,6 +28,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('password/', views.PasswordView.as_view(), name='password'),
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
+    path('delete_account/<int:user_id>', views.DeleteAccount.as_view(), name='delete_account'),
     path('follow_requests/', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),

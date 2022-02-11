@@ -3,10 +3,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
+from clubs.models import User
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -66,3 +67,14 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+class DeleteAccount(LoginRequiredMixin, DeleteView):
+    """View that allows a user to delete their account"""
+
+    model = User
+    template_name = "delete_account.html"
+    pk_url_kwarg = 'user_id'
+
+    def get_success_url(self):
+        return reverse('sign_up')
