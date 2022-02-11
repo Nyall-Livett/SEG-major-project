@@ -58,4 +58,5 @@ urlpatterns = [
     path('notification_mark_all_not_acted_upon/', views.NotificationMarkAllNotActedUpon.as_view(), name='notification_mark_all_not_acted_upon'),
     path('notification_delete/', views.NotificationDelete.as_view(), name='notification_delete'),
     path('previous_meetings/<int:club_id>', views.PreviousMeetingView.as_view(), name= 'previous_meetings'),
+    path('member_list/<int:club_id>', views.MemberListView.as_view(), name='member_list'),
 ]

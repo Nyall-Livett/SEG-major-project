@@ -1,0 +1,29 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1>Members of {{club.name}}</h1>
+        <table class ="table">
+          {% for user in club.members.all %}
+            <tr>
+              <td>
+                <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+              </td>
+            
+              <td><a href="{% url 'show_user' user_id=user.id %}">{{ user.full_name }}</a> </td>
+              
+              <td>{{ user.full_name }} </td>
+              
+              
+              <td>{{ user.bio }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+  </div>
+  </div>
+
+{% endblock %}
+
+

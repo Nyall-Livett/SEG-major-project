@@ -17,9 +17,7 @@
     margin-top: 5ch;
 }
 
- 
   </style>
-   
     <div class="container-fluid height-full">
         <div class="main-body">
             <div class="row g-4">
@@ -36,7 +34,7 @@
                                 <p></p>
                                 <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
                                 <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
-                                
+                                <a href={% url 'member_list' club.id %} class="text-success stretched-link" >Members list</a>
                             </div>
                         </div>    
                     </div>
@@ -105,7 +103,6 @@
                                   <h5 class="card-title">Date: {{ i.date }} </h5>
                                   <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>   
                                   Meeting notes: <p></p>{{ i.notes }}
-                                  Meeting members: {{ i.get_random_member }}
                                   <p></p>
                                 </div>
                               </div>
