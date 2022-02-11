@@ -1,10 +1,12 @@
 <table class="table">
     {% for meeting in meetings %}
         <tr>
+            {% if meeting.date < user.now %}
         <td>{{ meeting.date }}</td>
         <td> meeting book: <p></p>{{ meeting.book }}
         <td>Notes: <p></p>{{ meeting.notes }}</td>
         </tr>
+    {% endif %}
     {% endfor %}
       </table>
       
