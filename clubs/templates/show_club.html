@@ -1,10 +1,29 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-    <div class="container">
+<style>
+.height-full {
+    height: 100vh;
+    margin-left: 12ex;
+  }
+
+  
+ .card-img-top {
+    object-fit: cover;
+}
+
+.meeting-card {
+    background-color: white;
+    margin-top: 5ch;
+}
+
+ 
+  </style>
+   
+    <div class="container-fluid height-full">
         <div class="main-body">
             <div class="row g-4">
-                <div class="col-lg-4 mx-auto">
+                <div class="col-lg-3 ">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
@@ -22,9 +41,57 @@
                         </div>    
                     </div>
                 <!-- write here to be added beneath club leader card -->
-                {% for i in club.members.all %}
+                
+
+            <div class="card">
+                <div class="card-body">
+                    
+                        <p class="text font-size-sm"> Club requests: <p> </p>
+                        {% for i in club.applicants.all %}
+                        <td>
+                        <a href="{% url 'show_user' i.id %}">{{ i.username }}
+                        <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-success">accept</button>
+                          </form>
+                          <form action="{% url 'rejectMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">reject</button>
+                          </form></a>
+                        </td>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="col-md-5">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">About us:</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <p>{{club.description}} </p>
+                            
+                        </div>
+                        <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
+                    </div>                    
+                </div>
+            </div>
+            <!-- write here to be added beneath about us  -->
+        </div>
+
+        <div class="card" style="width: 26rem;">
+            <img class="card-img-top" src="https://www.mothersandmore.org/wp-content/uploads/2017/09/book-club.jpg" >
+            <div class="card-body">
+              <h5 class="card-title">Meetings</h5>
+              <p class="card-text">To see the list of previous meetings click on the link below.</p>
+              <a href={% url 'previous_meetings' club.id %} class="btn btn-primary">previous meetings</a>
+              {% for i in club.members.all %}
                 {% if i == request.user  %}
-                  <div class="card">
+                  <div class="meeting-card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
 
@@ -48,76 +115,9 @@
                         </div>
                     </div>
                 <p></p>
-                
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">
-
-                            <p class="text font-size-sm"> previous meetings: <p> </p>
-                            {% for i in  club.meetings.all %}
-                            {% if user.now >= i.date %}
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                  <h5 class="card-title">Date: {{ i.date }} </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>   
-                                  Meeting notes: <p></p>{{ i.notes }}
-                                  <p></p>
-                                </div>
-                              </div>
-                              {% endif %}
-                            {% endfor %}
-                            </p>
-                        </div>
-                    </div>  
-                </div>
                 {% endif %}
                 {% endfor %}
-           
-
-            <div class="card">
-                <div class="card-body">
-                    
-                        <p class="text font-size-sm"> Club requests: <p> </p>
-                        {% for i in club.applicants.all %}
-                        <td>
-                        <a href="{% url 'show_user' i.id %}">{{ i.username }}
-                        <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
-                            {% csrf_token %}
-                              <button type="submit" class="btn btn-success">accept</button>
-                          </form>
-                          <form action="{% url 'rejectMembership' i.id club.id %}" method="post">
-                            {% csrf_token %}
-                              <button type="submit" class="btn btn-danger">reject</button>
-                          </form></a>
-                        </td>
-                        {% endfor %}
-                        
-                </div>
             </div>
-        </div>
-
-    
-         
-        <div class="col-md-8">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <h6 class="mb-0">About us:</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                            <p>{{club.description}} </p>
-                            
-                        </div>
-                        <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
-                    </div>
-                </div>
-            </div>
-            <!-- write here to be added beneath about us  -->
-        </div>
-        </div>        
-
- 
-        
-               
+          </div>     
+        </div>                 
 {% endblock %}

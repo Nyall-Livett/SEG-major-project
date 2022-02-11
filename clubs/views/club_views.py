@@ -116,6 +116,21 @@ class ClubListView(LoginRequiredMixin, ListView):
     paginate_by = settings.USERS_PER_PAGE
 
 
+class PreviousMeetingView(LoginRequiredMixin, ListView):
+    model = Meeting
+    template_name = 'previous_meetings.html'
+    context_object_name = "meetings"
+    paginate_by = settings.MEETINGS_PER_PAGE
+    
+
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
+
+
 class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
 

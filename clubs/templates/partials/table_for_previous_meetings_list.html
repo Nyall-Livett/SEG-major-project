@@ -1,0 +1,10 @@
+<table class="table">
+    {% for meeting in meetings %}
+        <tr>
+        <td>{{ meeting.date }}</td>
+        <td> meeting book: <p></p>{{ meeting.book }}
+        <td>Notes: <p></p>{{ meeting.notes }}</td>
+        </tr>
+    {% endfor %}
+      </table>
+      
