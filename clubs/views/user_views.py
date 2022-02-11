@@ -1,4 +1,5 @@
 """User related views."""
+from re import template
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
@@ -7,7 +8,7 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import User
+from clubs.models import User, Club 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
@@ -20,6 +21,18 @@ class UserListView(LoginRequiredMixin, ListView):
     template_name = "user_list.html"
     context_object_name = "users"
     paginate_by = settings.USERS_PER_PAGE
+
+class MemberListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = "member_list.html"  
+    context_object_name = "users"
+
+    def get_context_data(self, **kwargs):
+        """Return context data, including new post form."""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
 
 class FollowRequestsListView(LoginRequiredMixin, ListView):
     """View that show a list of all follow requests."""

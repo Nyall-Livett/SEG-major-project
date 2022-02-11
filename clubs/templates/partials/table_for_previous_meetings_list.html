@@ -1,5 +1,5 @@
 <table class="table">
-    {% for meeting in meetings %}
+    {% for meeting in club.meetings.all %}
         <tr>
             {% if meeting.date < user.now %}
         <td>{{ meeting.date }}</td>
@@ -9,4 +9,6 @@
     {% endif %}
     {% endfor %}
       </table>
+
+     
       
