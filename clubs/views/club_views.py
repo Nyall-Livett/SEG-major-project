@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required

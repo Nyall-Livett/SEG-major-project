@@ -3,12 +3,27 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>This will permenantly delete your account</h1>
+      {% if not club_list%}
       <form method="post">{% csrf_token %}
-        <p>Are you sure you want to delete your account?</p>
-        <input type="submit" value="Confirm">
+        <h3>Delete Account</h3>
+        <input class="btn btn-danger" type="submit" value="Delete">
       </form>
-      <br>
+      <a class="btn btn-primary" href = "{% url 'show_user' user.id %}">Cancel</a>
+      {% else %}
+        <h3>You are the leader of the following clubs</h3>
+        <p>To delete your account you will need to either transfer your ownership to another member or delete the club</p>
+        <table class="table">
+          {% for club in club_list %}
+            <tr>
+              <td>{{ club.name }}</td>
+              <td>{{ club.leader }}</td>
+              <td><a href="{% url 'delete_club' club.id %}"><button type="button" class="btn btn-danger">Delete Club</button></a></td>
+              <td><a href="{% url 'transfer_ownership' user_id=user.id club_id=club.id %}"><button type="button" class="btn btn-info">Transfer Ownership</button></a></td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% endif %}
+
     </div>
 </div>
 {% endblock %}

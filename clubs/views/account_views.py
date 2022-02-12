@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import User
+from clubs.models import User, Club
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -75,6 +75,15 @@ class DeleteAccount(LoginRequiredMixin, DeleteView):
     model = User
     template_name = "delete_account.html"
     pk_url_kwarg = 'user_id'
+
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(id= self.kwargs.get('user_id'))
+        context['club_list'] = Club.objects.filter(leader=user)
+
+        return context
 
     def get_success_url(self):
         return reverse('sign_up')
