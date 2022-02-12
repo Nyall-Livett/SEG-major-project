@@ -16,7 +16,7 @@ from django.shortcuts import render
 from clubs.forms import MeetingForm
 from clubs.forms import BookForm
 
-from clubs.models import Book, Club, Meeting, User, Notification
+from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
@@ -70,10 +70,10 @@ class pending_requests(LoginRequiredMixin, ListView):
     model = Club
     template_name = 'pending_requests.html'
     pk_url_kwarg = 'club_id'
-    
+
 
     def setup(self, request, *args, **kwargs):
-       
+
         super().setup(request, *args, **kwargs)
 
 
@@ -104,7 +104,8 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-        
+        authors = list(context['club'].members.all())
+        context['posts'] = Post.objects.filter(author__in=authors, club = context['club'])[:20]
         return context
 
 class ClubListView(LoginRequiredMixin, ListView):
@@ -121,7 +122,7 @@ class PreviousMeetingView(LoginRequiredMixin, ListView):
     template_name = 'previous_meetings.html'
     context_object_name = "meetings"
     paginate_by = settings.MEETINGS_PER_PAGE
-    
+
 
     def get_context_data(self, **kwargs):
         """Return context data, including new post form."""
@@ -197,7 +198,7 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
             return redirect('club_list')
-        
+
 
 class acceptClubapplication(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
@@ -209,7 +210,7 @@ class acceptClubapplication(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
-        
+
         return redirect('show_club', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
@@ -222,7 +223,7 @@ class rejectMembership(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.rejectmembership(self.user)
-        
+
         return redirect('show_club', club_id = self.club.id)
 
 
@@ -242,8 +243,8 @@ class rejectMembership(LoginRequiredMixin, View):
 #             messages.add_message(request, messages.SUCCESS,
 #                 f"You have successfully joined {club.name} ")
 #             return redirect('club_list')
-            
-            
+
+
 #     except ObjectDoesNotExist:
 #         return redirect('club_list')
 #     else:
