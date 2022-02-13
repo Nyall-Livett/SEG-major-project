@@ -171,40 +171,22 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
-class StartMeetingView(LoginRequiredMixin, FormView):
-    """docstring for StartMeetingView."""
+class StartMeetingView(LoginRequiredMixin, UpdateView, meeting_id):
+    """View to start a meeting."""
 
+    model = StartMeetingForm
     template_name = "start_meeting.html"
     form_class = StartMeetingForm
 
-    def form_valid(self, form):
-        meeting = form.instance
-        form.save()
-        meeting.add_meeting(self.request.meeting)
-        return super().form_valid(form)
+    def get_object(self):
+        """Return the object (meeting) to be updated."""
+        meeting = self.meeting_id
+        return meeting
 
-    def get(self, request):
-
-        form = StartMeetingForm()
-        context = {
-            'form': form
-        }
-        return render(request,"start_meeting.html", context)
-
-
-    def post(self, request):
-        form = StartMeetingForm(request.POST)
-        form.save()
-        if form.is_valid():
-            form.save()
-            return redirect("dashboard")
-        else:
-            print(form.errors)
-        context = {
-            'form': form
-        }
-        #message.add_message(request, messages.ERROR, "This is invaild!")
-        return render(request,"start_meeting.html", context)
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        messages.add_message(self.request, messages.SUCCESS, "Meeting Completed!")
+        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
 
 class JoinRemoveClubView(LoginRequiredMixin, View):
