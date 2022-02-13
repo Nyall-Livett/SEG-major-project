@@ -211,7 +211,7 @@ class acceptClubapplication(LoginRequiredMixin, View):
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
 
-        return redirect('show_club', club_id = self.club.id)
+        return redirect('pending_requests', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
@@ -224,7 +224,7 @@ class rejectMembership(LoginRequiredMixin, View):
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.rejectmembership(self.user)
 
-        return redirect('show_club', club_id = self.club.id)
+        return redirect('pending_requests', club_id = self.club.id)
 
 
 # """@login_required

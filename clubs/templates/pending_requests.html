@@ -1,14 +1,53 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h1>Users</h1>
-      </div>
+
+<style>
+
+.container-pending-requests {
+  margin-left: 20ex;
+
+}
+.h1-title{
+  margin-left: 5ex;
+}
+</style>
+
+
+<h1 class= "h1-title">Applicant List</h1>
+ <div class="container-pending-requests">
+  <div class="row">
+    <div class="col-12">
+      
+      <p></p>
+      <table class="table">
+        {% for i in club.applicants.all %}
+          <tr>
+
+            <td><a href="{% url 'show_user'  user_id=i.id %}">{{ i.full_name }}</a></td>
+            <td>
+            <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-success">accept</button>
+                          </form>
+          </td>
+          <td>
+          <form action="{% url 'rejectMembership' i.id club.id %}" method="post">
+                            {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">reject</button>
+                          </form>
+        </td>
+          </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
-  {{ club.name }}
-  {{ club.id }}
+</div> 
+
+
+
+
+
+
 
 {% endblock %}
 

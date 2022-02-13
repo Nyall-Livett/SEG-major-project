@@ -39,27 +39,6 @@
                         </div>
                     </div>
                 <!-- write here to be added beneath club leader card -->
-
-
-            <div class="card">
-                <div class="card-body">
-
-                        <p class="text font-size-sm"> Club requests: <p> </p>
-                        {% for i in club.applicants.all %}
-                        <td>
-                        <a href="{% url 'show_user' i.id %}">{{ i.username }}
-                        <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
-                            {% csrf_token %}
-                              <button type="submit" class="btn btn-success">accept</button>
-                          </form>
-                          <form action="{% url 'rejectMembership' i.id club.id %}" method="post">
-                            {% csrf_token %}
-                              <button type="submit" class="btn btn-danger">reject</button>
-                          </form></a>
-                        </td>
-                        {% endfor %}
-                </div>
-            </div>
         </div>
 
 
