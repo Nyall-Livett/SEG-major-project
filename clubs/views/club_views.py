@@ -171,6 +171,41 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
+class StartMeetingView(LoginRequiredMixin, FormView):
+    """docstring for StartMeetingView."""
+
+    template_name = "start_meeting.html"
+    form_class = StartMeetingForm
+
+    def form_valid(self, form):
+        meeting = form.instance
+        form.save()
+        meeting.add_meeting(self.request.meeting)
+        return super().form_valid(form)
+
+    def get(self, request):
+
+        form = StartMeetingForm()
+        context = {
+            'form': form
+        }
+        return render(request,"start_meeting.html", context)
+
+
+    def post(self, request):
+        form = StartMeetingForm(request.POST)
+        form.save()
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+        else:
+            print(form.errors)
+        context = {
+            'form': form
+        }
+        #message.add_message(request, messages.ERROR, "This is invaild!")
+        return render(request,"start_meeting.html", context)
+
 
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
