@@ -228,12 +228,13 @@ class rejectMembership(LoginRequiredMixin, View):
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
 
-    model = User
+    model = Club
     template_name = "delete_club.html"
     pk_url_kwarg = 'club_id'
 
     def get_context_data(self, **kwargs):
         """Return context data"""
+
 
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
@@ -241,15 +242,16 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
         return context
 
     def delete(self, request, *args, **kwargs):
+
             self.club = Club.objects.get(id=self.kwargs.get('club_id'))
             self.user = request.user
             club_leader = self.club.leader.id
 
 
+
             if self.user.id is club_leader:
 
-                return super(DeleteClub, self).delete(
-                    request, *args, **kwargs)
+                return super(DeleteClub, self).delete(request, *args, **kwargs)
             else:
                 raise Http404("Object you are looking for doesn't exist")
 

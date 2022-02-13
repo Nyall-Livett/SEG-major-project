@@ -7,7 +7,7 @@
     margin-left: 12ex;
   }
 
-  
+
  .card-img-top {
     object-fit: cover;
 }
@@ -36,14 +36,14 @@
                                 <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
                                 <a href={% url 'member_list' club.id %} class="text-success stretched-link" >Members list</a>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                 <!-- write here to be added beneath club leader card -->
-                
+
 
             <div class="card">
                 <div class="card-body">
-                    
+
                         <p class="text font-size-sm"> Club requests: <p> </p>
                         {% for i in club.applicants.all %}
                         <td>
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-    
+
         <div class="col-md-5">
             <div class="card mb-2">
                 <div class="card-body">
@@ -72,10 +72,10 @@
                         </div>
                         <div class="col-sm-9 text-secondary">
                             <p>{{club.description}} </p>
-                            
+
                         </div>
                         <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
-                    </div>                    
+                    </div>
                 </div>
             </div>
             <!-- write here to be added beneath about us  -->
@@ -101,7 +101,7 @@
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                   <h5 class="card-title">Date: {{ i.date }} </h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>   
+                                  <h6 class="card-subtitle mb-2 text-muted">Book: {{ i.book.name }}</h6>
                                   Meeting notes: <p></p>{{ i.notes }}
                                   <p></p>
                                 </div>
@@ -115,6 +115,10 @@
                 {% endif %}
                 {% endfor %}
             </div>
-          </div>     
-        </div>                 
+          </div>
+          {% if club.leader == user %}
+          <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
+          {% endif %}
+
+        </div>
 {% endblock %}
