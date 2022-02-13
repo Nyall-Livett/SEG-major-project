@@ -1,6 +1,6 @@
 from re import template
 from django.conf import settings
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
@@ -13,7 +13,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from clubs.forms import MeetingForm
+from django import forms
+from clubs.forms import MeetingForm, StartMeetingForm
 from clubs.forms import BookForm
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
@@ -171,22 +172,11 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
-class StartMeetingView(LoginRequiredMixin, UpdateView, meeting_id):
-    """View to start a meeting."""
-
-    model = StartMeetingForm
-    template_name = "start_meeting.html"
-    form_class = StartMeetingForm
-
-    def get_object(self):
-        """Return the object (meeting) to be updated."""
-        meeting = self.meeting_id
-        return meeting
-
-    def get_success_url(self):
-        """Return redirect URL after successful update."""
-        messages.add_message(self.request, messages.SUCCESS, "Meeting Completed!")
-        return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+class StartMeetingView(LoginRequiredMixin, UpdateView):
+    model = Meeting #model
+    fields = ['notes'] # fields / if you want to select all fields, use "__all__"
+    template_name = 'start_meeting.html' # templete for updating
+    success_url="/dashboard" # posts list url
 
 
 class JoinRemoveClubView(LoginRequiredMixin, View):

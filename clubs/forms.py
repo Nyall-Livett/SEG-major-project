@@ -158,8 +158,13 @@ class StartMeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['notes']
-        widgets = { 'notes': forms.Textarea() }
+        fields = ['date', 'club', 'URL', 'notes', 'book', 'members']
+    date = forms.CharField(disabled=True)
+    club = forms.CharField(disabled=True)
+    URL = forms.CharField(disabled=True)
+    book = forms.CharField(disabled=True)
+    members = forms.CharField(disabled=True)
+    notes = forms.Textarea()
 
 
 class BookForm(forms.ModelForm):
