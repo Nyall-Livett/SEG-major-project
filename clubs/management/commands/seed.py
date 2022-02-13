@@ -2,15 +2,15 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
-from clubs.models import User, Post, Club, Book, Meeting
+from clubs.models import User, Post, Club
 
 class Command(BaseCommand):
     """The database seeder."""
 
     PASSWORD = "Password123"
-    CLUB_COUNT = 3
-    USER_COUNT = 10
-    POST_COUNT_PER_CLUB = 21
+    CLUB_COUNT = 2
+    USER_COUNT = 2
+    POST_COUNT_PER_CLUB = 3
 
     def __init__(self):
         super().__init__()
@@ -25,7 +25,7 @@ class Command(BaseCommand):
         self.club_list = list(Club.objects.all())
         for club in self.club_list:
             print()
-            print(f'Seeding {club.name} Posts...')
+            # print(f'Seeding {club.name} Posts...')
             self.seed_posts(club=club)
             print()
         print()
@@ -62,13 +62,14 @@ class Command(BaseCommand):
     def _create_club(self):
         name = self.faker.first_name()
         leader = random.choice(User.objects.all())
-        Club.objects.create(
+        club = Club.objects.create(
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
             theme = self.faker.text(max_nb_chars=512),
-            maximum_members = 4,
+            maximum_members = 2,
             leader = leader
         )
+        club.add_or_remove_member(leader)
 
     def seed_clubs(self):
         club_count = Club.objects.all().count()
@@ -84,12 +85,12 @@ class Command(BaseCommand):
             seed_try += 1
 
     def add_users_to_clubs(self):
-        club_list = list(Club.objects.all())
         user_list = list(User.objects.all())
         for user in user_list:
+            club_list = list(Club.objects.all().exclude(leader=user))
+            if (len(club_list)== 0):
+                continue
             club = random.choice(club_list)
-            while (user == club.leader):
-                club = random.choice(club_list)
             club.add_or_remove_member(user)
             if(club.members.count()==club.maximum_members):
                 club_list.remove(club)
