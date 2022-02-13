@@ -21,12 +21,13 @@ class Command(BaseCommand):
         print()
         self.seed_clubs()
         print()
-        # self.club_list = list(Club.objects.all())
-        # for club in self.club_list:
-        #     print()
-        #     print(f'Seeding {club.name} Posts')
-        #     self.seed_posts(club = club)
-        #     print()
+        self.add_users_to_clubs()
+        self.club_list = list(Club.objects.all())
+        for club in self.club_list:
+            print()
+            print(f'Seeding {club.name} Posts...')
+            self.seed_posts(club=club)
+            print()
         print()
         print('Users, Clubs and Posts seeding complete.')
 
@@ -65,7 +66,7 @@ class Command(BaseCommand):
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
             theme = self.faker.text(max_nb_chars=512),
-            maximum_members = 3,
+            maximum_members = 4,
             leader = leader
         )
 
@@ -75,36 +76,47 @@ class Command(BaseCommand):
         print(f'Clubs seeded: {club_count}',  end='\r')
         while seed_try < Command.CLUB_COUNT:
             try:
-                club = self._create_club()
+                self._create_club()
                 club_count += 1
                 print(f'Clubs seeded: {club_count}',  end='\r')
             except (IntegrityError):
                 continue
             seed_try += 1
 
-    # def seed_posts(self,club):
-    #     post_count = Post.objects.all().count()
-    #     seed_try = post_count
-    #     print(f'Posts seeded: {post_count}',  end='\r')
-    #     while seed_try < Command.POST_COUNT_PER_CLUB:
-    #         try:
-    #             club = self._create_post(club)
-    #             club_count += 1
-    #             print(f'Posts seeded: {post_count}',  end='\r')
-    #         except (IntegrityError):
-    #             continue
-    #         seed_try += 1
-    #
-    # def _create_post(self,club):
-    #     title = self.faker.text(max_nb_chars=64)
-    #     body = self.faker.text(max_nb_chars=300)
-    #     author = random.choice(club.members.all())
-    #     post = Post.objects.create(
-    #         title = title,
-    #         body = body,
-    #         club = club,
-    #         author = author,
-    #     )
+    def add_users_to_clubs(self):
+        club_list = list(Club.objects.all())
+        user_list = list(User.objects.all())
+        for user in user_list:
+            club = random.choice(club_list)
+            while (user == club.leader):
+                club = random.choice(club_list)
+            club.add_or_remove_member(user)
+            if(club.members.count()==club.maximum_members):
+                club_list.remove(club)
+
+    def seed_posts(self,club):
+        post_count = Post.objects.all().filter(club=club).count()
+        seed_try = post_count
+        print(f'{club.name} Posts seeded: {post_count}',  end='\r')
+        while seed_try < Command.POST_COUNT_PER_CLUB:
+            try:
+                self._create_post(club)
+                post_count += 1
+                print(f'{club.name} Posts seeded: {post_count}',  end='\r')
+            except (IntegrityError):
+                continue
+            seed_try += 1
+
+    def _create_post(self,club):
+        title = self.faker.text(max_nb_chars=64)
+        body = self.faker.text(max_nb_chars=300)
+        author = random.choice(list(club.members.all()))
+        post = Post.objects.create(
+            title = title,
+            body = body,
+            club = club,
+            author = author,
+        )
 
     def _email(self, first_name, last_name):
         email = f'{first_name}.{last_name}@example.org'
