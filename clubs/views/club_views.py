@@ -186,9 +186,9 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.WARNING,
                     f" Club leader cannot leave club ")
             else:
-                    self.club.add_or_remove_member(self.user)
-                    messages.add_message(request, messages.WARNING,
-                        f"You have left {self.club.name} ")
+                self.club.add_or_remove_member(self.user)
+                messages.add_message(request, messages.WARNING,
+                    f"You have left {self.club.name} ")
         else:
             if self.club.members.count() >= self.club.maximum_members:
                 messages.add_message(request, messages.WARNING,
@@ -197,7 +197,7 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 self.club.applicant_manager(self.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
-            return redirect('club_list')
+        return redirect('club_list')
 
 
 class acceptClubapplication(LoginRequiredMixin, View):
