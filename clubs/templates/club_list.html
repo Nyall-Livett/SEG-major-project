@@ -28,7 +28,7 @@
                   {% if user in club.applicants.all %}
                     <form action="{% url 'join_club' user.id club.id %}" method="post">
                       {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">request sent</button>
+                        <button type="submit" class="btn btn-primary">Request sent</button>
                     </form>
                   {% else %}
                     <form action="{% url 'join_club' user.id club.id %}" method="post">
