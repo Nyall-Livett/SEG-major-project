@@ -247,8 +247,6 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
             self.user = request.user
             club_leader = self.club.leader.id
 
-
-
             if self.user.id is club_leader:
 
                 return super(DeleteClub, self).delete(request, *args, **kwargs)
