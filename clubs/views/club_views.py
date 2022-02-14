@@ -57,7 +57,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
             club = Club.objects.get(id=club_id)
             new_leader = User.objects.get(id=new_leader_id)
 
-            if (request.user == club.leader and new_leader in club.members):
+            if (request.user == club.leader and new_leader in club.members.all()):
                 club.leader = new_leader
                 club.save()
                 return JsonResponse({
