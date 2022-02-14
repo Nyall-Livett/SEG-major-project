@@ -42,7 +42,11 @@ urlpatterns = [
     path('acceptMembership/<int:user_id><int:club_id>', views.acceptClubapplication.as_view() ,name = 'acceptMembership'),
     path('rejectMembership/<int:user_id><int:club_id>', views.rejectMembership.as_view() ,name = 'rejectMembership'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
-    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
+
+
+    path('transfer_ownership/', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
+
+
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
     path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
     path('books/', views.BookListView.as_view(), name='book_list'),
