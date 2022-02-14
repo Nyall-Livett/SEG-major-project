@@ -27,29 +27,6 @@
     <a class="nav-link" href = "{% url 'book_list' %}">Books</a>
   </li>
 
-  <li class="nav-item">
-  {% for i in request.user.leader_of.all  %}
-                      {% if i.id == club.id %}
-                      <a class="nav-link" href = {% url 'set_meeting' %}>Arrange a meeting</a>
-                      {% endif %}
-                      {% endfor %}
-  </li>
-
-  <li class="nav-item">
-    {% for i in request.user.leader_of.all  %}
-                        {% if i.id == club.id %}
-                        <a class="nav-link" href = {% url 'book' %}>add book</a>
-                        {% endif %}
-                        {% endfor %}
-    </li>
-
-    <li class="nav-item">
-      {% for i in request.user.leader_of.all  %}
-                          {% if i.id == club.id %}
-                          <a class="nav-link" href = "{% url 'pending_requests' club_id=club.pk %}">pending requests</a>
-                          {% endif %}
-                          {% endfor %} 
-      </li>
   </ul>
 
   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">

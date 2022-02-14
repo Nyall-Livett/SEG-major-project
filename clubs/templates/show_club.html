@@ -34,7 +34,13 @@
                                 <p></p>
                                 <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
                                 <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
-                                <a href={% url 'member_list' club.id %} class="text-success stretched-link" >Members list</a>
+                                <a href={% url 'member_list' club.id %}>Members list</a>
+                                {% for i in request.user.leader_of.all  %}
+                                {% if i.id == club.id %}
+                                  <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
+                                  <a href = {% url 'set_meeting' %}>Arrange a meeting</a>
+                                {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
