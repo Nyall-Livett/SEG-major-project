@@ -15,15 +15,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
 from clubs.forms import MeetingForm, StartMeetingForm
+from django.http import JsonResponse
+import json
+
 from clubs.forms import BookForm
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
-
-
-#from random import randint
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -50,33 +50,26 @@ class TransferClubLeadership(LoginRequiredMixin, View):
     """docstring for TransferClubLeadership."""
     http_method_names = ['post']
 
-    def setup(self, request, user_id, club_id, *args, **kwargs):
-        self.new_owner = User.objects.get(pk=user_id)
-        self.club = Club.objects.get(pk=club_id)
-        super().setup(request, user_id, club_id, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
-        if self.request.user.id is self.club.leader.id:
-            self.club.grant_leadership(self.new_owner)
-            messages.add_message(self.request, messages.SUCCESS,
-                f"You have successfully passed leadership of {self.club.name} to {self.new_owner.full_name()}.")
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            club_id = json.loads(request.POST.get('club_id'))
+            new_leader_id = json.loads(request.POST.get('new_leader_id'))
+            club = Club.objects.get(id=club_id)
+            new_leader = User.objects.get(id=new_leader_id)
 
-            return self.redirect()
-        raise PermissionDenied()
+            if (request.user == club.leader and new_leader in club.members):
+                club.leader = new_leader
+                club.save()
+                return JsonResponse({
+                    'redirect_url': reverse('show_club', args=[club_id])
+                }, status=200)
+            raise PermissionDenied()
 
-    def redirect(self):
-        return redirect("dashboard")
 
 class pending_requests(LoginRequiredMixin, ListView):
     model = Club
     template_name = 'pending_requests.html'
     pk_url_kwarg = 'club_id'
-
-
-    def setup(self, request, *args, **kwargs):
-
-        super().setup(request, *args, **kwargs)
-
 
 
     def get_context_data(self, **kwargs):
