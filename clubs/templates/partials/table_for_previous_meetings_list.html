@@ -5,7 +5,7 @@
           <td><b>Chosen Member:</b></td>
           <td><b>Notes:</b></td>
         </tr>
-        {% for meeting in club.meetings.all %}
+        {% for meeting in club.meetings.all
         {% if meeting.date < user.now %}
         <tr>
           <td>{{ meeting.date }}</td>
