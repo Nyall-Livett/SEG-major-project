@@ -131,17 +131,15 @@ class PreviousMeetingView(LoginRequiredMixin, ListView):
 
 class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
-
+    http_method_names = ['get', 'post']
     template_name = "set_meeting.html"
     form_class = MeetingForm
 
     def form_valid(self, form):
         meeting = form.instance
-        #schedule = form.save(commit=False)
-        #count = User.objects.count()
-        #schedule.chosen_member = User.objects.all()[randint(0, count - 1)]
-        #schedule.save()
-        form.save()
+        #meeting.date = form['date']
+        meeting.save()
+
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
@@ -156,12 +154,31 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
     def post(self, request):
         form = MeetingForm(request.POST)
+        #form.save()
+        print('--------------------')
+        print(request.POST)
+        print('--------------------')
+        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
         form.save()
         if form.is_valid():
+            print("validatation succeed!")
+            #print(form['date'])
             form.save()
-            return redirect("dashboard")
+            #print(form)
+            context = {
+            'form': form
+            }
+            #message.add_message(request, messages.ERROR, "This is invaild!")
+            return render(request,"set_meeting.html", context)
+
         else:
-            print(form.errors)
+            print("validatation failed")
+            print('-----------------------------------')
+            print(form)
+            print('-----------------------------------')
+            print(form.errors.as_data())
+            #return Http404
+
         context = {
             'form': form
         }
