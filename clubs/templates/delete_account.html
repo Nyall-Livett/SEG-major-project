@@ -23,6 +23,10 @@
           {% endfor %}
         </table>
       {% endif %}
+      <form method="post">{% csrf_token %}
+        <h3>Delete Account</h3>
+        <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
 
     </div>
 </div>
