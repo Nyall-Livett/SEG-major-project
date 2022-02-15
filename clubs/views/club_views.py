@@ -60,6 +60,8 @@ class TransferClubLeadership(LoginRequiredMixin, View):
             if (request.user == club.leader and new_leader in club.members.all()):
                 club.leader = new_leader
                 club.save()
+                notifier = CreateNotification()
+                notifier.notify(NotificationType.CLUB_RECEIVED, new_leader, {'club': club})
                 return JsonResponse({
                     'redirect_url': reverse('show_club', args=[club_id])
                 }, status=200)
