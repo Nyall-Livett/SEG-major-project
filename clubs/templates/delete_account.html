@@ -18,6 +18,7 @@
               <td>{{ club.name }}</td>
               <td>{{ club.leader }}</td>
               <td><a href="{% url 'delete_club' club.id %}"><button type="button" class="btn btn-danger">Delete Club</button></a></td>
+              <td><a href="{% url 'show_club' club_id=club.id %}"><button type="button" class="btn btn-info">View Club</button></a></td>
             </tr>
           {% endfor %}
         </table>

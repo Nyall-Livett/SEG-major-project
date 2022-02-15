@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.urls import reverse
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import ListView, DeleteView
 from django.core.exceptions import PermissionDenied
@@ -235,25 +235,27 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         """Return context data"""
 
-
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
 
+        # context['previous_url'] = self.request.META.get('HTTP_REFERER')
         return context
 
     def delete(self, request, *args, **kwargs):
 
-            self.club = Club.objects.get(id=self.kwargs.get('club_id'))
-            self.user = request.user
-            club_leader = self.club.leader.id
+        self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        self.user = request.user
+        club_leader = self.club.leader.id
 
-            if self.user.id is club_leader:
+        if self.user.id is club_leader:
 
-                return super(DeleteClub, self).delete(request, *args, **kwargs)
-            else:
-                raise Http404("Object you are looking for doesn't exist")
+            return super(DeleteClub, self).delete(request, *args, **kwargs)
+        else:
+            raise Http404("Object you are looking for doesn't exist")
 
     def get_success_url(self):
+        # self.delete_account_url =  f'/delete_account/{self.user.id}'
+
         return reverse('club_list')
 
 # """@login_required
