@@ -195,12 +195,13 @@ class Notification(models.Model):
     associated_user = models.IntegerField(blank=True, null=True)
     associated_club = models.IntegerField(blank=True, null=True)
 
-class Moments(models.Model):
+class Moment(models.Model):
     """docstring for Moments."""
 
     body = models.CharField(blank=False, max_length=128)
     type = models.IntegerField(blank=False, choices = MomentType.choices)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.IntegerField(blank=False, default = 0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(default=timezone.now, blank=False)
 
 
