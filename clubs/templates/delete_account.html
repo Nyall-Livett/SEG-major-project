@@ -11,23 +11,17 @@
       <a class="btn btn-primary" href = "{% url 'show_user' user.id %}">Cancel</a>
       {% else %}
         <h3>You are the leader of the following clubs</h3>
-        <p>To delete your account you will need to either transfer your ownership to another member or delete the club</p>
+        <p>To delete your account you will need to either transfer your role as a leader to another member or delete the club entirely</p>
         <table class="table">
           {% for club in club_list %}
             <tr>
               <td>{{ club.name }}</td>
               <td>{{ club.leader }}</td>
               <td><a href="{% url 'delete_club' club.id %}"><button type="button" class="btn btn-danger">Delete Club</button></a></td>
-              <td><a href="{% url 'transfer_ownership' user_id=user.id club_id=club.id %}"><button type="button" class="btn btn-info">Transfer Ownership</button></a></td>
             </tr>
           {% endfor %}
         </table>
       {% endif %}
-      <form method="post">{% csrf_token %}
-        <h3>Delete Account</h3>
-        <input class="btn btn-danger" type="submit" value="Delete">
-      </form>
-
     </div>
 </div>
 {% endblock %}
