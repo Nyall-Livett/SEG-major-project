@@ -117,6 +117,9 @@
                 {% endfor %}
             </div>
           </div>
+          {% if club.leader == user %}
+          <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
+          {% endif %}
         </div>
 
         <!-- Transfer leadership modal -->
@@ -152,6 +155,7 @@
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
 
