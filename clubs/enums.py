@@ -7,3 +7,9 @@ class NotificationType(models.IntegerChoices):
     CLUB_JOINED = 3, "Club joined"
     CLUB_RECEIVED = 4, "Received club leadership"
     DEFAULT = 5, "New notification"
+
+class MomentType(models.IntegerChoices):
+    BECAME_FRIENDS = 0
+    CLUB_CREATED = 1
+    BOOK_RECOMMENDATION = 2
+    READING_NEW_BOOK = 3
