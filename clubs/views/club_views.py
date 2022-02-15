@@ -62,6 +62,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
                 club.save()
                 notifier = CreateNotification()
                 notifier.notify(NotificationType.CLUB_RECEIVED, new_leader, {'club': club})
+                messages.add_message(self.request, messages.SUCCESS, f"You have successfully transferred leadership of {club.name}.")
                 return JsonResponse({
                     'redirect_url': reverse('show_club', args=[club_id])
                 }, status=200)
