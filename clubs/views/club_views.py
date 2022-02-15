@@ -212,7 +212,8 @@ class acceptClubapplication(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
-
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
         return redirect('pending_requests', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
