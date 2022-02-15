@@ -9,7 +9,7 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.enums import NotificationType
+from clubs.enums import NotificationType, MomentType
 
 import pytz
 import random
