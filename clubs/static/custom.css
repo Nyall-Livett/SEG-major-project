@@ -230,3 +230,22 @@
   border-radius: 10px;
   display: none;
 }
+
+/* Transfer club */
+
+.transfer-club-slide{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#are-you-sure * {
+  margin-right: 10px;
+}
+
+.hidden {
+  display: none;
+}
+.flex {
+  display: flex;
+}

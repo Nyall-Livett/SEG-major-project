@@ -1,8 +1,90 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container" style="height: 100vh;">
-  <div class="row" style="height: 100vh;">
-    Under Construction
+<div class="container">
+  <div class="row">
+
+    <h1>Your Clubs:</h1>
+    <table class="table">
+      {% for club in request.user.clubs.all %}
+        <tr>
+          <td>
+            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
+          </td>
+          <td>{{ club.name }}</td>
+          <td>{{ club.leader }}</td>
+          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
+          <td>
+              {% if user in club.members.all %}
+                <form action="{% url 'join_club' user.id club.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">Leave</button>
+                </form>
+              {% else %}
+                {% if user in club.applicants.all %}
+                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Request sent</button>
+                  </form>
+                {% else %}
+                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Join</button>
+                  </form>
+                {% endif %}
+              {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <h1>Take a look at some books:</h1>
+    <table class="table">
+      {% for book in books %}
+        <tr>
+          <td>
+            <img src="{{ book.image_url_s }}" alt="Image not found" >
+          </td>
+          <td><a href="{% url 'show_book' book.id %}">{{ book.name }}</a></td>
+          <td>{{ book.author }}</a></td>
+          <td>{{ book.isbn }}</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <h1>Join some clubs:</h1>
+    <table class="table">
+      {% for club in clubs %}
+        <tr>
+          <td>
+            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
+          </td>
+          <td>{{ club.name }}</td>
+          <td>{{ club.leader }}</td>
+          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
+          <td>
+              {% if user in club.members.all %}
+                <form action="{% url 'join_club' user.id club.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">Leave</button>
+                </form>
+              {% else %}
+                {% if user in club.applicants.all %}
+                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Request sent</button>
+                  </form>
+                {% else %}
+                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Join</button>
+                  </form>
+                {% endif %}
+              {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
   </div>
 </div>
 {% endblock %}

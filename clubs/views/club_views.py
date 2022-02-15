@@ -1,6 +1,6 @@
 from re import template
 from django.conf import settings
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
@@ -13,16 +13,17 @@ from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from clubs.forms import MeetingForm
+from django import forms
+from clubs.forms import MeetingForm, StartMeetingForm
+from django.http import JsonResponse
+import json
+
 from clubs.forms import BookForm
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
-
-
-#from random import randint
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -49,33 +50,26 @@ class TransferClubLeadership(LoginRequiredMixin, View):
     """docstring for TransferClubLeadership."""
     http_method_names = ['post']
 
-    def setup(self, request, user_id, club_id, *args, **kwargs):
-        self.new_owner = User.objects.get(pk=user_id)
-        self.club = Club.objects.get(pk=club_id)
-        super().setup(request, user_id, club_id, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
-        if self.request.user.id is self.club.leader.id:
-            self.club.grant_leadership(self.new_owner)
-            messages.add_message(self.request, messages.SUCCESS,
-                f"You have successfully passed leadership of {self.club.name} to {self.new_owner.full_name()}.")
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            club_id = json.loads(request.POST.get('club_id'))
+            new_leader_id = json.loads(request.POST.get('new_leader_id'))
+            club = Club.objects.get(id=club_id)
+            new_leader = User.objects.get(id=new_leader_id)
 
-            return self.redirect()
-        raise PermissionDenied()
+            if (request.user == club.leader and new_leader in club.members.all()):
+                club.leader = new_leader
+                club.save()
+                return JsonResponse({
+                    'redirect_url': reverse('show_club', args=[club_id])
+                }, status=200)
+            raise PermissionDenied()
 
-    def redirect(self):
-        return redirect("dashboard")
 
 class pending_requests(LoginRequiredMixin, ListView):
     model = Club
     template_name = 'pending_requests.html'
     pk_url_kwarg = 'club_id'
-
-
-    def setup(self, request, *args, **kwargs):
-
-        super().setup(request, *args, **kwargs)
-
 
 
     def get_context_data(self, **kwargs):
@@ -171,6 +165,12 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
+class StartMeetingView(LoginRequiredMixin, UpdateView):
+    model = Meeting #model
+    fields = ['notes'] # fields / if you want to select all fields, use "__all__"
+    template_name = 'start_meeting.html' # templete for updating
+    success_url="/dashboard" # posts list url
+
 
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
@@ -186,9 +186,9 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 messages.add_message(request, messages.WARNING,
                     f" Club leader cannot leave club ")
             else:
-                    self.club.add_or_remove_member(self.user)
-                    messages.add_message(request, messages.WARNING,
-                        f"You have left {self.club.name} ")
+                self.club.add_or_remove_member(self.user)
+                messages.add_message(request, messages.WARNING,
+                    f"You have left {self.club.name} ")
         else:
             if self.club.members.count() >= self.club.maximum_members:
                 messages.add_message(request, messages.WARNING,
@@ -197,7 +197,7 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                 self.club.applicant_manager(self.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
-            return redirect('club_list')
+        return redirect('club_list')
 
 
 class acceptClubapplication(LoginRequiredMixin, View):

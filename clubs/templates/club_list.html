@@ -20,15 +20,22 @@
             <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
             <td>
                 {% if user in club.members.all %}
-                <form action="{% url 'join_club' user.id club.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
-              </form>
-                {% else %}
                   <form action="{% url 'join_club' user.id club.id %}" method="post">
                     {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Join</button>
+                    <button type="submit" class="btn btn-secondary">Leave</button>
                   </form>
+                {% else %}
+                  {% if user in club.applicants.all %}
+                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                      {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Request sent</button>
+                    </form>
+                  {% else %}
+                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                      {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Join</button>
+                    </form>
+                  {% endif %}
                 {% endif %}
             </td>
           </tr>
