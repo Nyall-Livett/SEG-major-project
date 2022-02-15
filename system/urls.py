@@ -37,13 +37,18 @@ urlpatterns = [
     path('follow_request/<int:user_id>',views.follow_request, name ='follow_request'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
+    path('start_meeting/<slug:pk>/', views.StartMeetingView.as_view(), name='start_meeting'),
     path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
     path('join_club/<int:user_id><int:club_id>', views.JoinRemoveClubView.as_view(), name='join_club'),
     path('acceptMembership/<int:user_id><int:club_id>', views.acceptClubapplication.as_view() ,name = 'acceptMembership'),
     path('rejectMembership/<int:user_id><int:club_id>', views.rejectMembership.as_view() ,name = 'rejectMembership'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
-    path('transfer_ownership/<int:user_id>/<int:club_id>', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
+
+
+    path('transfer_ownership/', views.TransferClubLeadership.as_view(), name='transfer_ownership'),
+
+
     path('forum/<int:club_id>', views.ClubForumView.as_view(), name='club_forum'),
     path('new_post/<int:club_id>', views.NewPostView.as_view(), name='new_post'),
     path('books/', views.BookListView.as_view(), name='book_list'),

@@ -1,14 +1,18 @@
 <table class="table">
-    {% for meeting in club.meetings.all %}
         <tr>
-            {% if meeting.date < user.now %}
-        <td>{{ meeting.date }}</td>
-        <td> meeting book: <p></p>{{ meeting.book }}
-        <td>Notes: <p></p>{{ meeting.notes }}</td>
+          <td><b>Date:</b></td>
+          <td><b>Book:</b></td>
+          <td><b>Chosen Member:</b></td>
+          <td><b>Notes:</b></td>
         </tr>
-    {% endif %}
-    {% endfor %}
-      </table>
-
-     
-      
+        {% for meeting in club.meetings.all
+        {% if meeting.date < user.now %}
+        <tr>
+          <td>{{ meeting.date }}</td>
+          <td>{{ meeting.book }}</td>
+          <td>{{ meeting.chosen_member }}</td>
+          <td>{{ meeting.notes }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+</table>
