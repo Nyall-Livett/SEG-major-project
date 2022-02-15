@@ -98,35 +98,3 @@ class TransferOwnershipTestCase(TestCase, LogInTester):
         self.assertEqual(self.secondary_user, self.default_club.leader)
         after_count = Notification.objects.count()
         self.assertEqual(after_count, 1)
-
-
-    # # Test for correct exception when current user is not the club leader
-    # def test_exception_when_not_leader(self):
-    #     self.client.login(username=self.default_user, password='Password123')
-    #     self.assertTrue(self._is_logged_in())
-    #     self.assertEqual(self.default_user, self.default_club.leader)
-    #     response = self.client.post(self.url, follow=True)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.default_club.refresh_from_db()
-    #     self.assertEqual(self.secondary_user, self.default_club.leader)
-    #     response = self.client.post(self.url, follow=True)
-    #     self.assertEqual(response.status_code, 403)
-    #
-    # # Test for correct redirect url after passing ownership
-    # def test_correct_redirect_after_passing_ownership(self):
-    #     self.client.login(username=self.default_user, password='Password123')
-    #     self.assertTrue(self._is_logged_in())
-    #     response = self.client.post(self.url, follow=True)
-    #     response_url = reverse('dashboard')
-    #     self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-    #     self.assertTemplateUsed(response, 'dashboard.html')
-    # # Test correct message is being rendered
-    #
-    # def test_correct_message_is_shown_after_creation(self):
-    #     self.client.login(username=self.default_user, password='Password123')
-    #     self.assertTrue(self._is_logged_in())
-    #     response = self.client.post(self.url, follow=True)
-    #     messages_list = list(response.context['messages'])
-    #     self.assertEqual(len(messages_list), 1)
-    #     self.assertEqual(str(messages_list[0]), f"You have successfully passed leadership of {self.default_club.name} to {self.secondary_user.full_name()}.")
-    #     self.assertEqual(messages_list[0].level, messages.SUCCESS)
