@@ -118,6 +118,8 @@
             </div>
           </div>
         </div>
+
+        <!-- Transfer leadership modal -->
         <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -126,11 +128,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <select class="form-select" id="select-member" size="3" onchange="enableTransfer();" aria-label="size 3 select example">
-                  {% for member in club.members.all %}
-                    <option value={{member.id}}>{{member.full_name}}</option>
-                  {% endfor %}
-                </select>
+                {% if club.members.count > 0 %}
+                  <select class="form-select" id="select-member" size="3" onchange="enableTransfer();" aria-label="size 3 select example">
+                    {% for member in club.members.all %}
+                      {% if member != user %}
+                      <option value={{member.id}}>{{member.full_name}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                {% else %}
+                  <p>Sorry there is no one to transfer to.</p>
+                {% endif %}
               </div>
               <div class="modal-footer">
                 <div id="transfer-buttons">
@@ -143,7 +151,6 @@
                   <button type="button" id="transfer-button" onclick="transferLeadership()" class="btn btn-danger">Yes</button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
