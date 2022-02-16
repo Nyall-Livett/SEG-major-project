@@ -13,3 +13,4 @@ class MomentType(models.IntegerChoices):
     CLUB_CREATED = 1
     BOOK_RECOMMENDATION = 2
     READING_NEW_BOOK = 3
+    CUSTOM = 4
