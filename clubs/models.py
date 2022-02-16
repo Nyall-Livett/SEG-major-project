@@ -231,7 +231,7 @@ class Book(models.Model):
 
 class Meeting(models.Model):
     """Meeting model"""
-    date = models.CharField(max_length=300, blank=False, null=False)
+    date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
     members = models.ManyToManyField(User, related_name="members")
     chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)

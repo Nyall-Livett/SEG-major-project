@@ -245,6 +245,21 @@ class rejectMembership(LoginRequiredMixin, View):
 
         return redirect('pending_requests', club_id = self.club.id)
 
+class ChangeClubTheme(LoginRequiredMixin, UpdateView):
+    model = Club
+    fields = ['theme']
+    template_name = 'change_theme.html'
+    pk_url_kwarg = 'club_id'
+    #success_url="/club/"
+
+    def get_success_url(self):
+        """Return URL to redirect the user too after valid form handling."""
+        return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
+    
+
+   
+
+
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
 
