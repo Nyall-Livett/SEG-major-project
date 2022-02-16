@@ -185,9 +185,10 @@ class PostForm(forms.ModelForm):
 
 class MomentForm(forms.ModelForm):
     """docstring for MomentForm."""
+    class Meta:
 
-    model = Moment
-    fields = {'body'}
+        model = Moment
+        fields = {'body'}
 
 
 class UploadBooksForm(forms.Form):
