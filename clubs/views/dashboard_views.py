@@ -1,36 +1,21 @@
 from django.shortcuts import render
-from clubs.models import Book, Club
+from clubs.models import Book, Club, Moment
+from django.views.generic.list import ListView
+from clubs.forms import MomentForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 
-def dashboard(request):
-    book_list = list(Book.objects.all())
-    if (Book.objects.count() >= 3):
-        books = random.sample(book_list, 3)
-    elif(Book.objects.count() >= 2):
-        books = random.sample(book_list, 2)
-    elif(Book.objects.count() >= 1):
-        books = random.sample(book_list, 1)
-    else:
-        books = random.sample(book_list, 0)
+class DashboardView(LoginRequiredMixin, ListView):
+    """docstring for DashboardView."""
 
-    club_list = list(Club.objects.all())
-    if (Club.objects.count() >= 3):
-        clubs = random.sample(club_list, 3)
-    elif(Club.objects.count() >= 2):
-        clubs = random.sample(club_list, 2)
-    elif(Club.objects.count() >= 1):
-        clubs = random.sample(club_list, 1)
-    else:
-        clubs = random.sample(club_list, 0)
-    return render(request, 'dashboard.html', {'books': books, 'clubs': clubs})
+    http_method_names = ['get']
+    template_name = 'dashboard.html'
 
+    def get_queryset(self):
+        user_moments = self.request.user.moment_set.all()
+        return user_moments
 
-
-# class ClubPageView(LoginRequiredMixin, View):
-#     """ View that handles club page. """
-
-#     """Render log in template with blank log in form."""
-#     def render(self):
-#         self.request.
-
-#         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = MomentForm()
+        return context
