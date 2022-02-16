@@ -1,6 +1,6 @@
 {% extends 'base_content.html' %}
 {% block content %}
-
+{% load humanize %}
 
 <div class="container-fluid" style="padding:0px 48px;">
 
@@ -28,36 +28,43 @@
       <!-- Share a moment -->
       <div class="row flex-center" style="margin-top:28px;">
         <div class="col">
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label" style="color:#43a1f3;">Share a moment with your followers</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Say something...">
-          </div>
+          <form id="moment-form" onsubmit="submitForm(event, this)" action="{% url 'create_moment' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+              <label for="moment_id" class="form-label" style="color:#43a1f3;">Share a moment with your followers</label>
+              <input type="{{ field.field.widget.input_type }}" class="form-control" id="moment-body" placeholder="Say something..." autocomplete="off">
+            </div>
+            {% endfor %}
+          </form>
         </div>
       </div>
 
       <!-- View moments -->
-      <div class="row flex-center">
-        <div class="col">
-          <div class="container-fluid notification-card" style="padding-left: 8px;">
-            <div class="row">
-              <div class="notification-image" style="height:100px; width:100px">
-                <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
-              </div>
-              <div class="col" style="padding:10px;">
-                <div class="row">
-                  Name
+      {% for moment in object_list %}
+        <div class="row flex-center">
+          <div class="col">
+            <div class="container-fluid notification-card" style="padding-left: 8px;">
+              <div class="row">
+                <div class="notification-image" style="height:100px; width:100px">
+                  <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
                 </div>
-                <div class="row">
-                  body
+                <div class="col" style="padding:10px;">
+                  <div class="row">
+                    <a href="#">{{moment.user.username}}</a>
+                  </div>
+                  <div class="row">
+                    <p>{{moment.body}}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="">
-              created at
+              <div class="information">
+                <small style="color:#a8a8a8">{{moment.created_on|naturaltime}}</small>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endfor %}
     </div>
 
     <!-- Right -->
@@ -67,5 +74,33 @@
   </div>
 
 </div>
+
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+  })
+
+  const submitForm = (event, form) => {
+      event.preventDefault()
+      body = $('#moment-body').val()
+      $.ajax({
+        type: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          moment_body: JSON.stringify(body)
+        },
+        url: {% url 'create_moment' %},
+        dataType: "JSON"
+      }).done((data) => {
+        debugger
+      })
+
+  }
+
+</script>
 
 {% endblock %}
