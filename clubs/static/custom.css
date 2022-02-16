@@ -249,3 +249,35 @@
 .flex {
   display: flex;
 }
+
+/* dashboard */
+
+.min {
+  min-height: 200px;
+  /* width: 100%; */
+}
+
+.moment-card {
+  min-height: 120px;
+  width: 100%;
+  background-color: yellow;
+}
+
+.moment-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+/* moments */
+
+.moments-header{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}

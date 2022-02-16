@@ -1,90 +1,71 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
+
+
+<div class="container-fluid" style="padding:0px 48px;">
+
   <div class="row">
 
-    <h1>Your Clubs:</h1>
-    <table class="table">
-      {% for club in request.user.clubs.all %}
-        <tr>
-          <td>
-            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-          </td>
-          <td>{{ club.name }}</td>
-          <td>{{ club.leader }}</td>
-          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
-          <td>
-              {% if user in club.members.all %}
-                <form action="{% url 'join_club' user.id club.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
-                </form>
-              {% else %}
-                {% if user in club.applicants.all %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Request sent</button>
-                  </form>
-                {% else %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Join</button>
-                  </form>
-                {% endif %}
-              {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
+    <!-- Left -->
+    <div class="col-xl-2 min" style="background-color:red">
 
-    <h1>Take a look at some books:</h1>
-    <table class="table">
-      {% for book in books %}
-        <tr>
-          <td>
-            <img src="{{ book.image_url_s }}" alt="Image not found" >
-          </td>
-          <td><a href="{% url 'show_book' book.id %}">{{ book.name }}</a></td>
-          <td>{{ book.author }}</a></td>
-          <td>{{ book.isbn }}</a></td>
-        </tr>
-      {% endfor %}
-    </table>
+    </div>
 
-    <h1>Join some clubs:</h1>
-    <table class="table">
-      {% for club in clubs %}
-        <tr>
-          <td>
-            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-          </td>
-          <td>{{ club.name }}</td>
-          <td>{{ club.leader }}</td>
-          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
-          <td>
-              {% if user in club.members.all %}
-                <form action="{% url 'join_club' user.id club.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
-                </form>
-              {% else %}
-                {% if user in club.applicants.all %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Request sent</button>
-                  </form>
-                {% else %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Join</button>
-                  </form>
-                {% endif %}
-              {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
+    <!-- Middle -->
+    <div class="col-xl-8 min">
 
+      <!-- Moment header -->
+      <div class="moments-header">
+        <div>
+          <h3 style="color:#878787">Moments</h3>
+
+        </div>
+        <div style="margin-left: 24px;">
+          <h5 style="margin-bottom: 0px; color:cornflowerblue">“Some moments are nice, some are nicer, some are even worth writing about.”</h5> <small style="color:#767676">― Charles Bukowski</small>
+        </div>
+      </div>
+
+      <!-- Share a moment -->
+      <div class="row flex-center" style="margin-top:28px;">
+        <div class="col">
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label" style="color:#43a1f3;">Share a moment with your followers</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Say something...">
+          </div>
+        </div>
+      </div>
+
+      <!-- View moments -->
+      <div class="row flex-center">
+        <div class="col">
+          <div class="container-fluid notification-card" style="padding-left: 8px;">
+            <div class="row">
+              <div class="notification-image" style="height:100px; width:100px">
+                <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+              </div>
+              <div class="col" style="padding:10px;">
+                <div class="row">
+                  Name
+                </div>
+                <div class="row">
+                  body
+                </div>
+              </div>
+            </div>
+            <div class="">
+              created at
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="col-xl-2 min" style="background-color:green">
+
+    </div>
   </div>
+
 </div>
+
 {% endblock %}
