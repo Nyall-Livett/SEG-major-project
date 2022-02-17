@@ -18,7 +18,7 @@
 }
 
   </style>
-    <div class="container-fluid">
+    <div class="container-fluid" style="width:1250px;overflow-x:auto">
 
         <div class="main-body">
             <div class="row g-4">
@@ -43,7 +43,7 @@
                                   <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
                                   <a href = {% url 'set_meeting' %}>Arrange a meeting</a>
                                   <a href = "{% url 'change_theme' club_id=club.pk %}">change club theme</a>
-                                 
+
                                 {% endif %}
                                 {% endfor %}
                             </div>
@@ -72,7 +72,7 @@
             <div class="card mb-2">
               <div class="card-body">
                   <div class="row">
-                      <div class="col-sm-500">
+                      <div class="col-sm-12">
                           <h6 class="mb-0">20 Recent posts in Club Forum:</h6>
                           <div class="col-xs-12 col-lg-10 col-xl-10">
                             {% include 'partials/posts_as_table.html' with posts=posts %}
@@ -159,7 +159,7 @@
             </div>
           </div>
           </div>
-        
+
 
 
         <!-- Change club theme modal -->
