@@ -1,0 +1,24 @@
+{% load humanize %}
+
+<div class="row flex-center">
+  <div class="col">
+    <div class="container-fluid notification-card" style="padding-left: 8px;">
+      <div class="row">
+        <div class="notification-image" style="height:100px; width:100px">
+          <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+        </div>
+        <div class="col" style="padding:10px;">
+          <div class="row">
+            <a href="#">{{moment.user.username}}</a>
+          </div>
+          <div class="row">
+            <p>{{moment.body}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="information">
+        <small style="color:#a8a8a8">{{moment.created_on|naturaltime}}</small>
+      </div>
+    </div>
+  </div>
+</div>
