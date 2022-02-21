@@ -2,7 +2,7 @@
 {% block content %}
 {% load humanize %}
 
-<div class="container-fluid" style="padding:0px 26px; height:100%">
+<div class="container-fluid" style="padding:0 26px; height:100%">
 
   <div class="row" style="height:100%">
 
@@ -14,23 +14,19 @@
         </div>
       </div>
 
-      <div class="row card s-40 p-">
-        <div class="book-wrap">
-          <div class="container">
-            <div class="row">
+      <div class="row card s-40 p-16">
+        <div class="collection-wrap">
+          {% for club in random_clubs %}
+            <div class="single-item-wrap">
               <div class="book-image">
-
               </div>
-            <div class="row">
-              <div class="book-link">
-                <a href="#">booklink</a>
+              <div class="book-details">
+                <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
               </div>
             </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
-
     </div>
 
     <!-- Middle -->
@@ -66,6 +62,10 @@
       <div id="moment-wrapper">
         {% for moment in object_list %}
           {% include 'partials/custom_moment_partial.html' with moment=moment %}
+          {% empty %}
+          <div class="empty-moments">
+            <h4>Its pretty quiet in here, why dont you share a moment</h4>
+          </div>
         {% endfor %}
       </div>
     </div>
@@ -78,21 +78,24 @@
         </div>
       </div>
 
-      <div class="row card s-40 p-">
-        <div class="book-wrap">
-          <div class="container">
-            <div class="row">
-              <div class="book-image">
+      <div class="row card s-40 p-16">
 
+          <div class="collection-wrap">
+
+            {% for club in random_clubs %}
+              <div class="single-item-wrap">
+                <div class="book-image">
+                </div>
+                <div class="book-details">
+                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                </div>
               </div>
-            <div class="row">
-              <div class="book-link">
-                <a href="#">booklink</a>
-              </div>
-            </div>
-            </div>
+            {% endfor %}
+
           </div>
-        </div>
+
+
+
       </div>
 
     </div>
@@ -108,14 +111,20 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    // set max height of moments wrapper
+    setMaxHeight()
+  })
+
+  const setMaxHeight = () => {
     let wrapper = $('#moment-wrapper')[0]
     let coords = wrapper.getBoundingClientRect()
     let windowHeight = window.innerHeight
     let wrapperMaxHeight = windowHeight - coords.y
-
     $('#moment-wrapper').css("max-height", wrapperMaxHeight);
-  })
+  }
+
+  const clearForm = () => {
+    $('#moment-body').val('')
+  }
 
   const showNewMoment = (result) => {
 
@@ -161,7 +170,7 @@
         dataType: "JSON",
         success: (result) => {showNewMoment(result)}
       }).done((data) => {
-        // Clear form
+        clearForm()
       })
 
   }

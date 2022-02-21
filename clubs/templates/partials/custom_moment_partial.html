@@ -9,7 +9,7 @@
         </div>
         <div class="col" style="padding:10px;">
           <div class="row">
-            <a href="#">{{moment.user.username}}</a>
+            <a href="{% url 'show_user' moment.user.id %}">{{moment.user.username}}</a>
           </div>
           <div class="row">
             <p>{{moment.body}}</p>
