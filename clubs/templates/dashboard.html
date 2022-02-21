@@ -2,26 +2,48 @@
 {% block content %}
 {% load humanize %}
 
-<div class="container-fluid" style="padding:0px 48px;">
+<div class="container-fluid" style="padding:0px 26px; height:100%">
 
-  <div class="row">
+  <div class="row" style="height:100%">
 
     <!-- Left -->
-    <div class="col-xl-2 min" style="background-color:red">
+    <div class="col-sm-2" style="height:100%" >
+      <div class="row">
+        <div>
+          <p style="color:#878787">Recommended reads</p>
+        </div>
+      </div>
+
+      <div class="row card s-40 p-">
+        <div class="book-wrap">
+          <div class="container">
+            <div class="row">
+              <div class="book-image">
+
+              </div>
+            <div class="row">
+              <div class="book-link">
+                <a href="#">booklink</a>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
 
     <!-- Middle -->
-    <div class="col-xl-8 min">
+    <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
 
       <!-- Moment header -->
       <div class="moments-header">
         <div>
-          <h3 style="color:#878787">Moments</h3>
+          <h5 style="color:#878787">Moments</h5>
 
         </div>
         <div style="margin-left: 24px;">
-          <h5 style="margin-bottom: 0px; color:cornflowerblue">“Some moments are nice, some are nicer, some are even worth writing about.”</h5> <small style="color:#767676">― Charles Bukowski</small>
+          <p style="margin-bottom: 0px; color:cornflowerblue">“Some moments are nice, some are nicer, some are even worth writing about.”</p> <small style="color:#767676">― Charles Bukowski</small>
         </div>
       </div>
 
@@ -41,39 +63,44 @@
       </div>
 
       <!-- View moments -->
-      {% for moment in object_list %}
-        <div class="row flex-center">
-          <div class="col">
-            <div class="container-fluid notification-card" style="padding-left: 8px;">
-              <div class="row">
-                <div class="notification-image" style="height:100px; width:100px">
-                  <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
-                </div>
-                <div class="col" style="padding:10px;">
-                  <div class="row">
-                    <a href="#">{{moment.user.username}}</a>
-                  </div>
-                  <div class="row">
-                    <p>{{moment.body}}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="information">
-                <small style="color:#a8a8a8">{{moment.created_on|naturaltime}}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
+      <div id="moment-wrapper">
+        {% for moment in object_list %}
+          {% include 'partials/custom_moment_partial.html' with moment=moment %}
+        {% endfor %}
+      </div>
     </div>
 
     <!-- Right -->
-    <div class="col-xl-2 min" style="background-color:green">
+    <div class="col-sm-2" style="height:100%">
+      <div class="row">
+        <div>
+          <p style="color:#878787">Popular clubs</p>
+        </div>
+      </div>
+
+      <div class="row card s-40 p-">
+        <div class="book-wrap">
+          <div class="container">
+            <div class="row">
+              <div class="book-image">
+
+              </div>
+            <div class="row">
+              <div class="book-link">
+                <a href="#">booklink</a>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
 
 </div>
+
+
 
 {% endblock %}
 {% block javascript %}
@@ -81,8 +108,45 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
+    // set max height of moments wrapper
+    let wrapper = $('#moment-wrapper')[0]
+    let coords = wrapper.getBoundingClientRect()
+    let windowHeight = window.innerHeight
+    let wrapperMaxHeight = windowHeight - coords.y
 
+    $('#moment-wrapper').css("max-height", wrapperMaxHeight);
   })
+
+  const showNewMoment = (result) => {
+
+    let username = JSON.parse(result.username)
+    let body = JSON.parse(result.body)
+
+    let test = `<div class="row flex-center">
+      <div class="col">
+        <div class="container-fluid notification-card" style="padding-left: 8px;">
+          <div class="row">
+            <div class="notification-image" style="height:100px; width:100px">
+              <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+            </div>
+            <div class="col" style="padding:10px;">
+              <div class="row">
+                <a href="#">${username}</a>
+              </div>
+              <div class="row">
+                <p>${body}</p>
+              </div>
+            </div>
+          </div>
+          <div class="information">
+            <small style="color:#a8a8a8">now</small>
+          </div>
+        </div>
+      </div>
+    </div>`
+
+    $('#moment-wrapper').prepend(test)
+  }
 
   const submitForm = (event, form) => {
       event.preventDefault()
@@ -94,9 +158,10 @@
           moment_body: JSON.stringify(body)
         },
         url: {% url 'create_moment' %},
-        dataType: "JSON"
+        dataType: "JSON",
+        success: (result) => {showNewMoment(result)}
       }).done((data) => {
-        debugger
+        // Clear form
       })
 
   }
