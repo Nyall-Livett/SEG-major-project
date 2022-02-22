@@ -6,7 +6,7 @@ class CreateMoment:
     def notify(self, type, user, kwargs):
         notifier = self._get_notifier(type)
         self.user = user
-        notifier(type, user, **kwargs)
+        notifier(user, **kwargs)
 
     def _get_notifier(self, type):
 
@@ -14,7 +14,7 @@ class CreateMoment:
             return self._became_friends
 
         elif type == MomentType.CLUB_CREATED:
-            return self._created_club
+            return self._create_club
 
         elif type == MomentType.BOOK_RECOMMENDATION:
             return self._book_recommendation
@@ -32,7 +32,7 @@ class CreateMoment:
             user = self.user
         )
 
-    def _created_club(self, user, **kwargs):
+    def _create_club(self, user, **kwargs):
         club = kwargs['club']
         body = "{user} created {club}.".format(user=self.user.username, club=club.name)
         Moment.objects.create(
