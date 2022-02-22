@@ -203,6 +203,8 @@ class Moment(models.Model):
     likes = models.IntegerField(blank=False, default = 0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(default=timezone.now, blank=False)
+    associated_user = models.IntegerField(blank=True, null=True)
+    associated_club = models.IntegerField(blank=True, null=True)
 
 
 class Post(models.Model):
