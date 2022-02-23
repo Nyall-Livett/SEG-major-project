@@ -192,7 +192,7 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['__all__'] # fields
+    fields = '__all__' # fields
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
