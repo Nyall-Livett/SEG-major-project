@@ -1,23 +1,24 @@
 {% load humanize %}
 
+
 <div class="row flex-center">
   <div class="col">
     <div class="container-fluid notification-card" style="padding-left: 8px;">
-      <div class="row">
-        <div class="notification-image" style="height:100px; width:100px">
+      <div class="card-top">
+        <div class="notification-image" style="height:70px; width:70px">
           <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
         </div>
-        <div class="col" style="padding:10px;">
-          <div class="row">
-            <a href="{% url 'show_user' moment.user.id %}">{{moment.user.username}}</a>
+        <div class="col" style="padding-left:4px; padding-top:6px;">
+          <div class="align-text">
+            <a href="{% url 'show_user' moment.user.id %}">{{moment.user.username}}</a> <small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small>
           </div>
-          <div class="row">
-            <p>{{moment.body}}</p>
+          <div>
+            <small style="color: #6d6d6d">{{moment.created_on|naturaltime}}</small>
           </div>
         </div>
       </div>
-      <div class="information">
-        <small style="color:#a8a8a8">{{moment.created_on|naturaltime}}</small>
+      <div class="card-bottom" style="margin-bottom:8px;">
+        {{moment.body}}
       </div>
     </div>
   </div>
