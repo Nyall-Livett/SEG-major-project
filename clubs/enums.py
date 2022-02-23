@@ -9,8 +9,8 @@ class NotificationType(models.IntegerChoices):
     DEFAULT = 5, "New notification"
 
 class MomentType(models.IntegerChoices):
-    BECAME_FRIENDS = 0
-    CLUB_CREATED = 1
-    BOOK_RECOMMENDATION = 2
-    READING_NEW_BOOK = 3
-    CUSTOM = 4
+    CUSTOM = 0
+    BECAME_FRIENDS = 1
+    CLUB_CREATED = 2
+    BOOK_RECOMMENDATION = 3
+    READING_NEW_BOOK = 4
