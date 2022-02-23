@@ -5,6 +5,7 @@ from django.views import View
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 import json
+from django.forms.models import model_to_dict
 
 
 class CreateMomentView(LoginRequiredMixin, View):
@@ -20,16 +21,12 @@ class CreateMomentView(LoginRequiredMixin, View):
                 type=MomentType.CUSTOM,
                 user=request.user
             )
-
             try:
                 new_moment.full_clean()
                 new_moment.save()
-                json_username = json.dumps(new_moment.user.username)
-                json_body = json.dumps(new_moment.body)
                 return JsonResponse(
                 {
-                    'username': json_username,
-                    'body': json_body,
+                    'moment': model_to_dict(new_moment),
                 }, status=200)
 
             except ValidationError as e:
