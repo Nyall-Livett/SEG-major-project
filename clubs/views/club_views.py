@@ -132,6 +132,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
     http_method_names = ['get', 'post']
     template_name = "set_meeting.html"
+    pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
     def form_valid(self, form):
@@ -142,14 +143,14 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
-    def get(self, request):
+    def get(self, request, club_id):
 
         form = MeetingForm()
         context = {
             'form': form
         }
         return render(request,"set_meeting.html", context)
-
+  
 
     def post(self, request):
         form = MeetingForm(request.POST)

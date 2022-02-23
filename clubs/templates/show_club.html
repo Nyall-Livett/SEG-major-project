@@ -41,7 +41,7 @@
 
                                   <a href="#" data-bs-toggle="modal" data-bs-target="#modal">Transfer Leadership</a>
                                   <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
-                                  <a href = {% url 'set_meeting' %}>Arrange a meeting</a>
+                                  <a href = "{% url 'set_meeting' club_id=club.pk %}">Arrange a meeting</a>
                                   <a href = "{% url 'change_theme' club_id=club.pk %}">change club theme</a>
 
                                 {% endif %}
