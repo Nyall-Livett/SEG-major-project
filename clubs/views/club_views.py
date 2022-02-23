@@ -186,7 +186,13 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['notes'] # fields / if you want to select all fields, use "__all__"
+    fields = ['notes'] # fields
+    template_name = 'edit_meeting.html' # templete for updating
+    success_url="/dashboard" # posts list url
+
+class EditMeetingView(LoginRequiredMixin, UpdateView):
+    model = Meeting #model
+    fields = ['__all__'] # fields
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
@@ -255,9 +261,9 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return URL to redirect the user too after valid form handling."""
         return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
-    
 
-   
+
+
 
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
