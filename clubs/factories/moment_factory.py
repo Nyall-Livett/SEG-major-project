@@ -25,11 +25,12 @@ class CreateMoment:
 
     def _became_friends(self, user, **kwargs):
         other_user = kwargs['other_user']
-        body = "{user} started following {other_user}.".format(user=self.user.username, other_user=other_user.username)
+        body = " started following "
         Moment.objects.create(
             type=MomentType.BECAME_FRIENDS,
             body = body,
-            user = self.user
+            user = self.user,
+            associated_user = other_user
         )
 
     def _create_club(self, user, **kwargs):
@@ -38,7 +39,8 @@ class CreateMoment:
         Moment.objects.create(
             type=MomentType.CLUB_CREATED,
             body = body,
-            user = self.user
+            user = self.user,
+            associated_club = club
         )
 
     def _book_recommendation(self, user, **kwargs):
