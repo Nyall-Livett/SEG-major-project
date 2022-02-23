@@ -23,7 +23,8 @@ from clubs.forms import BookForm
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
-from clubs.enums import NotificationType
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import NotificationType, MomentType
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -40,6 +41,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         notifier = CreateNotification()
         notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club': club})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.CLUB_CREATED, self.request.user, {'club': club})
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -155,9 +158,9 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     def post(self, request):
         form = MeetingForm(request.POST)
         #form.save()
-        print('--------------------')
-        print(request.POST)
-        print('--------------------')
+        # print('--------------------')
+        # print(request.POST)
+        # print('--------------------')
         #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
         form.save()
         if form.is_valid():
@@ -172,11 +175,12 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             return render(request,"set_meeting.html", context)
 
         else:
-            print("validatation failed")
-            print('-----------------------------------')
-            print(form)
-            print('-----------------------------------')
-            print(form.errors.as_data())
+            pass
+            # print("validatation failed")
+            # print('-----------------------------------')
+            # print(form)
+            # print('-----------------------------------')
+            # print(form.errors.as_data())
             #return Http404
 
         context = {
