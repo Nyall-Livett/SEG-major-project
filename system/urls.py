@@ -38,6 +38,7 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('start_meeting/<slug:pk>/', views.StartMeetingView.as_view(), name='start_meeting'),
+    path('edit_meeting/<slug:pk>/', views.EditMeetingView.as_view(), name='edit_meeting'),
     path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
     path('join_club/<int:user_id><int:club_id>', views.JoinRemoveClubView.as_view(), name='join_club'),
