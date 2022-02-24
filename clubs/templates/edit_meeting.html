@@ -4,11 +4,11 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Start meeting</h1>
+      <h1>Edit Meeting Details</h1>
       <form method="post">
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Complete Meeting" class="btn btn-primary">
+        <input type="submit" value="Edit Details" class="btn btn-primary">
       </form>
       <br>
     </div>

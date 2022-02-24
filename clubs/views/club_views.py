@@ -187,13 +187,13 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     fields = ['notes'] # fields
-    template_name = 'edit_meeting.html' # templete for updating
+    template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     fields = '__all__' # fields
-    template_name = 'start_meeting.html' # templete for updating
+    template_name = 'edit_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
 
