@@ -12,7 +12,7 @@ class DashboardView(LoginRequiredMixin, ListView):
     template_name = 'dashboard.html'
 
     def get_queryset(self):
-        user_moments = self.request.user.moment_set.all().order_by('-created_on')
+        user_moments = Moment.objects.all().order_by('-created_on')
         return user_moments
 
     def get_context_data(self, **kwargs):
