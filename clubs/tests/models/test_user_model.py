@@ -1,7 +1,7 @@
 """Unit tests for the User model."""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from clubs.models import User
+from clubs.models import User, Book
 
 class UserModelTestCase(TestCase):
     """Unit tests for the User model."""
@@ -136,6 +136,50 @@ class UserModelTestCase(TestCase):
         with self.assertRaises(ValidationError):
             self.user.full_clean()
 
+    def test_favourite_book_may_be_blank(self):
+        self.user.favourite_book = None
+        self._assert_user_is_valid()
+
+    def test_favourite_character_may_be_blank(self):
+        self.user.favourite_character = ''
+        self._assert_user_is_valid()
+
+    def test_favourite_character_may_contain_50_characters(self):
+        self.user.favourite_character = 'x' * 50
+        self._assert_user_is_valid()
+
+    def test_favourite_character_must_not_contain_more_than_50_characters(self):
+        self.user.favourite_character = 'x' * 51
+        self._assert_user_is_invalid()
+
+    def test_favourite_genre_may_be_blank(self):
+        self.user.favourite_genre = ''
+        self._assert_user_is_valid()
+
+    def test_favourite_genre_may_contain_50_characters(self):
+        self.user.favourite_genre = 'x' * 50
+        self._assert_user_is_valid()
+
+    def test_favourite_genre_must_not_contain_more_than_50_characters(self):
+        self.user.favourite_genre = 'x' * 51
+        self._assert_user_is_invalid()
+
+    def test_favourite_author_may_be_blank(self):
+        self.user.favourite_author = ''
+        self._assert_user_is_valid()
+
+    def test_favourite_author_may_contain_50_characters(self):
+        self.user.favourite_author = 'x' * 50
+        self._assert_user_is_valid()
+
+    def test_favourite_author_must_not_contain_more_than_50_characters(self):
+        self.user.favourite_author = 'x' * 51
+        self._assert_user_is_invalid()
+
+    def test_want_to_read_next_may_be_blank(self):
+        self.user.want_to_read_next = None
+        self._assert_user_is_valid()
+
 
     """ Tests for following/unfollowing User """
 
@@ -192,7 +236,7 @@ class UserModelTestCase(TestCase):
         self.user.send_follow_request(jane)
         self.assertTrue(self.user.is_request_sent(jane))
         self.assertTrue(jane.has_request(self.user))
-        self.assertEqual(self.user.sent_requests.count(), 1) 
+        self.assertEqual(self.user.sent_requests.count(), 1)
         self.assertEqual(jane.follow_requests.count(), 1)
         self.user.send_follow_request(petra)
         self.assertTrue(self.user.is_request_sent(petra))
