@@ -43,12 +43,17 @@
                                       <p class="text-muted">{{user.bio}}</p>
                                   </div>
 
+                                  {% if following %}
                                   <div>
-                                    <h5 class="m-b-10 f-w-600">Clubs participating:</h5>
+                                    <h5 class="m-b-10 f-w-600">Clubs joined:</h5>
                                     {% for club in user.clubs.all %}
                                     <m class= "text-muted">{{ club.name }}, </m>
                                     {% endfor %}
-                                </div>
+                                  </div>
+                                  {% endif %}
+
+
+
                               </div>
                           </div>
                       </div>
