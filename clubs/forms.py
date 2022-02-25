@@ -11,7 +11,7 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
         widgets = { 'bio': forms.Textarea() }
 
     new_password = forms.CharField(
@@ -45,6 +45,11 @@ class SignUpForm(forms.ModelForm):
             email=self.cleaned_data.get('email'),
             bio=self.cleaned_data.get('bio'),
             password=self.cleaned_data.get('new_password'),
+            favourite_book=self.cleaned_data.get('favourite_book'),
+            favourite_character=self.cleaned_data.get('favourite_character'),
+            favourite_genre=self.cleaned_data.get('favourite_genre'),
+            favourite_author=self.cleaned_data.get('favourite_author'),
+            want_to_read_next=self.cleaned_data.get('want_to_read_next'),
         )
         return user
 
@@ -127,7 +132,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
         widgets = { 'bio': forms.Textarea() }
 
 class ClubForm(forms.ModelForm):
