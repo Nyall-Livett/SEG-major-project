@@ -1,0 +1,28 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      {% if not club_list%}
+      <form method="post">{% csrf_token %}
+        <h3>Delete Account</h3>
+        <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
+      <a class="btn btn-primary" href = "{% url 'show_user' user.id %}">Cancel</a>
+      {% else %}
+        <h3>You are the leader of the following clubs</h3>
+        <p>To delete your account you will need to either transfer your role as a leader to another member or delete the club entirely</p>
+        <table class="table">
+          {% for club in club_list %}
+            <tr>
+              <td>{{ club.name }}</td>
+              <td>{{ club.leader }}</td>
+              <td><a href="{% url 'delete_club' club.id %}"><button type="button" class="btn btn-danger">Delete Club</button></a></td>
+              <td><a href="{% url 'show_club' club_id=club.id %}"><button type="button" class="btn btn-info">View Club</button></a></td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% endif %}
+    </div>
+</div>
+{% endblock %}

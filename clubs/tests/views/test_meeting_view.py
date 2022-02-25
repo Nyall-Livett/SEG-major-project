@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User, Club, Meeting
+from clubs.models import User, Club, Meeting, Book
+from clubs.forms import MeetingForm
 from clubs.tests.helpers import LogInTester, reverse_with_next
+
 
 
 class MeetingTestCase(TestCase, LogInTester):
@@ -10,30 +12,44 @@ class MeetingTestCase(TestCase, LogInTester):
     fixtures = [
         'clubs/tests/fixtures/default_user.json',
         #'clubs/tests/fixtures/default_meeting.json',
+        'clubs/tests/fixtures/default_book.json',
+        'clubs/tests/fixtures/default_club.json',
         ]
 
     def setUp(self):
         self.url = reverse('set_meeting')
         self.default_user = User.objects.get(username='johndoe')
         #self.default_meeting = Meeting.objects.get(date='2022-01-27 11:00:00')
+        self.default_club = Club.objects.get(name='Oxford Book Club')
+        self.default_book = Book.objects.get(isbn= "0195153448")
+
         self.form_input = {
-            'date': '2022-01-29 11:00:00',
-            'club': 1
+            #"date": "2022-02-27 11:00:00",
+            "date": "2022-02-27 11:00:00",
+            "URL": "www.aaa.com",
+            "club":1,
+            "notes": "This is a note.",
+            "book":1,
+            "members":1
         }
+
+
+
 
 
     # Test URL is correct
     def test_set_meeting_url(self):
         self.assertEqual(self.url,'/set_meeting/')
-
+    '''
     # Test new meeting has been created mark 1
-    """def test_create_new_meeting(self):
+    def test_create_new_meeting(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
         meeting_count_before = Meeting.objects.count()
         response = self.client.post(self.url, self.form_input, follow=True)
         meeting_count_after = Meeting.objects.count()
-        self.assertEqual(meeting_count_before, meeting_count_after-1)"""
+        self.assertEqual(meeting_count_before, meeting_count_after-1)
+    '''
 
     # Test the correct template is rendered
     def test_get_meeting_gives_correct_used(self):
@@ -77,7 +93,7 @@ class MeetingTestCase(TestCase, LogInTester):
     def test_form_is_bound_after_being_invalid(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
-        self.form_input['date'] = ""
+        self.form_input['url'] = ""
         response = self.client.post(self.url, self.form_input, follow=True)
         form = response.context['form']
         self.assertTrue(form.is_bound)

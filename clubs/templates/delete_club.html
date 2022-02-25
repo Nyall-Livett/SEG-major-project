@@ -1,0 +1,15 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <form method="post">
+        {% csrf_token %}
+        <h1>Delete Club</h1>
+        <p>This will delete {{ club.name }} and all of it's related data permenantly. Are you sure you would like to delete this club?</p>
+        <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
+      <a class="btn btn-primary" href = "{% url 'show_club' club.id %}">Cancel</a>
+    </div>
+</div>
+{% endblock %}
