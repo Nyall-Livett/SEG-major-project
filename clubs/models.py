@@ -25,6 +25,11 @@ class User(AbstractUser):
     bio = models.CharField(max_length=520, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
     follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
+    favourite_book = models.ForeignKey(Book, null=True, on_delete=models.SET_NULL)
+    favourite_character = models.CharField(max_length=50, blank=True)
+    favourite_genre = models.CharField(max_length=50, blank=True)
+    favourite_author = models.CharField(max_length=50, blank=True)
+    want_to_read_next = models.ForeignKey(Book, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         """Model options."""
