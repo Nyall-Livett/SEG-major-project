@@ -48,7 +48,7 @@ class User(AbstractUser):
     favourite_character = models.CharField(max_length=50, blank=True)
     favourite_genre = models.CharField(max_length=50, blank=True)
     favourite_author = models.CharField(max_length=50, blank=True)
-    want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_book')
+    want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_read')
 
     class Meta:
         """Model options."""
@@ -240,8 +240,8 @@ class Meeting(models.Model):
     location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
     chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    book = models.ForeignKey(Book, on_delete=models.SET_NULL, related_name="book")
-    next_book = models.ForeignKey(Book, on_delete=models.SET_NULL, related_name="next_book")
+    book = models.ForeignKey(Book, null=True, on_delete=models.SET_NULL, related_name="book")
+    next_book = models.ForeignKey(Book, null=True, on_delete=models.SET_NULL, related_name="next_book")
     notes = models.CharField(max_length=300, blank=True)
 
     def add_meeting(self, meeting):

@@ -142,8 +142,8 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
-    def get(self, request):
-
+    def get(self, request, club_id):
+        self.club = Club.objects.get(id=club_id)
         form = MeetingForm()
         context = {
             'form': form
@@ -186,7 +186,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['notes'] # fields
+    fields = ['notes', 'next_book'] # fields
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
