@@ -147,6 +147,9 @@ class ClubForm(forms.ModelForm):
         }
 
 
+
+
+
 # 'hours': forms.NumberInput(attrs={'min': '0', 'class': 'yourClass', 'id': 'blah'}),
 
 
@@ -155,7 +158,7 @@ class MeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'club', 'URL', 'notes', 'book', 'members']
+        fields = ['date', 'location', 'URL', 'book', 'notes']
         widgets = { 'notes': forms.Textarea() }
 
 class StartMeetingForm(forms.ModelForm):
@@ -163,12 +166,12 @@ class StartMeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'club', 'URL', 'notes', 'book', 'members']
+        fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
     date = forms.CharField(disabled=True)
-    club = forms.CharField(disabled=True)
+    location = forms.CharField(disabled=True)
     URL = forms.CharField(disabled=True)
     book = forms.CharField(disabled=True)
-    members = forms.CharField(disabled=True)
+    chosen_member = forms.CharField(disabled=True)
     notes = forms.Textarea()
 
 class EditMeetingForm(forms.ModelForm):
@@ -176,8 +179,11 @@ class EditMeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'club', 'URL', 'notes', 'book', 'members']
+        fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
         widgets = { 'notes': forms.Textarea() }
+
+
+
 
 
 class BookForm(forms.ModelForm):
