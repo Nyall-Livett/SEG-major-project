@@ -142,6 +142,26 @@ class Openfile():
     #
     #         writer.writerows(all)
 
+    def get_book_categories(row):
+
+        isbn = row[0]
+        api = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+
+        api_response = urlopen(api + isbn)
+        book_data = json.load(api_response)
+
+        try:
+            volume_info = book_data["items"][0]["volumeInfo"]
+
+            try:
+                categories =  volume_info['categories']
+            except:
+                categories = ""
+        except:
+            categories = ""
+
+        return categories
+
     current_directory = os.getcwd()
 
     with open(current_directory + "/clubs/book_database/bigger_test.csv",'r') as csvfile:
@@ -156,18 +176,13 @@ class Openfile():
             all.append(new_row)
 
             for row in reader:
-                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'GDFSGREGERGV']
+                categories = get_book_categories(row)
+                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
                 all.append(new_row)
 
             writer.writerows(all)
 
-    # with open(os.getcwd() + "/clubs/book_database/bigger_test.csv",'r') as csvfile:
-    #     reader = csv.reader(csvfile, delimiter=";", quotechar='"')
-    #     row = next(reader)
-    #     for row in reader:
-    #         print(row)
-    #         print(row[0])
-
+#
 #
 # class GetBookView():
 #     while True:
