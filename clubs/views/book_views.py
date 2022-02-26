@@ -14,8 +14,8 @@ from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm
 from django.views.generic.detail import DetailView
 import json
-# Python's built-in module for opening and reading URLs
 from urllib.request import urlopen
+import os
 
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -107,52 +107,114 @@ class CreateBookView(LoginRequiredMixin, FormView):
         """Return redirect URL after successful update."""
         return reverse("book_list")
 
-class GetBookView(FormView):
-    while True:
-
-        # create getting started variables
-        api = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
-        isbn = input("Enter 10 digit ISBN: ").strip()
-
-        # send a request and get a JSON response
-        resp = urlopen(api + isbn)
-        # parse JSON into Python as a dictionary
-        book_data = json.load(resp)
-
-        # create additional variables for easy querying
-        volume_info = book_data["items"][0]["volumeInfo"]
-        author = volume_info["authors"]
-        # practice with conditional expressions!
-        prettify_author = author if len(author) > 1 else author[0]
-
-        # display title, author, page count, publication date
-        # fstrings require Python 3.6 or higher
-        # \n adds a new line for easier reading
-
-        print(book_data)
-        print(book_data["items"][0]["searchInfo"])
+class Openfile():
+    # print(os.getcwd())
+    # current_path = os.path.dirname(__file__)
+    # print(current_path)
+    # new_path = os.path.relpath('..\\book_database\\bigger_test.csv', os.getcwd())
+    # print(new_path)
+    # print(os.getcwd() + "/book_database/bigger_test.csv")
 
 
-        print(f"\nTitle: {volume_info['title']}")
-        print(f"Author: {prettify_author}")
-        print(f"Page Count: {volume_info['pageCount']}")
-        print(f"Publication Date: {volume_info['publishedDate']}")
-        print("\n***\n")
-        try:
-            categories = volume_info['categories']
-            print(f"\nCategories: {categories}")
-        except:
-            print("This book has no saved categories")
+    #
+    # current_path = os.path.dirname(__file__)
+    #
+    # new_path = os.path.relpath('..\\book_database\\bigger_test.csv', current_path)
+    # with open(new_path, 'r') as f:
+    #     reader = csv.reader(csvinput)
+    #
+    #     row = next(reader)
+    #     print(row)
 
-        try:
-            main_categories = volume_info['mainCategory']
-            print(f"\nCategories: {main_categories}")
-        except:
-            print("This book has no saved main categories")
+    # with open(os.getcwd() + "/clubs/book_database/bigger_test.csv",'r') as csvinput:
+    #     with open(os.getcwd() + "/clubs/book_database/books_with_categories.csv", 'w') as csvoutput:
+    #         writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quotechar='"')
+    #         reader = csv.reader(csvinput)
+    #
+    #         all = []
+    #         row = next(reader)
+    #         row.append('\"Category\"')
+    #         all.append(row)
+    #
+    #         for row in reader:
+    #             row.append("\"GDFSGREGERGV\"")
+    #             all.append(row)
+    #
+    #         writer.writerows(all)
 
-        # ask user if they would like to enter another isbn
-        user_update = input("Would you like to enter another ISBN? y or n ").lower().strip()
+    current_directory = os.getcwd()
 
-        if user_update != "y":
-            print("May the Zen of Python be with you. Have a nice day!")
-            break # as the name suggests, the break statement breaks out of the while loop
+    with open(current_directory + "/clubs/book_database/bigger_test.csv",'r') as csvfile:
+        with open(current_directory + "/clubs/book_database/books_with_categories.csv", 'w') as csvoutput:
+            writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+            reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+
+            all = []
+            row = next(reader)
+            new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+
+            all.append(new_row)
+
+            for row in reader:
+                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'GDFSGREGERGV']
+                all.append(new_row)
+
+            writer.writerows(all)
+
+    # with open(os.getcwd() + "/clubs/book_database/bigger_test.csv",'r') as csvfile:
+    #     reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+    #     row = next(reader)
+    #     for row in reader:
+    #         print(row)
+    #         print(row[0])
+
+#
+# class GetBookView():
+#     while True:
+#
+#         # create getting started variables
+#         api = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+#         isbn = input("Enter 10 digit ISBN: ").strip()
+#
+#         # send a request and get a JSON response
+#         resp = urlopen(api + isbn)
+#         # parse JSON into Python as a dictionary
+#         book_data = json.load(resp)
+#
+#         # create additional variables for easy querying
+#         volume_info = book_data["items"][0]["volumeInfo"]
+#         author = volume_info["authors"]
+#         # practice with conditional expressions!
+#         prettify_author = author if len(author) > 1 else author[0]
+#
+#         # display title, author, page count, publication date
+#         # fstrings require Python 3.6 or higher
+#         # \n adds a new line for easier reading
+#
+#         print(book_data)
+#         print(book_data["items"][0]["searchInfo"])
+#
+#
+#         print(f"\nTitle: {volume_info['title']}")
+#         print(f"Author: {prettify_author}")
+#         print(f"Page Count: {volume_info['pageCount']}")
+#         print(f"Publication Date: {volume_info['publishedDate']}")
+#         print("\n***\n")
+#         try:
+#             categories = volume_info['categories']
+#             print(f"\nCategories: {categories}")
+#         except:
+#             print("This book has no saved categories")
+#
+#         try:
+#             main_categories = volume_info['mainCategory']
+#             print(f"\nCategories: {main_categories}")
+#         except:
+#             print("This book has no saved main categories")
+#
+#         # ask user if they would like to enter another isbn
+#         user_update = input("Would you like to enter another ISBN? y or n ").lower().strip()
+#
+#         if user_update != "y":
+#             print("May the Zen of Python be with you. Have a nice day!")
+#             break # as the name suggests, the break statement breaks out of the while loop
