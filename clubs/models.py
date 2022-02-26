@@ -235,14 +235,14 @@ class Post(models.Model):
 
 class Meeting(models.Model):
     """Meeting model"""
-    date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
-    members = models.ManyToManyField(User, related_name="members")
-    chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    date = models.DateTimeField("date", default=timezone.now)
+    location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
+    chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    book = models.ForeignKey(Book, on_delete=models.SET_NULL, related_name="book")
+    next_book = models.ForeignKey(Book, on_delete=models.SET_NULL, related_name="next_book")
     notes = models.CharField(max_length=300, blank=True)
-
 
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
