@@ -165,14 +165,13 @@ class StartMeetingForm(forms.ModelForm):
     class Meta:
         "Form options"
         model = Meeting
-        #fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
-        fields = ['next_book', 'notes']
-        widgets = { 'notes': forms.Textarea() }
-        #widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'})}
-    #date = forms.CharField(disabled=True)
-    #location = forms.CharField(disabled=True)
-    #URL = forms.CharField(disabled=True)
-    #chosen_member = forms.CharField(disabled=True)
+        fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
+        #fields = ['next_book', 'notes']
+        #widgets = { 'notes': forms.Textarea() }
+        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
+    date = forms.CharField(disabled=True, required=False)
+    location = forms.CharField(disabled=True, required=False)
+    URL = forms.CharField(disabled=True, required=False)
 
 class EditMeetingForm(forms.ModelForm):
     class Meta:
