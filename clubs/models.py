@@ -12,7 +12,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType
 
 import pytz
-import random
 
 # default values are used for any existing instances of books.
 class Book(models.Model):
@@ -247,9 +246,3 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
-
-    def get_random_member(self):
-        list = []
-        for i in self.members.all():
-            list.append(i)
-        return random.choice(list)

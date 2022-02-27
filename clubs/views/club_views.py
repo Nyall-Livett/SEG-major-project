@@ -14,14 +14,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
-from clubs.forms import MeetingForm, StartMeetingForm
 from django.http import JsonResponse
 import json
-
-from clubs.forms import BookForm
+import random
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
 
@@ -165,6 +163,10 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
         obj = form.save(commit=False)
         obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        list = []
+        for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
+            list.append(i)
+        obj.chosen_member = random.choice(list)
         obj.save()
         if form.is_valid():
             print("validatation succeed!")
@@ -176,7 +178,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             'club': Club.objects.get(id=self.kwargs.get('club_id'))
             }
             #message.add_message(request, messages.ERROR, "This is invaild!")
-            return render(request,"set_meeting.html", context)
+            return redirect('show_club', self.kwargs.get('club_id'))
 
         else:
             print("validatation failed")
@@ -186,22 +188,18 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             print(form.errors.as_data())
             #return Http404
 
-        context = {
-            'form': form,
-            'club': Club.objects.get(id=self.kwargs.get('club_id'))
-        }
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['notes', 'next_book'] # fields
+    form_class = StartMeetingForm
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = '__all__' # fields
+    form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
