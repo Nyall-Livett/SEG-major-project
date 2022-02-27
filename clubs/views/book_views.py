@@ -132,26 +132,23 @@ class WriteCategoriesToCSV():
         return categories
 
 
-        
-
     current_directory = os.getcwd()
 
-    if not(os.path.exists(current_directory + "/clubs/book_database/books_with_categories.csv")):
+    if not(os.path.exists(current_directory + "/clubs/book_database/test.csv")):
 
-        with open(current_directory + "/clubs/book_database/bigger_test.csv",'r') as csvfile:
-            with open(current_directory + "/clubs/book_database/books_with_categories.csv", 'w') as csvoutput:
+        with open(current_directory + "/clubs/book_database/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+            with open(current_directory + "/clubs/book_database/test.csv", 'w') as csvoutput:
                 writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
                 reader = csv.reader(csvfile, delimiter=";", quotechar='"')
 
-                all = []
                 row = next(reader)
+
+
                 new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
 
-                all.append(new_row)
+                writer.writerow(new_row)
 
                 for row in reader:
                     categories = get_book_categories(row)
                     new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
-                    all.append(new_row)
-
-                writer.writerows(all)
+                    writer.writerow(new_row)
