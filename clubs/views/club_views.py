@@ -134,38 +134,46 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     template_name = "set_meeting.html"
     form_class = MeetingForm
 
-    def form_valid(self, form):
+    def form_valid(self, form, **kwargs):
         meeting = form.instance
         #meeting.date = form['date']
+        meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
         meeting.save()
 
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
-    def get(self, request, club_id):
-        self.club = Club.objects.get(id=club_id)
+    def get(self, request, **kwargs):
         form = MeetingForm()
         context = {
-            'form': form
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
         }
         return render(request,"set_meeting.html", context)
 
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         form = MeetingForm(request.POST)
+        context = {
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
+        }
         #form.save()
         print('--------------------')
         print(request.POST)
         print('--------------------')
         #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
-        form.save()
+        obj = form.save(commit=False)
+        obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        obj.save()
         if form.is_valid():
             print("validatation succeed!")
             #print(form['date'])
             form.save()
             #print(form)
             context = {
-            'form': form
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
             }
             #message.add_message(request, messages.ERROR, "This is invaild!")
             return render(request,"set_meeting.html", context)
@@ -179,7 +187,8 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             #return Http404
 
         context = {
-            'form': form
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
         }
         #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
