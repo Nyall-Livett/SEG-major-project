@@ -246,3 +246,5 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
+
+    
