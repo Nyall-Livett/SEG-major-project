@@ -13,9 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm
 from django.views.generic.detail import DetailView
-import json
-from urllib.request import urlopen
-import os
+
 
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -106,49 +104,3 @@ class CreateBookView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse("book_list")
-
-class WriteCategoriesToCSV():
-    """Write categories to the books csv"""
-
-    def get_book_categories(row):
-        """Get Category from the Google books API"""
-
-        isbn = row[0]
-        api = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
-
-        api_response = urlopen(api + isbn)
-        book_data = json.load(api_response)
-
-        try:
-            volume_info = book_data["items"][0]["volumeInfo"]
-
-            try:
-                categories =  volume_info['categories']
-            except:
-                categories = ""
-        except:
-            categories = ""
-
-        return categories
-
-
-    current_directory = os.getcwd()
-
-    if not(os.path.exists(current_directory + "/clubs/book_database/test.csv")):
-
-        with open(current_directory + "/clubs/book_database/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
-            with open(current_directory + "/clubs/book_database/test.csv", 'w') as csvoutput:
-                writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
-                reader = csv.reader(csvfile, delimiter=";", quotechar='"')
-
-                row = next(reader)
-
-
-                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
-
-                writer.writerow(new_row)
-
-                for row in reader:
-                    categories = get_book_categories(row)
-                    new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
-                    writer.writerow(new_row)

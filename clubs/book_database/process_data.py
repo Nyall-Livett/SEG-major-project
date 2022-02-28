@@ -1,22 +1,90 @@
 import os
 import csv
-import system
+import sys
 import re
 from surprise import Dataset
-from surprise import reader
+from surprise import Reader
 from collections import defaultdict
 import numpy as np
+import json
+from urllib.request import urlopen
 
 class ProcessData:
 
     isbn_to_name = {}
     name_to_isbn = {}
-    ratingsPath = '../clubs/book_database/BX-Book-Ratings.csv'
-    booksPath = '../clubs/book_database/books_with_categories.csv'
+    current_directory = os.getcwd()
+    ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
+    booksPath = current_directory +  '/BX_Books_formated.csv'
+
+    def formatRatings(self):
+
+        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formated.csv")):
+
+            with open(self.current_directory + "/BX-Book-Ratings.csv",'r', encoding="iso-8859-1") as csvfile:
+                with open(self.current_directory + "/BX-Book-Ratings_formated.csv", 'w') as csvoutput:
+                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";")
+                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+
+                    row = next(reader)
+                    new_row = [row[0], row[1], row[2]]
+
+                    writer.writerow(new_row)
+
+                    for row in reader:
+                        new_row = [row[0], row[1], row[2]]
+                        writer.writerow(new_row)
+        print("finished loading ratings")
+
+
+
+    def get_book_categories(self, row):
+        """Get Category from the Google books API"""
+
+        isbn = row[0]
+        api = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
+
+        api_response = urlopen(api + isbn)
+        book_data = json.load(api_response)
+
+        try:
+            volume_info = book_data["items"][0]["volumeInfo"]
+
+            try:
+                categories =  volume_info['categories']
+            except:
+                categories = ""
+        except:
+            categories = ""
+
+        return categories
+
+
+    def formatBooks(self):
+
+        if not(os.path.exists(self.current_directory + "/BX_Books_formated.csv")):
+
+            with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+                with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
+                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+
+                    row = next(reader)
+
+                    new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+
+                    writer.writerow(new_row)
+
+                    for row in reader:
+                        categories = self.get_book_categories(row)
+                        new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
+                        writer.writerow(new_row)
+
+
+        print("The book csv has been formatted")
+
 
     def loadBooks(self):
-
-        os.chdir(os.path.dirname(sys.argv[0]))
 
         ratingsDataset = 0
         self.isbn_to_title = {}
@@ -27,14 +95,14 @@ class ProcessData:
         ratingsDataset = Dataset.load_from_file(self.ratingsPath, reader = reader)
 
         with open(self.booksPath, newline = '\n', encoding= 'ISO-8859-1') as csvfile:
-            bookReader = csv.reader(csvfile)
+            bookReader = csv.reader(csvfile, delimiter=";", quotechar='"')
             next(bookReader)
 
             for row in bookReader:
                 isbn = row[0]
-                bookTitle = row[1]
-                self.isbn_to_title[isbn] = bookTitla
-                self.title_to_isbn[bookName] = isbn
+                title = row[1]
+                self.isbn_to_title[isbn] = title
+                self.title_to_isbn[title] = isbn
 
         return ratingsDataset
 
@@ -128,3 +196,10 @@ class ProcessData:
             return self.isbn_to_title[title]
         else:
             return 0
+
+
+test = ProcessData()
+test.formatBooks()
+test.formatRatings()
+
+data = test.loadBooks()
