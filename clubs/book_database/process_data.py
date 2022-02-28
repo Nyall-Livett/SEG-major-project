@@ -104,14 +104,16 @@ class ProcessData:
                 self.isbn_to_title[isbn] = title
                 self.title_to_isbn[title] = isbn
 
+        print("The books have been loaded")
+
         return ratingsDataset
 
 
     def getUserRatings(self, user):
         userRatings = []
         hitUser = False
-        with open(slef.ratingsPath, newline='\n') as csvfile:
-            ratingReader = csv.reader(csvfile)
+        with open(self.ratingsPath, newline='\n') as csvfile:
+            ratingReader = csv.reader(csvfile,  delimiter=";")
             next(ratingReader)
 
             for row in ratingReader:
@@ -119,7 +121,7 @@ class ProcessData:
                 if(user == userID):
                     isbn = row[0]
                     rating = float(row[2])
-                    userRatings.append(isbn, rating)
+                    userRatings.append((isbn, rating))
                     hitUser = True
                 if (hitUser and(user != userID)):
                     break
@@ -132,7 +134,7 @@ class ProcessData:
         ratings = defaultdict(int)
         rankings = defaultdict(int)
         with open(self.ratingsPath, newline='') as csvfile:
-            ratingReader = csv.reader(csvfile)
+            ratingReader = csv.reader(csvfile,   delimiter=";")
             next(ratingReader)
             for row in ratingReader:
                 isbn = row[1]
@@ -148,7 +150,7 @@ class ProcessData:
         genreIDs = {}
         maxGenreID = 0
         with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
-            bookReader = csv.reader(csvfile)
+            bookReader = csv.reader(csvfile,   delimiter=";", quotechar='"')
             next(bookReader)
             for row in bookReader:
                 isbn = row[0]
@@ -168,14 +170,14 @@ class ProcessData:
             bitfield = [0] * maxGenreID
             for genreID in genreIDList:
                 bitfield[genreID] = 1
-            genres[movieID] = bitfield
+            genres[isbn] = bitfield
 
         return genres
 
     def getYears(self):
         years = defaultdict(int)
         with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
-            bookReader = csv.reader(csvfile)
+            bookReader = csv.reader(csvfile, delimiter = ';', quotechar= '"')
             next(bookReader)
             for row in bookReader:
                 isbn = row[0]
@@ -203,3 +205,15 @@ test.formatBooks()
 test.formatRatings()
 
 data = test.loadBooks()
+
+# ratings = test.getUserRatings(276725)
+# print(ratings)
+
+# genres = test.getGenres()
+# print(genres)
+#
+# years = test.getYears()
+# print(years)
+#
+# ranks = test.getPopularityRanks()
+# print(ranks)
