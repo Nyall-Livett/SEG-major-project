@@ -141,53 +141,27 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         meeting = form.instance
-        #meeting.date = form['date']
         meeting.save()
-
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
     def get(self, request, club_id):
-
         form = MeetingForm()
-        context = {
-            'form': form
-        }
+        context = {'form': form}
         return render(request,"set_meeting.html", context)
-  
+
 
     def post(self, request):
         form = MeetingForm(request.POST)
-        #form.save()
-        # print('--------------------')
-        # print(request.POST)
-        # print('--------------------')
-        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
         form.save()
         if form.is_valid():
-            print("validatation succeed!")
-            #print(form['date'])
             form.save()
-            #print(form)
-            context = {
-            'form': form
-            }
-            #message.add_message(request, messages.ERROR, "This is invaild!")
+            context = {'form': form}
             return render(request,"set_meeting.html", context)
-
-        else:
-            pass
-            # print("validatation failed")
-            # print('-----------------------------------')
-            # print(form)
-            # print('-----------------------------------')
-            # print(form.errors.as_data())
-            #return Http404
 
         context = {
             'form': form
         }
-        #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
@@ -303,41 +277,4 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         # self.delete_account_url =  f'/delete_account/{self.user.id}'
-
         return reverse('club_list')
-
-# """@login_required
-# def join_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         if club.members.count() >= club.maximum_members:
-#             messages.add_message(request, messages.WARNING,
-#                 f" Cannot join {club.name}. Member capacity has been reached")
-#             return redirect('club_list')
-#         else:
-#             club.add_or_remove_member(user)
-#             notifier = CreateNotification()
-#             notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
-#             messages.add_message(request, messages.SUCCESS,
-#                 f"You have successfully joined {club.name} ")
-#             return redirect('club_list')
-
-
-#     except ObjectDoesNotExist:
-#         return redirect('club_list')
-#     else:
-#         return redirect('club_list', user_id=user_id)
-
-# @login_required
-# def leave_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         club.add_or_remove_member(user)
-#         messages.add_message(request, messages.SUCCESS,
-#             f"You have left {club.name} ")
-#         return redirect('club_list')
-#     except ObjectDoesNotExist:
-#     def redirect(self):
-#         return redirect('club_list')
