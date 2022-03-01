@@ -3,7 +3,9 @@ from clubs.models import Book, Club, Moment
 from django.views.generic.list import ListView
 from clubs.forms import MomentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-import random
+import random, operator
+from operator import attrgetter
+
 
 class DashboardView(LoginRequiredMixin, ListView):
     """docstring for DashboardView."""
@@ -11,9 +13,18 @@ class DashboardView(LoginRequiredMixin, ListView):
     http_method_names = ['get']
     template_name = 'dashboard.html'
 
+    def get_moments(self, follower):
+        return follower.moment_set.all()[:5]
+
+    def flatten(self, list):
+        return [item for sublist in list for item in sublist]
+
     def get_queryset(self):
-        user_moments = Moment.objects.all().order_by('-created_on')
-        return user_moments
+        user_moments = list(self.request.user.moment_set.all()[:5])
+        moment_list = self.flatten(list(map(self.get_moments, self.request.user.followers.all())))
+        flat_moment_list = self.flatten([user_moments, moment_list])
+        flat_moment_list.sort(key=operator.attrgetter('created_on'), reverse=True)
+        return flat_moment_list
 
     def get_context_data(self, **kwargs):
         club_list = list(Club.objects.all())
