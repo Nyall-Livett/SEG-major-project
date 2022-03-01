@@ -14,13 +14,13 @@ class DashboardView(LoginRequiredMixin, ListView):
     template_name = 'dashboard.html'
 
     def get_moments(self, follower):
-        return follower.moment_set.all()[:5]
+        return follower.moment_set.all()[5:]
 
     def flatten(self, list):
         return [item for sublist in list for item in sublist]
 
     def get_queryset(self):
-        user_moments = list(self.request.user.moment_set.all()[:5])
+        user_moments = list(self.request.user.moment_set.all()[5:])
         moment_list = self.flatten(list(map(self.get_moments, self.request.user.followers.all())))
         flat_moment_list = self.flatten([user_moments, moment_list])
         flat_moment_list.sort(key=operator.attrgetter('created_on'), reverse=True)
