@@ -11,8 +11,8 @@ from urllib.request import urlopen
 
 class ProcessData:
 
-    isbn_to_name = {}
-    name_to_isbn = {}
+    isbn_to_title = {}
+    title_to_isbn = {}
     current_directory = os.getcwd()
     ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
     booksPath = current_directory +  '/BX_Books_formated.csv'
@@ -189,13 +189,13 @@ class ProcessData:
 
     def getBookTitle(self, isbn):
         if isbn in self.isbn_to_title:
-            return self.title_to_isbn[isbn]
+            return self.isbn_to_title.get(isbn)
         else:
             return ""
 
     def getisbn(self, title):
         if title in self.title_to_isbn:
-            return self.isbn_to_title[title]
+            return self.title_to_isbn.get(title)
         else:
             return 0
 
@@ -217,3 +217,8 @@ data = test.loadBooks()
 #
 # ranks = test.getPopularityRanks()
 # print(ranks)
+#
+# print(test.title_to_isbn)
+# print(test.isbn_to_title)
+print(test.getBookTitle("0002005018"))
+print(test.getisbn('Clara Callan'))
