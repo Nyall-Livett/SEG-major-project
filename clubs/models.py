@@ -12,8 +12,26 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType, MomentType
 
 import pytz
-import random
 
+# default values are used for any existing instances of books.
+class Book(models.Model):
+    """Book model"""
+    isbn = models.CharField(max_length=13, unique=True, blank=False)
+    name = models.CharField(max_length=64, blank=False)
+    description = models.CharField(max_length=2048, blank=True)
+    author = models.CharField(max_length=64, blank=False)
+    publication_year = models.CharField(max_length=4, blank=True)
+    publisher = models.CharField(max_length=64, blank=True)
+    image_url_s = models.URLField(max_length=200, blank=True)
+    image_url_m = models.URLField(max_length=200, blank=True)
+    image_url_l = models.URLField(max_length=200, blank=True)
+
+    class Meta:
+        """Model options."""
+        ordering = ['isbn']
+
+    def __str__(self):
+        return self.name
 
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
@@ -25,6 +43,11 @@ class User(AbstractUser):
     bio = models.CharField(max_length=520, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
     follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
+    favourite_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='fav_book')
+    favourite_character = models.CharField(max_length=50, blank=True)
+    favourite_genre = models.CharField(max_length=50, blank=True)
+    favourite_author = models.CharField(max_length=50, blank=True)
+    want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_read')
 
     class Meta:
         """Model options."""
@@ -219,43 +242,19 @@ class Post(models.Model):
         """Model options."""
         ordering = ['-created_at']
 
-# default values are used for any existing instances of books.
-class Book(models.Model):
-    """Book model"""
-    isbn = models.CharField(max_length=13, unique=True, blank=False)
-    name = models.CharField(max_length=64, blank=False)
-    description = models.CharField(max_length=2048, blank=True)
-    author = models.CharField(max_length=64, blank=False)
-    publication_year = models.CharField(max_length=4, blank=True)
-    publisher = models.CharField(max_length=64, blank=True)
-    image_url_s = models.URLField(max_length=200, blank=True)
-    image_url_m = models.URLField(max_length=200, blank=True)
-    image_url_l = models.URLField(max_length=200, blank=True)
-
-    class Meta:
-        """Model options."""
-        ordering = ['isbn']
-
-    def __str__(self):
-        return self.name
-
 class Meeting(models.Model):
     """Meeting model"""
-    date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
-    members = models.ManyToManyField(User, related_name="members")
-    chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    date = models.DateTimeField("date", default=timezone.now)
+    location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
+    chosen_member = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="book")
+    next_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="next_book")
     notes = models.CharField(max_length=300, blank=True)
-
 
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
 
-    def get_random_member(self):
-        list = []
-        for i in self.members.all():
-            list.append(i)
-        return random.choice(list)
+    

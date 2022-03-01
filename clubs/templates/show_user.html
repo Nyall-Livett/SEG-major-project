@@ -43,12 +43,40 @@
                                       <p class="text-muted">{{user.bio}}</p>
                                   </div>
 
+                                  {% if following or user.id == request.user.id %}
+                                  <br>
+                                  <br>
                                   <div>
-                                    <h5 class="m-b-10 f-w-600">Clubs participating:</h5>
+                                    <h5 class="m-b-10 f-w-600">Clubs joined:</h5>
                                     {% for club in user.clubs.all %}
                                     <m class= "text-muted">{{ club.name }}, </m>
                                     {% endfor %}
-                                </div>
+                                  </div>
+                                  <br>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Book:</h5>
+                                      <p class="text-muted">{{user.favourite_book}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Character:</h5>
+                                      <p class="text-muted">{{user.favourite_character}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Genre:</h5>
+                                      <p class="text-muted">{{user.favourite_genre}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Author:</h5>
+                                      <p class="text-muted">{{user.favourite_author}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Want to read next:</h5>
+                                      <p class="text-muted">{{user.want_to_read_next}}</p>
+                                  </div>
+                                  {% endif %}
+
+
+
                               </div>
                           </div>
                       </div>

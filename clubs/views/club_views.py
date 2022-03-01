@@ -14,14 +14,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
-from clubs.forms import MeetingForm, StartMeetingForm
 from django.http import JsonResponse
 import json
-
-from clubs.forms import BookForm
+import random
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
@@ -139,40 +137,71 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
-    def form_valid(self, form):
+    def form_valid(self, form, **kwargs):
         meeting = form.instance
+        #meeting.date = form['date']
+        meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
         meeting.save()
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
-    def get(self, request, club_id):
+    def get(self, request, **kwargs):
         form = MeetingForm()
-        context = {'form': form}
+        context = {
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
+        }
         return render(request,"set_meeting.html", context)
 
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         form = MeetingForm(request.POST)
-        form.save()
+        context = {
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
+        }
+        #form.save()
+        print('--------------------')
+        print(request.POST)
+        print('--------------------')
+        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
+        obj = form.save(commit=False)
+        obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        list = []
+        for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
+            list.append(i)
+        obj.chosen_member = random.choice(list)
+        obj.save()
         if form.is_valid():
             form.save()
-            context = {'form': form}
-            return render(request,"set_meeting.html", context)
+            #print(form)
+            context = {
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
+            }
+            #message.add_message(request, messages.ERROR, "This is invaild!")
+            return redirect('show_club', self.kwargs.get('club_id'))
 
-        context = {
-            'form': form
-        }
+        else:
+            print("validatation failed")
+            print('-----------------------------------')
+            print(form)
+            print('-----------------------------------')
+            print(form.errors.as_data())
+            #return Http404
+
+        #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['notes'] # fields
+    form_class = StartMeetingForm
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = '__all__' # fields
+    form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
