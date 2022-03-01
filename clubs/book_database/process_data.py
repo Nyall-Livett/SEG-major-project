@@ -200,11 +200,11 @@ class ProcessData:
             return 0
 
 
-test = ProcessData()
-test.formatBooks()
-test.formatRatings()
-
-data = test.loadBooks()
+# test = ProcessData()
+# test.formatBooks()
+# test.formatRatings()
+#
+# data = test.loadBooks()
 
 # ratings = test.getUserRatings(276725)
 # print(ratings)
@@ -220,5 +220,5 @@ data = test.loadBooks()
 #
 # print(test.title_to_isbn)
 # print(test.isbn_to_title)
-print(test.getBookTitle("0002005018"))
-print(test.getisbn('Clara Callan'))
+# print(test.getBookTitle("0002005018"))
+# print(test.getisbn('Clara Callan'))

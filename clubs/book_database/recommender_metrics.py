@@ -17,7 +17,7 @@ class RecommenderMetrics:
 
         for userID, isbn, actualRating, estimatedRating, _ in predictions:
             if (estimatedRating >= minimumRating):
-                topN[int(userID)].append(isbn, estimatedRating))
+                topN[int(userID)].append((isbn, estimatedRating))
 
         for userID, ratings in topN.items():
             ratings.sort(key=lambda x: x[1], reverse=True)
