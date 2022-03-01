@@ -9,7 +9,7 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.enums import NotificationType
+from clubs.enums import NotificationType, MomentType
 
 import pytz
 
@@ -64,7 +64,7 @@ class User(AbstractUser):
 
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
-        return self.gravatar(size=60)
+        return self.gravatar(size=50)
 
     def future_meetings(self):
         utc=pytz.UTC
@@ -218,6 +218,16 @@ class Notification(models.Model):
     associated_user = models.IntegerField(blank=True, null=True)
     associated_club = models.IntegerField(blank=True, null=True)
 
+class Moment(models.Model):
+    """docstring for Moments."""
+
+    body = models.CharField(blank=False, max_length=128)
+    type = models.IntegerField(blank=False, choices = MomentType.choices)
+    likes = models.IntegerField(blank=False, default = 0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(default=timezone.now, blank=False)
+    associated_user = models.IntegerField(blank=True, null=True)
+    associated_club = models.IntegerField(blank=True, null=True)
 
 
 class Post(models.Model):

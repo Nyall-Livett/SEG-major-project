@@ -21,7 +21,8 @@ import random
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
 from clubs.factories.notification_factory import CreateNotification
-from clubs.enums import NotificationType
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import NotificationType, MomentType
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -38,6 +39,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         notifier = CreateNotification()
         notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club': club})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.CLUB_CREATED, self.request.user, {'club': club})
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -60,6 +63,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
                 club.save()
                 notifier = CreateNotification()
                 notifier.notify(NotificationType.CLUB_RECEIVED, new_leader, {'club': club})
+                messages.add_message(self.request, messages.SUCCESS, f"You have successfully transferred leadership of {club.name}.")
                 return JsonResponse({
                     'redirect_url': reverse('show_club', args=[club_id])
                 }, status=200)
@@ -130,6 +134,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
     http_method_names = ['get', 'post']
     template_name = "set_meeting.html"
+    pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
     def form_valid(self, form, **kwargs):
@@ -137,7 +142,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         #meeting.date = form['date']
         meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
         meeting.save()
-
         meeting.add_meeting(self.request.meeting)
         return super().form_valid(form)
 
@@ -169,8 +173,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         obj.chosen_member = random.choice(list)
         obj.save()
         if form.is_valid():
-            print("validatation succeed!")
-            #print(form['date'])
             form.save()
             #print(form)
             context = {
@@ -242,7 +244,8 @@ class acceptClubapplication(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
-
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
         return redirect('pending_requests', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
@@ -303,41 +306,4 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         # self.delete_account_url =  f'/delete_account/{self.user.id}'
-
         return reverse('club_list')
-
-# """@login_required
-# def join_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         if club.members.count() >= club.maximum_members:
-#             messages.add_message(request, messages.WARNING,
-#                 f" Cannot join {club.name}. Member capacity has been reached")
-#             return redirect('club_list')
-#         else:
-#             club.add_or_remove_member(user)
-#             notifier = CreateNotification()
-#             notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
-#             messages.add_message(request, messages.SUCCESS,
-#                 f"You have successfully joined {club.name} ")
-#             return redirect('club_list')
-
-
-#     except ObjectDoesNotExist:
-#         return redirect('club_list')
-#     else:
-#         return redirect('club_list', user_id=user_id)
-
-# @login_required
-# def leave_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         club.add_or_remove_member(user)
-#         messages.add_message(request, messages.SUCCESS,
-#             f"You have left {club.name} ")
-#         return redirect('club_list')
-#     except ObjectDoesNotExist:
-#     def redirect(self):
-#         return redirect('club_list')

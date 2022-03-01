@@ -1,0 +1,12 @@
+[
+  {
+    "model": "clubs.moment",
+    "pk": 1,
+    "fields": {
+      "body": "This is a moment"
+      "type": 0,
+      "likes":0
+      "user": 1
+    }
+  }
+]

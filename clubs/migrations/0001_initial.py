@@ -104,6 +104,19 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Moment',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('body', models.CharField(max_length=128)),
+                ('type', models.IntegerField(choices=[(0, 'Custom'), (1, 'Became Friends'), (2, 'Club Created'), (3, 'Book Recommendation'), (4, 'Reading New Book')])),
+                ('likes', models.IntegerField(default=0)),
+                ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('associated_user', models.IntegerField(blank=True, null=True)),
+                ('associated_club', models.IntegerField(blank=True, null=True)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Meeting',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
