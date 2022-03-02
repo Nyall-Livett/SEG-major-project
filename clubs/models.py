@@ -9,7 +9,7 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.enums import NotificationType, MomentType
+from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
 
 import pytz
 
@@ -257,4 +257,8 @@ class Meeting(models.Model):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
 
-    
+class CustomAvatar(models.Model):
+
+    color = models.CharField(blank=False, null=True , choices = AvatarColor.choices)
+    icon = models.CharField(blank=False, null=True, choices = AvatarIcon.choices)
+    leader = models.OneToOneField(User, on_delete=models.CASCADE)
