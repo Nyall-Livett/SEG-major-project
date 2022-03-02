@@ -137,17 +137,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
-    def form_valid(self, form, **kwargs):
-        print('---------------')
-        print('Form_valid method has been reached')
-        print('---------------')
-        meeting = form.instance
-        #meeting.date = form['date']
-        meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
-        meeting.save()
-        meeting.add_meeting(self.request.meeting)
-        return super().form_valid(form)
-
     def get(self, request, **kwargs):
         form = MeetingForm()
         context = {
@@ -158,38 +147,11 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
 
     def post(self, request, **kwargs):
-        print('-----------')
-        print('Post method has been reached')
-        print('-----------')
         form = MeetingForm(request.POST)
-        """
-        context = {
-            'form': form,
-            'club': Club.objects.get(id=self.kwargs.get('club_id'))
-        }
-        #form.save()
-        print('--------------------')
-        print(request.POST)
-        print('--------------------')
-        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
-        obj = form.save(commit=False)
-        print('--------------------')
-        print(obj)
-        print('--------------------')
-        obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
-        print('--------------------')
-        print(obj.club)
-        print('--------------------')
-        obj.URL = "This is a test url"
-        list = []
-        for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
-            list.append(i)
-        obj.chosen_member = random.choice(list)
-        obj.save()
-
-        """
         if form.is_valid():
             obj = form.save(commit=False)
+
+            # Set club, URL and chosen member before save
             obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
             obj.URL = "This is a test url"
             list = []
@@ -197,23 +159,23 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
                 list.append(i)
             obj.chosen_member = random.choice(list)
             obj.save()
-            #print(form)
+
+            """
             context = {
             'form': form,
             'club': Club.objects.get(id=self.kwargs.get('club_id'))
             }
-            #message.add_message(request, messages.ERROR, "This is invaild!")
+
+            """
+
             return redirect('show_club', self.kwargs.get('club_id'))
 
         else:
-            print("validatation failed")
-            print('-----------------------------------')
-            print(form)
-            print('-----------------------------------')
-            print(form.errors.as_data())
-            #return Http404
-
-        #message.add_message(request, messages.ERROR, "This is invaild!")
+            context = {
+                'form': form,
+                'club': Club.objects.get(id=self.kwargs.get('club_id'))
+            }
+            
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
