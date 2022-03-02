@@ -4,63 +4,54 @@
   <div class="row">
     <div class="col-4">
       <div class="row">
-        <h5 style="color:#878787">Create your own avatar</h5>
+        <div style="color:#878787">Create your own avatar</div>
+        <small style="color:#878787">(You can use gravatar if you prefer)</small>
       </div>
       <div class="create-icon-wrap">
         <div class="container card create-icon-container">
 
-          <!-- choose color -->
+          <!-- Choose color -->
           <div class="row" style="margin-top:16px;">
             <h6 style="color:#878787">Choose background color</h6>
           </div>
-          <div class="row sb" style="margin-top:16px;">
+
+          <div class="color-holder sb" style="margin-top:16px;">
+
             <div class="rounded-container">
               <input type="radio" name="blue" value="blue">
               <div class="rounded-color"
-                onmouseover="addColorToPreview(this)"
-                onmouseout="removeColorFromPreview()"
                 onclick="setColor(this.id)"
-                id="blue"
-                data-color="#70bbfb">
+                id="blue">
               </div>
             </div>
 
             <div class="rounded-container">
               <input type="radio" name="red" value="red">
               <div class="rounded-color"
-                onmouseover="addColorToPreview(this)"
-                onmouseout="removeColorFromPreview()"
                 onclick="setColor(this.id)"
-                id="red"
-                data-color="#ff7d7d">
+                id="red">
               </div>
             </div>
 
             <div class="rounded-container">
               <input type="radio" name="yellow" value="yellow">
               <div class="rounded-color"
-                onmouseover="addColorToPreview(this)"
-                onmouseout="removeColorFromPreview()"
                 onclick="setColor(this.id)"
-                id="yellow"
-                data-color="#f1fc5a">
+                id="yellow">
               </div>
             </div>
 
             <div class="rounded-container">
               <input type="radio" name="green" value="green">
               <div class="rounded-color"
-                onmouseover="addColorToPreview(this)"
-                onmouseout="removeColorFromPreview()"
                 onclick="setColor(this.id)"
-                id="green"
-                data-color="#55d634">
+                id="green">
               </div>
             </div>
           </div>
 
 
-          <!-- choose icon -->
+          <!-- Choose icon -->
           <div class="row " style="margin-top:32px;">
             <h6 style="color:#878787">Choose Avatar Icon</h6>
           </div>
@@ -83,21 +74,37 @@
         </div>
       </div>
     </div>
-    <div class="col-1">
 
-    </div>
-    <div class="col-7">
-      <h1>Sign up</h1>
+    <!-- Gutter -->
+    <!-- <div class="col-1"></div> -->
+
+    <!-- Sign up form -->
+    <div class="col-8" style="padding: 0 26px">
+
+
+      <h6 style="color:#878787">Sign up form</h6>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
+
+
         {% include 'partials/bootstrap_form.html' with form=form %}
+
+
         <input type="submit" value="Sign up" class="btn btn-primary">
       </form>
       <br>
     </div>
   </div>
 </div>
+
+
 {% endblock %}
+
+
+
+
+
+
 {% block javascript %}
 
   <script type="text/javascript">
@@ -107,40 +114,18 @@
       icon = $("#icon-image")
     })
 
-
     // Color
     const setColor = (color) => {
       preview.attr('id', color)
     }
 
-    const addColorToPreview = (element) => {
-      preview.css("background-color", element.dataset.color);
-    }
-
-    const removeColorFromPreview = () => {
-      preview.removeAttr("style")
-    }
-
-    // // Icon
+    // Icon
     const setIcon = (iconName) => {
       if (icon.is(":hidden")) {
         icon.css("display", "inline-block")
       }
       icon.attr('src', `/static/images/${iconName}.svg` )
     }
-    //
-    // const addIconToPreview = (iconName) => {
-    //   debugger
-    //   icon.attr('src', f"/static/images/{{iconName}}.png" )
-    // }
-    //
-    // const removeIconFromPreview = () => {
-    //   preview.removeAttr("style")
-    // }
-
-    $('.rounded-container').hover( addColorToPreview, removeColorFromPreview)
-
-
 
   </script>
 
