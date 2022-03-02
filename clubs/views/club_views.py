@@ -159,15 +159,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
                 list.append(i)
             obj.chosen_member = random.choice(list)
             obj.save()
-
-            """
-            context = {
-            'form': form,
-            'club': Club.objects.get(id=self.kwargs.get('club_id'))
-            }
-
-            """
-
             return redirect('show_club', self.kwargs.get('club_id'))
 
         else:
@@ -175,7 +166,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
                 'form': form,
                 'club': Club.objects.get(id=self.kwargs.get('club_id'))
             }
-            
+
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
