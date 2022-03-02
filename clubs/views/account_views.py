@@ -8,6 +8,7 @@ from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
 from clubs.models import User, Club
+from clubs.enums import AvatarIcon, AvatarColor
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -64,6 +65,12 @@ class SignUpView(LoginProhibitedMixin, FormView):
         self.object = form.save()
         login(self.request, self.object)
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['avatar_icons'] = AvatarIcon.labels
+        context['avatar_colors'] = AvatarColor.labels
+        return context
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
