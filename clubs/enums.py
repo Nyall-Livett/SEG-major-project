@@ -15,25 +15,33 @@ class MomentType(models.IntegerChoices):
     BOOK_RECOMMENDATION = 3
     READING_NEW_BOOK = 4
 
-class AvatarIcon(models.IntegerChoices):
-    BRUTUS = 0, "brutus"
-    BILL = 1, "bill"
-    GENIE = 2, "genie"
-    GRINCH = 3, "grinch"
-    JERRY = 4, "jerry"
-    KEIJI = 5, "keiji"
-    KERMIT = 6, "kermit"
-    KUROO = 7, "kuroo"
-    LION = 8, "lion"
-    MELODY = 9, "melody"
-    MERMAID = 10, "mermaid"
-    MORTY = 11, "morty"
-    TURTLE = 12, "turtle"
-    CHEBURASHKA = 13, "cheburashka"
-    AMETHYST = 14, "amethyst"
+class AvatarIcon(models.TextChoices):
+    BRUTUS = "brutus"
+    BILL = "bill"
+    GENIE = "genie"
+    GRINCH = "grinch"
+    JERRY = "jerry"
+    KEIJI = "keiji"
+    KERMIT = "kermit"
+    KUROO = "kuroo"
+    LION = "lion"
+    MELODY = "melody"
+    MERMAID = "mermaid"
+    MORTY = "morty"
+    TURTLE = "turtle"
+    CHEBURASHKA = "cheburashka"
+    AMETHYST = "amethyst"
 
-class AvatarColor(models.IntegerChoices):
-    BLUE = 0, "#70bbfb"
-    RED = 1, "#ff7d7d"
-    YELLOW = 2, "#f1fc5a"
-    GREEN = 3, "#55d634"
+    @classmethod
+    def list(cls):
+        return list(map(lambda x: (x.value), AvatarIcon))
+
+class AvatarColor(models.TextChoices):
+    BLUE = "blue"
+    RED = "red"
+    YELLOW = "yellow"
+    GREEN = "green"
+
+    @classmethod
+    def list(cls):
+        return list(map(lambda x: (x.value), AvatarColor))
