@@ -367,3 +367,85 @@ a {
   height:20px;
   width: 100%;
 }
+
+/* create icon */
+
+.icon-preview{
+  height: 125px;
+  width: 125px;
+  background-color: lightgrey;
+  border-radius: 50%;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#icon-image {
+  height: 100px;
+  width: 100px
+}
+
+.create-icon-wrap {
+  width: 100%;
+}
+
+.create-icon-container{
+  width: inherit;
+  height: 100%;
+  margin-top: 16px;
+  background-color: white;
+}
+
+.rounded-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.square-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.rounded-container{
+  height: 100px;
+  width: 100px;
+}
+
+.square-container{
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+  padding: 0;
+  margin: 4px 4px;
+}
+
+.rounded-color{
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#blue {
+  background-color: #70bbfb;
+}
+
+#red {
+  background-color: #ff7d7d;
+}
+
+#yellow {
+  background-color: #f1fc5a;
+}
+
+#green {
+  background-color: #55d634;
+}
+
+.sb {
+  flex-direction: row;
+  justify-content: space-evenly;
+}
