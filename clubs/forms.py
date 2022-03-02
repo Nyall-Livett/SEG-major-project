@@ -158,7 +158,7 @@ class MeetingForm(forms.ModelForm):
         "Form options"
 
         model = Meeting
-        fields = ['date', 'location', 'URL', 'book', 'notes']
+        fields = ['date', 'location', 'book', 'notes']
         widgets = { 'notes': forms.Textarea() }
 
 class StartMeetingForm(forms.ModelForm):

@@ -138,6 +138,9 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     form_class = MeetingForm
 
     def form_valid(self, form, **kwargs):
+        print('---------------')
+        print('Form_valid method has been reached')
+        print('---------------')
         meeting = form.instance
         #meeting.date = form['date']
         meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
@@ -155,7 +158,11 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
 
     def post(self, request, **kwargs):
+        print('-----------')
+        print('Post method has been reached')
+        print('-----------')
         form = MeetingForm(request.POST)
+        """
         context = {
             'form': form,
             'club': Club.objects.get(id=self.kwargs.get('club_id'))
@@ -166,14 +173,30 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         print('--------------------')
         #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
         obj = form.save(commit=False)
+        print('--------------------')
+        print(obj)
+        print('--------------------')
         obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        print('--------------------')
+        print(obj.club)
+        print('--------------------')
+        obj.URL = "This is a test url"
         list = []
         for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
             list.append(i)
         obj.chosen_member = random.choice(list)
         obj.save()
+
+        """
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+            obj.URL = "This is a test url"
+            list = []
+            for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
+                list.append(i)
+            obj.chosen_member = random.choice(list)
+            obj.save()
             #print(form)
             context = {
             'form': form,
