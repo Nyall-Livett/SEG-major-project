@@ -33,6 +33,14 @@ for innerID, score in enumerate(similarityRow):
 
 kNeighbors = heapq.nlargest(k, similarUsers, key=lambda t: t[1])
 
+# Not getting the top N users with high similarity, we try to get all the users with similarity
+# higher than 0.95
+
+# kNeighbors = []
+# for rating in similarUsers:
+#     if rating[1] > 0.95:
+#         kNeighbors.append(rating)
+
 # Get the stuff they rated, and add up ratings for each item, weighted by user similarity
 candidates = defaultdict(float)
 for similarUser in kNeighbors:

@@ -26,6 +26,14 @@ testUserInnerID = trainSet.to_inner_uid(testSubject)
 testUserRatings = trainSet.ur[testUserInnerID]
 kNeighbors = heapq.nlargest(k, testUserRatings, key=lambda t: t[1])
 
+# Not getting the top N books, we try to get all the books with rating
+# higher than 8.0
+
+# kNeighbors = []
+# for rating in testUserRatings:
+#     if rating[1] > 8.0:
+#         kNeighbors.append(rating)
+
 # Get similar items to stuff we liked (weighted by rating)
 candidates = defaultdict(float)
 for itemID, rating in kNeighbors:
