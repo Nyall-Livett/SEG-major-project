@@ -59,6 +59,30 @@ class ProcessData:
 
         return categories
 
+    #
+    # def formatBooks(self):
+    #
+    #     if not(os.path.exists(self.current_directory + "/BX_Books_formated.csv")):
+    #
+    #         with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+    #             with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
+    #                 writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+    #                 reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+    #
+    #                 row = next(reader)
+    #
+    #                 new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+    #
+    #                 writer.writerow(new_row)
+    #
+    #                 for row in reader:
+    #                     categories = self.get_book_categories(row)
+    #                     new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
+    #                     writer.writerow(new_row)
+    #
+    #
+    #     print("The book csv has been formatted")
+
 
     def formatBooks(self):
 
@@ -80,8 +104,63 @@ class ProcessData:
                         new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
                         writer.writerow(new_row)
 
+        else:
 
-        print("The book csv has been formatted")
+            current_isbn = ""
+            start = False
+
+            with open(self.current_directory + "/BX_Books_formated.csv",'r', encoding="iso-8859-1") as csvfile:
+                reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+
+                for row in reader:
+                    current_isbn = row[0]
+                print(current_isbn)
+                start = False
+
+            with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+                with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
+                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+
+                    for row in reader:
+
+                        if start ==True:
+                            categories = self.get_book_categories(row)
+                            new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
+                            writer.writerow(new_row)
+
+                        else:
+                            
+                            if row[0] == current_isbn:
+                                start = True
+        #
+        # if not(os.path.exists(self.current_directory + "/BX_Books_formated.csv")):
+        #
+        #     with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+        #         with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
+        #             writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+        #             reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+        #
+        #             row = next(reader)
+        #
+        #             new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+        #
+        #             writer.writerow(new_row)
+        #
+        #             for row in reader:
+        #                 categories = self.get_book_categories(row)
+        #                 new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
+        #                 writer.writerow(new_row)
+        #
+        # else:
+        #
+        #     with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
+        #         with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
+        #             writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
+        #             reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+        #
+        #
+        #             print(writer)
 
 
     def loadBooks(self):
@@ -200,8 +279,8 @@ class ProcessData:
             return 0
 
 
-# test = ProcessData()
-# test.formatBooks()
+test = ProcessData()
+test.formatBooks()
 # test.formatRatings()
 #
 # data = test.loadBooks()
