@@ -24,18 +24,20 @@ class MeetingFormTestCase(TestCase):
         self.form_input = {
             #"date": "2022-02-27 11:00:00",
             "date": "2022-02-27 11:00:00",
+            "location": "Online",
             "URL": "www.aaa.com",
             "club":1,
             "notes": "This is a note.",
             "book":1,
-            "members":[1]
+            "next_book":1,
+            "chosen_member":1
         }
 
 
     # Test Form has the correct fields in the form
-    def test_form_contains_required_fields(self):
+    """def test_form_contains_required_fields(self):
         form = MeetingForm(self.form_input)
-        self.assertIn('club', form.fields)
+        self.assertIn('club', form.fields)"""
         #self.assertIn('members', form.fields)
         #self.assertIn('book', form.fields)
 
@@ -47,25 +49,43 @@ class MeetingFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
 
     # Test the form rejects blank club
-    def test_form_rejects_blank_name(self):
+    def test_form_rejects_blank_club(self):
         self.form_input['club'] = ''
         form = MeetingForm(data=self.form_input)
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid())
 
-    # Test the form rejects blank meeting notes
+    # Test the form accepts blank meeting notes
     def test_form_accepts_blank_notes(self):
         self.form_input['notes'] = ''
         form = MeetingForm(data=self.form_input)
         self.assertTrue(form.is_valid())
 
-    # Test the form error message for blank next_book
-    def test_form_error_message_for_blank_book(self):
+    # Test the form accepts blank meeting location
+    def test_form_accepts_blank_location(self):
+        self.form_input['location'] = ''
+        form = MeetingForm(data=self.form_input)
+        self.assertTrue(form.is_valid())
+
+    # Test the form accepts blank meeting URL
+    def test_form_accepts_blank_URL(self):
+        self.form_input['URL'] = ''
+        form = MeetingForm(data=self.form_input)
+        self.assertTrue(form.is_valid())
+
+    # Test the form accepts blank meeting book
+    def test_form_accepts_blank_book(self):
         self.form_input['book'] = ''
         form = MeetingForm(data=self.form_input)
-        self.assertEqual(form.errors["book"], ["This field is required."])
+        self.assertTrue(form.is_valid())
 
-    # Test the form error message for blank club
-    def test_form_error_message_for_blank_club(self):
-        self.form_input['club'] = 0
+    # Test the form accepts blank meeting next_book
+    def test_form_accepts_blank_next_book(self):
+        self.form_input['next_book'] = ''
         form = MeetingForm(data=self.form_input)
-        self.assertEqual(form.errors["club"], ["Select a valid choice. That choice is not one of the available choices."])
+        self.assertTrue(form.is_valid())
+
+    # Test the form accepts blank book
+    def test_form_accepts_blank_book(self):
+        self.form_input['book'] = ''
+        form = MeetingForm(data=self.form_input)
+        self.assertTrue(form.is_valid())

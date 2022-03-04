@@ -1,90 +1,196 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <div class="row">
+{% load humanize %}
 
-    <h1>Your Clubs:</h1>
-    <table class="table">
-      {% for club in request.user.clubs.all %}
-        <tr>
-          <td>
-            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-          </td>
-          <td>{{ club.name }}</td>
-          <td>{{ club.leader }}</td>
-          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
-          <td>
-              {% if user in club.members.all %}
-                <form action="{% url 'join_club' user.id club.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
-                </form>
-              {% else %}
-                {% if user in club.applicants.all %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Request sent</button>
-                  </form>
-                {% else %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Join</button>
-                  </form>
-                {% endif %}
-              {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
+<div class="container-fluid" style="padding:0 26px; height:100%">
 
-    <h1>Take a look at some books:</h1>
-    <table class="table">
-      {% for book in books %}
-        <tr>
-          <td>
-            <img src="{{ book.image_url_s }}" alt="Image not found" >
-          </td>
-          <td><a href="{% url 'show_book' book.id %}">{{ book.name }}</a></td>
-          <td>{{ book.author }}</a></td>
-          <td>{{ book.isbn }}</a></td>
-        </tr>
-      {% endfor %}
-    </table>
+  <div class="row" style="height:100%">
 
-    <h1>Join some clubs:</h1>
-    <table class="table">
-      {% for club in clubs %}
-        <tr>
-          <td>
-            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-          </td>
-          <td>{{ club.name }}</td>
-          <td>{{ club.leader }}</td>
-          <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
-          <td>
-              {% if user in club.members.all %}
-                <form action="{% url 'join_club' user.id club.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
-                </form>
-              {% else %}
-                {% if user in club.applicants.all %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Request sent</button>
-                  </form>
-                {% else %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Join</button>
-                  </form>
-                {% endif %}
-              {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
+    <!-- Left -->
+    <div class="col-sm-2" style="height:100%" >
+      <div class="row">
+        <div>
+          <p style="color:#878787">Recommended reads</p>
+        </div>
+      </div>
 
+      <div class="row card s-40 p-16">
+        <div class="collection-wrap">
+          {% for club in random_clubs %}
+            <div class="single-item-wrap">
+              <div class="book-image">
+              </div>
+              <div class="book-details">
+                <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle -->
+    <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
+
+      <!-- Moment header -->
+      <div class="moments-header">
+        <div>
+          <h5 style="color:#878787">Moments</h5>
+        </div>
+        <div style="margin-left: 24px;">
+          <p style="margin-bottom: 0px; color:cornflowerblue">“Some moments are nice, some are nicer, some are even worth writing about.”</p> <small style="color:#767676">― Charles Bukowski</small>
+        </div>
+      </div>
+
+      <!-- Share a moment -->
+      <div class="row flex-center" style="margin-top:28px;">
+        <div class="col">
+          <form id="moment-form" onsubmit="submitForm(event, this)" action="{% url 'create_moment' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+              <label for="moment_id" class="form-label" style="color:#43a1f3;">Share a moment with your followers</label>
+              <input type="{{ field.field.widget.input_type }}" class="form-control" id="moment-body" placeholder="Say something..." autocomplete="off">
+            </div>
+            {% endfor %}
+          </form>
+        </div>
+      </div>
+
+      <!-- View moments -->
+      <div id="moment-wrapper">
+        {% for moment in object_list %}
+
+          <!-- CUSTOM -->
+          {% if moment.type == 0 %}
+            {% include 'partials/custom_moment_partial.html' with moment=moment %}
+
+          <!-- BECAME_FRIENDS -->
+          {% elif moment.type == 1 %}
+
+          <!-- CLUB_CREATED -->
+          {% elif moment.type == 2 %}
+            {% include 'partials/create_club_moment_partial.html' with moment=moment %}
+
+          <!-- BOOK_RECOMMENDATION -->
+          {% elif moment.type == 3 %}
+          
+          <!-- READING_NEW_BOOK -->
+          {% elif moment.type == 4 %}
+
+          {% endif %}
+        {% empty %}
+          <div class="empty-moments">
+            <h4>Its pretty quiet in here, why dont you share a moment</h4>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="col-sm-2" style="height:100%">
+      <div class="row">
+        <div>
+          <p style="color:#878787">Popular clubs</p>
+        </div>
+      </div>
+      <div class="row card s-40 p-16">
+          <div class="collection-wrap">
+
+            {% for club in random_clubs %}
+              <div class="single-item-wrap">
+                <div class="book-image">
+                </div>
+                <div class="book-details">
+                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                </div>
+              </div>
+            {% endfor %}
+
+          </div>
+      </div>
+    </div>
   </div>
 </div>
+
+
+
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    setMaxHeight()
+  })
+
+  const setMaxHeight = () => {
+    let wrapper = $('#moment-wrapper')[0]
+    let coords = wrapper.getBoundingClientRect()
+    let windowHeight = window.innerHeight
+    let wrapperMaxHeight = windowHeight - coords.y
+    $('#moment-wrapper').css("max-height", wrapperMaxHeight);
+  }
+
+  const clearForm = () => {
+    $('#moment-body').val('')
+  }
+
+  const showNewMoment = (result) => {
+    if ($('.empty-moments').length) {
+      $('.empty-moments').hide()
+    }
+
+    let moment = result.moment
+
+    let test = `
+      <div class="row flex-center">
+        <div class="col">
+          <div class="container-fluid notification-card" style="padding-left: 8px;">
+            <div class="card-top">
+
+              <div class="notification-image" style="height:70px; width:70px">
+                <img src="{{user.mini_gravatar}}" alt="Gravatar of {{user.username}}" class="rounded-circle">
+              </div>
+
+              <div class="col" style="padding-left:4px; padding-top:6px;">
+                <div class="align-text">
+                  <a href="{% url 'show_user' user.id %}">{{user.username}}</a> <small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small>
+                </div>
+                <div>
+                  <small style="color: #6d6d6d">now</small>
+                </div>
+              </div>
+            </div>
+            <div class="card-bottom" style="margin-bottom:8px;">
+              ${moment.body}
+            </div>
+          </div>
+        </div>
+      </div>
+      `
+
+    $('#moment-wrapper').prepend(test)
+  }
+
+  const submitForm = (event, form) => {
+      event.preventDefault()
+      body = $('#moment-body').val()
+      $.ajax({
+        type: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          moment_body: JSON.stringify(body)
+        },
+        url: {% url 'create_moment' %},
+        dataType: "JSON",
+        success: (result) => {showNewMoment(result)}
+      }).done((data) => {
+        clearForm()
+      })
+
+  }
+
+</script>
+
 {% endblock %}
