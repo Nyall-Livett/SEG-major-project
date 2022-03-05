@@ -1,4 +1,4 @@
-"""This recommender uses the 'BX_Books.csv', 'BX-Users.csv' and 'BX-Book-Ratings.csv' datasets to give content based recommendations """
+"""This uses the 'preprocessed_data.csv' dataset to give recommendation. 'preprocessed_data.csv' contains genre data and a brief summary of the books"""
 
 import re
 import pandas as pd
@@ -7,39 +7,21 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-# books = pd.read_csv("Preprocessed_data.csv")
-books = pd.read_csv("BX_Books.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
-users = pd.read_csv("BX-Users.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
-ratings = pd.read_csv("BX-Book-Ratings.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
-books = books[['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L']]
-books.rename(columns = {'ISBN':'isbn', 'Book-Title':'book_title', 'Book-Author':'book_author', 'Year-Of-Publication':'year', 'Publisher':'publisher', 'Image-URL-S':'img_s', 'Image-URL-M':'img_m', 'Image-URL-L':'img_l'}, inplace=True)
-users.rename(columns = {'User-ID':'user_id', 'Location':'location', 'Age':'age'}, inplace=True)
-ratings.rename(columns = {'User-ID':'user_id', 'ISBN':'isbn', 'Book-Rating':'rating'}, inplace=True)
+books = pd.read_csv("Preprocessed_data.csv")
 
-# print(list(books.columns))
-# print(books)
-# print(list(users.columns))
-# print(users)
-# print(list(ratings.columns))
-# print(ratings)
 
-users_with_ratings = users.merge(ratings, on='user_id')
-merged_contents = users_with_ratings.merge(books, on='isbn')
-
-# print(list(merged_contents.columns))
-# print(merged_contents)
-
-df = merged_contents.copy()
+df = books.copy()
 df.dropna(inplace=True)
 df.reset_index(drop=True, inplace=True)
+df.drop(columns = ['Unnamed: 0','location','isbn',
+                   'img_s','img_m','city','age',
+                   'state','Language','country',
+                   'year_of_publication'],axis=1,inplace = True)
+df.drop(index=df[df['Category'] == '9'].index, inplace=True) #remove 9 in category
 
-df.drop(columns = ['location','isbn', 'img_s','img_m','age',],axis=1,inplace = True)
+df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
 
-
-df.drop(index=df[df['rating'] == 0].index, inplace=True)
-
-# print(list(df.columns))
-# print (df)
+df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
 
 
 
@@ -66,7 +48,7 @@ def content_based_recommender(book_title):
             common_books = common_books.drop_duplicates(subset=['book_title'])
             common_books.reset_index(inplace= True)
             common_books['index'] = [i for i in range(common_books.shape[0])]
-            target_cols = ['book_title','book_author','publisher']
+            target_cols = ['book_title','book_author','publisher', 'Category']
             common_books['combined_features'] = [' '.join(common_books[target_cols].iloc[i,].values) for i in range(common_books[target_cols].shape[0])]
             cv = CountVectorizer()
             count_matrix = cv.fit_transform(common_books['combined_features'])
@@ -79,6 +61,7 @@ def content_based_recommender(book_title):
             books = []
             for i in range(len(sorted_sim_books)):
                 books.append(common_books[common_books['index'] == sorted_sim_books[i][0]]['book_title'].item())
+            
             return books
 
     else:
