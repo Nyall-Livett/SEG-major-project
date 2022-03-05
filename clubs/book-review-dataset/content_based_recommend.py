@@ -16,29 +16,28 @@ ratings.rename(columns = {'User-ID':'user_id', 'ISBN':'isbn', 'Book-Rating':'rat
 
 print(list(books.columns))
 print(books)
-print(list(users.columns))
-print(users)
-print(list(ratings.columns))
-print(ratings)
+# print(list(users.columns))
+# print(users)
+# print(list(ratings.columns))
+# print(ratings)
 
 users_with_ratings = users.merge(ratings, on='user_id')
 merged_contents = users_with_ratings.merge(books, on='isbn')
 
-print(list(merged_contents.columns))
-print(merged_contents)
+# print(list(merged_contents.columns))
+# print(merged_contents)
 
-# df = books.copy()
-# df.dropna(inplace=True)
-# df.reset_index(drop=True, inplace=True)
-# df.drop(columns = ['Unnamed: 0','location','isbn',
-#                    'img_s','img_m','city','age',
-#                    'state','Language','country',
-#                    'year_of_publication'],axis=1,inplace = True)
-# df.drop(index=df[df['Category'] == '9'].index, inplace=True) #remove 9 in category
+df = merged_contents.copy()
+df.dropna(inplace=True)
+df.reset_index(drop=True, inplace=True)
 
-# df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
+df.drop(columns = ['location','isbn', 'img_s','img_m','age',],axis=1,inplace = True)
 
-# df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
+
+df.drop(index=df[df['rating'] == 0].index, inplace=True)
+
+print(list(df.columns))
+print (df)
 
 
 
