@@ -21,6 +21,12 @@ print(users)
 print(list(ratings.columns))
 print(ratings)
 
+users_with_ratings = users.merge(ratings, on='user_id')
+merged_contents = users_with_ratings.merge(books, on='isbn')
+
+print(list(merged_contents.columns))
+print(merged_contents)
+
 # df = books.copy()
 # df.dropna(inplace=True)
 # df.reset_index(drop=True, inplace=True)
