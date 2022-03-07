@@ -122,6 +122,14 @@ class ProcessData:
                     writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
                     reader = csv.reader(csvfile, delimiter=";", quotechar='"')
 
+
+                    if current_isbn == "":
+                        row = next(reader)
+
+                        new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+
+                        writer.writerow(new_row)
+
                     for row in reader:
 
                         if start ==True:
@@ -130,7 +138,7 @@ class ProcessData:
                             writer.writerow(new_row)
 
                         else:
-                            
+
                             if row[0] == current_isbn:
                                 start = True
         #
