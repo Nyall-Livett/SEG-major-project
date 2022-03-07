@@ -1,3 +1,16 @@
+
+html, body {
+  height: 100vh;
+}
+
+body {
+  padding-top: 75px;
+}
+
+a {
+  text-decoration: none;
+}
+
 /*Customization for the main body of the landing page*/
 .home-body{
     position: fixed;
@@ -248,4 +261,109 @@
 }
 .flex {
   display: flex;
+}
+
+/* dashboard */
+
+.p-16{
+  padding: 16px 0;
+}
+
+.moment-card {
+  /* min-height: 120px; */
+  width: 100%;
+}
+
+.moment-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+/* moments */
+
+.moments-header{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+#moment-wrapper {
+  padding-bottom: 64px;
+  overflow: scroll;
+  overflow-x:hidden;
+}
+
+.book-image{
+  height: 75px;
+  width: 50px;
+  background-color: grey;
+}
+
+
+
+.collection-wrap{
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.single-item-wrap{
+  display: flex;
+  width: 80px;
+  flex-direction: column;
+  margin: 8px;
+  align-items: center;
+  max-width: 100px;
+}
+
+.empty-moments{
+  margin-top:50px;
+  display: flex;
+  justify-content: center;
+  color: #8c8c8c
+}
+
+.book-details{
+  text-align: center;
+}
+
+.card-top{
+  display: flex;
+  flex-direction: row;
+}
+
+.card-bottom{
+  padding-top: 8px;
+  padding-left: 8px;
+  color: #535353;
+}
+
+.align-text{
+  display: flex;
+  align-items: center;
+}
+
+.new-club-holder{
+  height: 100px;
+  width: 75px;
+  background-color: lightgray;
+}
+
+.moment-content{
+  display: flex;
+}
+
+.moment-buttons{
+  margin-top: 8px;
+  padding-bottom: 8px;
+  height:20px;
+  width: 100%;
 }

@@ -26,8 +26,8 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting = Meeting(
             date="2022-01-27 11:00:00",
             club=self.default_club,
-            chosen_member=self.default_user,
             book= self.default_book,
+            location="Online",
             URL="www.aaa.com",
             notes="This is a note.",
             )
@@ -43,9 +43,9 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting.club = None
         self._assert_meeting_is_invalid()
 
-    def test_meeting_must_have_book(self):
+    def test_meeting_may_not_have_book(self):
         self.default_meeting.book = None
-        self._assert_meeting_is_invalid()
+        self._assert_meeting_is_valid()
 
     def test_date_must_not_be_blank(self):
         self.default_meeting.date = ''
@@ -53,6 +53,10 @@ class MeetingModelTestCase(TestCase):
 
     def test_notes_may_be_blank(self):
         self.default_meeting.notes = ''
+        self._assert_meeting_is_valid()
+
+    def test_location_may_be_blank(self):
+        self.default_meeting.location = ''
         self._assert_meeting_is_valid()
 
     def test_URL_may_be_blank(self):
