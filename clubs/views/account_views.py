@@ -53,6 +53,15 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+    def form_valid(self, form):
+        object = form.save()
+        # Create avatar
+        color = self.request.POST['color']
+        icon = self.request.POST['icon']
+        if color and icon:
+            CustomAvatar.objects.create(color=color, icon=icon, user=object)
+        login(self.request, object)
+        return super().form_valid(form)
 
 class SignUpView(LoginProhibitedMixin, FormView):
     """View that signs up user."""
