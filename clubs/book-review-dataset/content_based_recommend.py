@@ -17,7 +17,7 @@ users.rename(columns = {'User-ID':'user_id', 'Location':'location', 'Age':'age'}
 ratings.rename(columns = {'User-ID':'user_id', 'ISBN':'isbn', 'Book-Rating':'rating'}, inplace=True)
 
 # print(list(books.columns))
-# print(books)
+print(books)
 # print(list(users.columns))
 # print(users)
 # print(list(ratings.columns))
@@ -84,14 +84,14 @@ def content_based_recommender(book_title):
     else:
       print('Cant find book in dataset, please check spelling')
 
-book1 = content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)")
-print(book1)
-book2 = content_based_recommender("The Testament")
-print(book2)
-book3 = content_based_recommender("1st to Die: A Novel")
-print(book3)
-book4 = content_based_recommender("Harry Potter and the Order of the Phoenix (Book 5)")
-print(book4)
-book5 = content_based_recommender("Fahrenheit 451")
-print(book5)
+# book1 = content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)")
+# print(book1)
+# book2 = content_based_recommender("The Testament")
+# print(book2)
+# book3 = content_based_recommender("1st to Die: A Novel")
+# print(book3)
+# book4 = content_based_recommender("Harry Potter and the Order of the Phoenix (Book 5)")
+# print(book4)
+# book5 = content_based_recommender("Fahrenheit 451")
+# print(book5)
 
