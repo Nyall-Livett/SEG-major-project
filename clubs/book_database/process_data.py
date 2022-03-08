@@ -204,9 +204,9 @@ class ProcessData:
             return 0
 
 
-# test = ProcessData()
+test = ProcessData()
 # # test.formatBooks()
-# test.formatRatings()
+test.formatRatings()
 #
 # data = test.loadBooks()
 
