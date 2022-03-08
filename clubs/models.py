@@ -48,6 +48,7 @@ class User(AbstractUser):
     favourite_genre = models.CharField(max_length=50, blank=True)
     favourite_author = models.CharField(max_length=50, blank=True)
     want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_read')
+    using_gravatar = models.BooleanField(default=False)
 
     class Meta:
         """Model options."""
@@ -259,6 +260,6 @@ class Meeting(models.Model):
 
 class CustomAvatar(models.Model):
 
-    color = models.CharField(blank=False, null=True , choices = AvatarColor.choices)
-    icon = models.CharField(blank=False, null=True, choices = AvatarIcon.choices)
-    leader = models.OneToOneField(User, on_delete=models.CASCADE)
+    color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
+    icon = models.CharField(blank=False, null=True, max_length=28, choices = AvatarIcon.choices)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
