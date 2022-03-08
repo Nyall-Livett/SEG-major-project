@@ -2,6 +2,9 @@
 
 import re
 import pandas as pd
+# import nltk
+# from nltk.corpus import stopwords
+# nltk.download("stopwords")
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -24,7 +27,7 @@ df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
 df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
 
 
-
+"""Uses book title, author, publisher and Category to give recommendations"""
 def content_based_recommender(book_title):
     
     book_title = str(book_title)
@@ -67,6 +70,8 @@ def content_based_recommender(book_title):
     else:
       print('Cant find book in dataset, please check spelling')
 
+
+
 book1 = content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)")
 print(book1)
 book2 = content_based_recommender("The Testament")
@@ -77,4 +82,6 @@ book4 = content_based_recommender("Harry Potter and the Order of the Phoenix (Bo
 print(book4)
 book5 = content_based_recommender("Fahrenheit 451")
 print(book5)
+
+
 
