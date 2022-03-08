@@ -8,6 +8,7 @@ from collections import defaultdict
 import numpy as np
 import json
 from urllib.request import urlopen
+from evaluator import Evaluator
 
 class ProcessData:
 
@@ -18,6 +19,7 @@ class ProcessData:
     booksPath = current_directory +  '/BX_Books_formated.csv'
 
     def formatRatings(self):
+        counter = 0
 
         if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formated.csv")):
 
@@ -32,8 +34,10 @@ class ProcessData:
                     writer.writerow(new_row)
 
                     for row in reader:
-                        new_row = [row[0], row[1], row[2]]
-                        writer.writerow(new_row)
+                        if (counter < 10000):
+                            new_row = [row[0], row[1], row[2]]
+                            writer.writerow(new_row)
+                            counter+=1
         print("finished loading ratings")
 
 
@@ -201,7 +205,7 @@ class ProcessData:
 
 
 # test = ProcessData()
-# test.formatBooks()
+# # test.formatBooks()
 # test.formatRatings()
 #
 # data = test.loadBooks()
