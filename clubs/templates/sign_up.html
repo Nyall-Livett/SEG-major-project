@@ -63,6 +63,8 @@
             </div>
             {% endfor %}
           </div>
+
+          <!-- Preview -->
           <div class="row d-flex justify-content-center" style="margin-top:24px">
             <h6 class="" style="color:#878787">Preview</h6>
           </div>
@@ -88,7 +90,8 @@
 
 
         {% include 'partials/bootstrap_form.html' with form=form %}
-
+        <input id="hidden-color" type="hidden" name="color" value="">
+        <input id="hidden-icon" type="hidden" name="icon" value="">
 
         <input type="submit" value="Sign up" class="btn btn-primary">
       </form>
@@ -112,11 +115,14 @@
     $(document).ready(function() {
       preview = $(".icon-preview")
       icon = $("#icon-image")
+      hidden_color = $("#hidden-color")
+      hidden_icon = $("#hidden-icon")
     })
 
     // Color
     const setColor = (color) => {
       preview.attr('id', color)
+      hidden_color.val(color)
     }
 
     // Icon
@@ -125,6 +131,7 @@
         icon.css("display", "inline-block")
       }
       icon.attr('src', `/static/images/${iconName}.svg` )
+      hidden_icon.val(iconName)
     }
 
   </script>
