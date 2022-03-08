@@ -23,6 +23,7 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditM
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
+from clubs.zoom_api_url_generator_helper import getZoomMeetingURL, create_JSON_meeting_data, convertDateTime
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -137,14 +138,6 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
-    def form_valid(self, form, **kwargs):
-        meeting = form.instance
-        #meeting.date = form['date']
-        meeting.club = Club.objects.get(id=self.kwargs.get('club_id'))
-        meeting.save()
-        meeting.add_meeting(self.request.meeting)
-        return super().form_valid(form)
-
     def get(self, request, **kwargs):
         form = MeetingForm()
         context = {
@@ -156,41 +149,32 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
     def post(self, request, **kwargs):
         form = MeetingForm(request.POST)
-        context = {
-            'form': form,
-            'club': Club.objects.get(id=self.kwargs.get('club_id'))
-        }
-        #form.save()
-        print('--------------------')
-        print(request.POST)
-        print('--------------------')
-        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
-        obj = form.save(commit=False)
-        obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
-        list = []
-        for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
-            list.append(i)
-        obj.chosen_member = random.choice(list)
-        obj.save()
         if form.is_valid():
-            form.save()
-            #print(form)
-            context = {
-            'form': form,
-            'club': Club.objects.get(id=self.kwargs.get('club_id'))
-            }
-            #message.add_message(request, messages.ERROR, "This is invaild!")
+            obj = form.save(commit=False)
+
+            # Set club, URL and chosen member before save
+            obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+
+            # get meeting title, start time, meeting description and generate a zoom meeting URL
+            title = obj.club.name
+            start_time = convertDateTime(form.cleaned_data['date'])
+            meet_desc = form.cleaned_data['notes']
+            json_data = create_JSON_meeting_data(title, start_time, meet_desc)
+            obj.URL = getZoomMeetingURL(json_data)
+
+            list = []
+            for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
+                list.append(i)
+            obj.chosen_member = random.choice(list)
+            obj.save()
             return redirect('show_club', self.kwargs.get('club_id'))
 
         else:
-            print("validatation failed")
-            print('-----------------------------------')
-            print(form)
-            print('-----------------------------------')
-            print(form.errors.as_data())
-            #return Http404
+            context = {
+                'form': form,
+                'club': Club.objects.get(id=self.kwargs.get('club_id'))
+            }
 
-        #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
