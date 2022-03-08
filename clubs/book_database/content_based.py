@@ -21,16 +21,16 @@ random.seed(0)
 (book_data, evaluationData, rankings) = LoadBookData()
 
 # # Construct an Evaluator to, you know, evaluate them
-# evaluator = Evaluator(evaluationData, rankings)
+evaluator = Evaluator(evaluationData, rankings)
 
 contentKNN = ContentKNNAlgorithm()
 print(contentKNN)
-# evaluator.AddAlgorithm(contentKNN, "ContentKNN")
+evaluator.AddAlgorithm(contentKNN, "ContentKNN")
 
 # Just make random recommendations
 Random = NormalPredictor()
-# evaluator.AddAlgorithm(Random, "Random")
-#
-# evaluator.Evaluate(False)
-#
-# evaluator.SampleTopNRecs(ml)
+evaluator.AddAlgorithm(Random, "Random")
+
+evaluator.Evaluate(False)
+
+evaluator.SampleTopNRecs(ml)

@@ -19,42 +19,35 @@ books.rename(columns = {'ISBN':'isbn', 'Book-Title':'book_title', 'Book-Author':
 users.rename(columns = {'User-ID':'user_id', 'Location':'location', 'Age':'age'}, inplace=True)
 ratings.rename(columns = {'User-ID':'user_id', 'ISBN':'isbn', 'Book-Rating':'rating'}, inplace=True)
 
-# print(list(books.columns))
-# print(books)
-# print(list(users.columns))
-# print(users)
-# print(list(ratings.columns))
-# print(ratings)
+
 
 users_with_ratings = users.merge(ratings, on='user_id')
 merged_contents = users_with_ratings.merge(books, on='isbn')
 
-# print(list(merged_contents.columns))
-# print(merged_contents)
+
 
 df = merged_contents.copy()
 df.dropna(inplace=True)
 df.reset_index(drop=True, inplace=True)
 
-df.drop(columns = ['location', 'img_s','img_m','age',],axis=1,inplace = True)
 
+df.drop(columns = ['location', 'img_s','img_m','age',],axis=1,inplace = True)
 df.drop(index=df[df['rating'] == 0].index, inplace=True)
 
-print(list(df.columns))
 
+"""Make training set"""
 ratingsData = df.copy().head(10000)
 ratingsData.drop(columns = ['book_title', 'book_author','year','publisher', 'img_l'],axis=1,inplace = True)
 
 ratingsReader = Reader(line_format = 'user item rating', sep=';', skip_lines = 1)
 data = Dataset.load_from_df(ratingsData, ratingsReader)
 
-train, test = train_test_split(df, train_size=0.75)
+# train, test = train_test_split(df, train_size=0.75)
 fullTrainSet = data.build_full_trainset()
-
-
 fullAntiTestSet = fullTrainSet.build_anti_testset()
 
-
+predictions =
+accuracy.mae(predictions, verbose=False)
 
 def content_based_recommender(book_title):
 
