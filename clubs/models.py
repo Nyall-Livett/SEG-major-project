@@ -258,6 +258,18 @@ class Meeting(models.Model):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
 
+
+class BooksRead(models.Model):
+    """Book Read model - books read by a user with rating"""
+    RATINGS = [
+        ('like', 'like'),
+        ('neutral', 'neutral'),
+        ('dislike', 'dislke')
+    ]
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, blank=False, null=False, on_delete=models.CASCADE, related_name="reviewing")
+    rating = models.CharField(max_length=30, choices=RATINGS)
+
 class CustomAvatar(models.Model):
 
     color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
