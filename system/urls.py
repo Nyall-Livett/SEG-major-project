@@ -53,6 +53,7 @@ urlpatterns = [
     path('books/', views.BookListView.as_view(), name='book_list'),
     path('upload_books/', views.UploadBooksView.as_view(), name='upload_books'),
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
+    path('book_review', views.BookReviewView.as_view(), name='book_review'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
     path('notifications/', views.NotificationListView.as_view(), name='notifications'),

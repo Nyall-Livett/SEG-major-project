@@ -19,7 +19,7 @@ import json
 import random
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
