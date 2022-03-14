@@ -196,7 +196,12 @@ class EditMeetingForm(forms.ModelForm):
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 
+class BookReviewForm(forms.ModelForm):
+    class Meta:
 
+        model = BooksRead
+        fields = ['book', 'rating']
+        widgets = { 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 
 class BookForm(forms.ModelForm):
