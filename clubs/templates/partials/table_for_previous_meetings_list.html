@@ -9,6 +9,7 @@
         {% if meeting.date < user.now %}
         <tr>
           <td>{{ meeting.date }}</td>
+          <td>{{ meeting.location }}</td>
           <td>{{ meeting.book }}</td>
           <td>{{ meeting.chosen_member }}</td>
           <td>{{ meeting.notes }}</td>

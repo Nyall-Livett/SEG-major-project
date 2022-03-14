@@ -3,6 +3,21 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment
+from dal import autocomplete
+
+class BookAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        #if not self.request.user.is_authenticated:
+        #    return Book.objects.none()
+
+        qs = Book.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -159,7 +174,7 @@ class MeetingForm(forms.ModelForm):
 
         model = Meeting
         fields = ['date', 'location', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea() }
+        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 class StartMeetingForm(forms.ModelForm):
     class Meta:
@@ -168,7 +183,7 @@ class StartMeetingForm(forms.ModelForm):
         fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
         #fields = ['next_book', 'notes']
         #widgets = { 'notes': forms.Textarea() }
-        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
+        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'next_book': autocomplete.ModelSelect2(url='book-autocomplete') , 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
     date = forms.CharField(disabled=True, required=False)
     location = forms.CharField(disabled=True, required=False)
     URL = forms.CharField(disabled=True, required=False)
@@ -178,7 +193,7 @@ class EditMeetingForm(forms.ModelForm):
         "Form options"
         model = Meeting
         fields = ['date', 'location', 'URL', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea() }
+        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 
 

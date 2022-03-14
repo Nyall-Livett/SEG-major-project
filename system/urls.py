@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from clubs import views
+from clubs.forms import BookAutocomplete
 
 
 
@@ -64,4 +65,5 @@ urlpatterns = [
     path('previous_meetings/<int:club_id>', views.PreviousMeetingView.as_view(), name= 'previous_meetings'),
     path('member_list/<int:club_id>', views.MemberListView.as_view(), name='member_list'),
     path('change_theme/<int:club_id>', views.ChangeClubTheme.as_view(), name='change_theme'),
+    path('book-autocomplete', BookAutocomplete.as_view(), name='book-autocomplete'),
 ]
