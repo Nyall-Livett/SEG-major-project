@@ -190,6 +190,25 @@ class EditMeetingView(LoginRequiredMixin, UpdateView):
     success_url="/dashboard" # posts list url
 
 
+class BookReviewView(LoginRequiredMixin, FormView):
+    """docstring for BookReviewView."""
+
+    template_name = "book_review.html"
+    form_class = BookReviewForm
+
+    def form_valid(self, form):
+        review = form.instance
+        review.reviewer = self.request.user
+        review.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse("book_review")
+
+
+
+
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
 
