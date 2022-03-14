@@ -264,7 +264,7 @@ class BooksRead(models.Model):
     RATINGS = [
         ('like', 'like'),
         ('neutral', 'neutral'),
-        ('dislike', 'dislke')
+        ('dislike', 'dislike')
     ]
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, blank=False, null=False, on_delete=models.CASCADE, related_name="reviewing")
