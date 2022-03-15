@@ -42,7 +42,7 @@
                                         <script>
                                           liked++;
                                         </script>
-                                      {% elif review.rating == 'disliked' %}
+                                      {% elif review.rating == 'dislike' %}
                                         <script>
                                           disliked++;
                                         </script>
@@ -57,6 +57,8 @@
                                     <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100, '%)'); </script></p>
                                     <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100, '%)'); </script></p>
                                     <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <hr>
+                                    <p><b>Read by: </b><script> document.write(liked+disliked+neutral); </script></p>
                                   </div>
 
                               </div>
