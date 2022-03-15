@@ -1,16 +1,139 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
+<div class="fluid-container" style="padding:0 26px;">
   <div class="row">
-    <div class="col-12">
-      <h1>Sign up</h1>
+    <div class="col-4">
+      <div class="row">
+        <div style="color:#878787">Create your own avatar</div>
+        <small style="color:#878787">(You can use gravatar if you prefer)</small>
+      </div>
+      <div class="create-icon-wrap">
+        <div class="container card create-icon-container">
+
+          <!-- Choose color -->
+          <div class="row" style="margin-top:16px;">
+            <h6 style="color:#878787">Choose background color</h6>
+          </div>
+
+          <div class="color-holder sb" style="margin-top:16px;">
+
+            <div class="rounded-container">
+              <input type="radio" name="blue" value="blue">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="blue">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="red" value="red">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="red">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="yellow" value="yellow">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="yellow">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="green" value="green">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="green">
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Choose icon -->
+          <div class="row " style="margin-top:32px;">
+            <h6 style="color:#878787">Choose Avatar Icon</h6>
+          </div>
+          <div class="row" style="margin: auto;">
+            {% for icon in avatar_icons %}
+            <div class="square-container">
+              <input type="radio" name="'{{icon}}'" value="{{icon}}">
+              <img id="{{icon}}" onclick="setIcon(this.id)" src="/static/images/{{icon}}.svg">
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Preview -->
+          <div class="row d-flex justify-content-center" style="margin-top:24px">
+            <h6 class="" style="color:#878787">Preview</h6>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="icon-preview">
+              <img id="icon-image" src="#" onerror="this.style.display='none'" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gutter -->
+    <!-- <div class="col-1"></div> -->
+
+    <!-- Sign up form -->
+    <div class="col-8" style="padding: 0 26px">
+
+
+      <h6 style="color:#878787">Sign up form</h6>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
+
+
         {% include 'partials/bootstrap_form.html' with form=form %}
+        <input id="hidden-color" type="hidden" name="color" value="">
+        <input id="hidden-icon" type="hidden" name="icon" value="">
+
         <input type="submit" value="Sign up" class="btn btn-primary">
       </form>
       <br>
     </div>
   </div>
 </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block javascript %}
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      preview = $(".icon-preview")
+      icon = $("#icon-image")
+      hidden_color = $("#hidden-color")
+      hidden_icon = $("#hidden-icon")
+    })
+
+    // Color
+    const setColor = (color) => {
+      preview.attr('id', color)
+      hidden_color.val(color)
+    }
+
+    // Icon
+    const setIcon = (iconName) => {
+      if (icon.is(":hidden")) {
+        icon.css("display", "inline-block")
+      }
+      icon.attr('src', `/static/images/${iconName}.svg` )
+      hidden_icon.val(iconName)
+    }
+
+  </script>
+
 {% endblock %}

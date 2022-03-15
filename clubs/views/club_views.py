@@ -15,11 +15,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
 from django.http import JsonResponse
+from django.db import IntegrityError
 import json
 import random
 
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
@@ -188,6 +189,28 @@ class EditMeetingView(LoginRequiredMixin, UpdateView):
     form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
+
+
+class BookReviewView(LoginRequiredMixin, FormView):
+    """docstring for BookReviewView."""
+
+    template_name = "book_review.html"
+    form_class = BookReviewForm
+
+    def form_valid(self, form):
+        review = form.instance
+        review.reviewer = self.request.user
+        try:
+            review.save()
+            return super().form_valid(form)
+        except IntegrityError as e:
+            return render(self.request, "book_review.html")
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse('book_review')
+
+
 
 
 class JoinRemoveClubView(LoginRequiredMixin, View):

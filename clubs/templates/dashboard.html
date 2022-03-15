@@ -74,7 +74,7 @@
 
           <!-- BOOK_RECOMMENDATION -->
           {% elif moment.type == 3 %}
-          
+
           <!-- READING_NEW_BOOK -->
           {% elif moment.type == 4 %}
 
@@ -143,15 +143,24 @@
 
     let moment = result.moment
 
-    let test = `
+    let new_moment = `
       <div class="row flex-center">
         <div class="col">
           <div class="container-fluid notification-card" style="padding-left: 8px;">
             <div class="card-top">
 
-              <div class="notification-image" style="height:70px; width:70px">
-                <img src="{{user.mini_gravatar}}" alt="Gravatar of {{user.username}}" class="rounded-circle">
-              </div>
+              <!-- Avatar -->
+              {% if moment.user.using_gravatar %}
+                <div class="notification-image" style="height:70px; width:70px">
+                  <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+                </div>
+              {% else %}
+                <div class="notification-image" style="height:70px;width:70px">
+                  <div id="{{user.customavatar.color}}" class="moment-avatar">
+                    <img src="/static/images/{{user.customavatar.icon}}.svg">
+                  </div>
+                </div>
+              {% endif %}
 
               <div class="col" style="padding-left:4px; padding-top:6px;">
                 <div class="align-text">
@@ -170,7 +179,7 @@
       </div>
       `
 
-    $('#moment-wrapper').prepend(test)
+    $('#moment-wrapper').prepend(new_moment)
   }
 
   const submitForm = (event, form) => {
