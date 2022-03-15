@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
 from django.http import JsonResponse
+from django.db import IntegrityError
 import json
 import random
 
@@ -199,8 +200,11 @@ class BookReviewView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         review = form.instance
         review.reviewer = self.request.user
-        review.save()
-        return super().form_valid(form)
+        try:
+            review.save()
+            return super().form_valid(form)
+        except IntegrityError as e:
+            return render(self.request, "book_review.html")
 
     def get_success_url(self):
         """Return redirect URL after successful update."""

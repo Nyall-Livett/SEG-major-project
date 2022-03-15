@@ -43,6 +43,7 @@ class BooksReadAdmin(admin.ModelAdmin):
         'id', 'reviewer', 'book', 'rating',
     ]
 
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for posts."""
