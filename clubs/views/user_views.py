@@ -8,7 +8,7 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import User, Club, Notification
+from clubs.models import User, Club, BooksRead, Notification
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
@@ -123,6 +123,7 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         user = self.get_object()
         context['following'] = self.request.user.is_following(user)
         context['request_sent'] = self.request.user.is_request_sent(user)
+        context['reviews'] = BooksRead.objects.all()
         return context
 
 @login_required

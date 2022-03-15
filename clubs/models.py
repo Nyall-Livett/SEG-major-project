@@ -11,6 +11,7 @@ from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
 
+
 import pytz
 
 # default values are used for any existing instances of books.
@@ -257,6 +258,21 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
+
+
+class BooksRead(models.Model):
+    """Book Read model - books read by a user with rating"""
+    RATINGS = [
+        ('like', 'like'),
+        ('neutral', 'neutral'),
+        ('dislike', 'dislike')
+    ]
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, blank=False, null=False, on_delete=models.CASCADE, related_name="reviewing")
+    rating = models.CharField(max_length=30, choices=RATINGS)
+
+    class Meta:
+        unique_together = ['reviewer', 'book']
 
 class CustomAvatar(models.Model):
 
