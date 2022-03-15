@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import Book
+from clubs.models import Book, BooksRead
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
@@ -80,6 +80,11 @@ class ShowBookView(LoginRequiredMixin, DetailView):
             return super().get(request, *args, **kwargs)
         except Http404:
             return redirect('book_list')
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        context['reviews'] = BooksRead.objects.all()
+        return context
 
 class CreateBookView(LoginRequiredMixin, FormView):
 
