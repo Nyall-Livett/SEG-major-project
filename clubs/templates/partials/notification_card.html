@@ -43,9 +43,9 @@
         </div>
       </div>
       {% if notification.type|render_buttons:0 %}
-        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user %}
+        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user notification=notification %}
       {% else  %}
-        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club %}
+        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club notification=notification%}
       {% endif  %}
     </div>
   </div>

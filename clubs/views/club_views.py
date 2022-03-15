@@ -91,9 +91,14 @@ class ShowClubView(LoginRequiredMixin, DetailView):
     template_name = 'show_club.html'
     pk_url_kwarg = 'club_id'
 
-    def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to club_list if club_id invalid."""
+    def get(self, request, club_id, optional_notification="", *args, **kwargs):
+        if optional_notification:
+            notification = Notification.objects.get(id=optional_notification)
+            if notification.receiver == request.user and notification.acted_upon == False:
+                notification.acted_upon = True
+                notification.save()
 
+        """Handle get request, and redirect to club_list if club_id invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
@@ -107,6 +112,7 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         authors = list(context['club'].members.all())
         context['posts'] = Post.objects.filter(author__in=authors, club = context['club'])[:20]
         return context
+
 
 class ClubListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""

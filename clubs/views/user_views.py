@@ -8,7 +8,7 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import User, Club, BooksRead
+from clubs.models import User, Club, BooksRead, Notification
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
@@ -41,6 +41,14 @@ class FollowRequestsListView(LoginRequiredMixin, ListView):
     template_name = "follow_requests.html"
     context_object_name = "follow_requests"
     paginate_by = settings.USERS_PER_PAGE
+
+    def get(self,request, optional_notification, *args, **kwargs):
+        if optional_notification:
+            notification = Notification.objects.get(id=optional_notification)
+            if notification.receiver == request.user and notification.acted_upon == False:
+                notification.acted_upon = True
+                notification.save()
+        return super().get(self,request, optional_notification, *args, **kwargs)
 
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
