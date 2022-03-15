@@ -8,7 +8,7 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import User, Club 
+from clubs.models import User, Club, BooksRead
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
@@ -24,7 +24,7 @@ class UserListView(LoginRequiredMixin, ListView):
 
 class MemberListView(LoginRequiredMixin, ListView):
     model = User
-    template_name = "member_list.html"  
+    template_name = "member_list.html"
     context_object_name = "users"
 
     def get_context_data(self, **kwargs):
@@ -78,7 +78,7 @@ class FollowingListView(LoginRequiredMixin, ListView):
     template_name = "followee.html"
     context_object_name = "followees"
     paginate_by = settings.USERS_PER_PAGE
-    
+
     def dispatch(self, request, *args, **kwargs):
         try:
             user = User.objects.get(pk=self.kwargs['user_id'])
@@ -115,6 +115,7 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         user = self.get_object()
         context['following'] = self.request.user.is_following(user)
         context['request_sent'] = self.request.user.is_request_sent(user)
+        context['reviews'] = BooksRead.objects.all()
         return context
 
 @login_required
