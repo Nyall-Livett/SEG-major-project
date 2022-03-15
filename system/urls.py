@@ -30,11 +30,15 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('delete_account/<int:user_id>', views.DeleteAccount.as_view(), name='delete_account'),
     path('delete_club/<int:club_id>', views.DeleteClub.as_view(), name='delete_club'),
+
     path('follow_requests/', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
+    path('follow_requests/<int:optional_notification>', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
+
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
-    path('follow_toggle/<int:user_id>',views.follow_toggle, name ='follow_toggle'),
-    path('follow_request/<int:user_id>',views.follow_request, name ='follow_request'),
+    path('club/<int:club_id>/<int:optional_notification>',views.ShowClubView.as_view(), name ='show_club'),
+    path('follow_toggle/<int:user_id>', views.follow_toggle, name ='follow_toggle'),
+    path('follow_request/<int:user_id>', views.follow_request, name ='follow_request'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/<int:club_id>', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('start_meeting/<slug:pk>/', views.StartMeetingView.as_view(), name='start_meeting'),

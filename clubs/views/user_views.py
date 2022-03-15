@@ -8,7 +8,7 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import User, Club 
+from clubs.models import User, Club, Notification
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
@@ -24,7 +24,7 @@ class UserListView(LoginRequiredMixin, ListView):
 
 class MemberListView(LoginRequiredMixin, ListView):
     model = User
-    template_name = "member_list.html"  
+    template_name = "member_list.html"
     context_object_name = "users"
 
     def get_context_data(self, **kwargs):
@@ -41,6 +41,14 @@ class FollowRequestsListView(LoginRequiredMixin, ListView):
     template_name = "follow_requests.html"
     context_object_name = "follow_requests"
     paginate_by = settings.USERS_PER_PAGE
+
+    def get(self,request, optional_notification, *args, **kwargs):
+        if optional_notification:
+            notification = Notification.objects.get(id=optional_notification)
+            if notification.receiver == request.user and notification.acted_upon == False:
+                notification.acted_upon = True
+                notification.save()
+        return super().get(self,request, optional_notification, *args, **kwargs)
 
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
@@ -78,7 +86,7 @@ class FollowingListView(LoginRequiredMixin, ListView):
     template_name = "followee.html"
     context_object_name = "followees"
     paginate_by = settings.USERS_PER_PAGE
-    
+
     def dispatch(self, request, *args, **kwargs):
         try:
             user = User.objects.get(pk=self.kwargs['user_id'])
