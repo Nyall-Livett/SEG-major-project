@@ -42,7 +42,7 @@ class FollowRequestsListView(LoginRequiredMixin, ListView):
     context_object_name = "follow_requests"
     paginate_by = settings.USERS_PER_PAGE
 
-    def get(self,request, optional_notification, *args, **kwargs):
+    def get(self,request, optional_notification="", *args, **kwargs):
         if optional_notification:
             notification = Notification.objects.get(id=optional_notification)
             if notification.receiver == request.user and notification.acted_upon == False:
