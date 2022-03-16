@@ -1,16 +1,240 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
+<div class="container" style="padding:0 26px;">
   <div class="row">
-    <div class="col-12">
-      <h1>Edit profile</h1>
+    <div class="col-4">
+      <div class="row">
+        <div style="color:#878787">Edit your avatar</div>
+        <small style="color:#878787">(You can use gravatar if you prefer)</small>
+      </div>
+      <div class="create-icon-wrap">
+        <div class="container card create-icon-container">
+
+          <!-- Choose color -->
+          <div class="row" style="margin-top:16px;">
+            <h6 style="color:#878787">Choose background color</h6>
+          </div>
+
+          <div class="color-holder sb" style="margin-top:16px;">
+
+            <div class="rounded-container">
+              <input type="radio" name="blue" value="blue">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="blue">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="red" value="red">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="red">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="yellow" value="yellow">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="yellow">
+              </div>
+            </div>
+
+            <div class="rounded-container">
+              <input type="radio" name="green" value="green">
+              <div class="rounded-color"
+                onclick="setColor(this.id)"
+                id="green">
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Choose icon -->
+          <div class="row" style="margin-top:32px;">
+            <h6 style="color:#878787">Choose Avatar Icon</h6>
+          </div>
+          <div class="row" style="margin: auto;">
+            {% for icon in avatar_icons %}
+            <div class="square-container">
+              <input type="radio" name="'{{icon}}'" value="{{icon}}">
+              <img id="{{icon}}" onclick="setIcon(this.id)" src="/static/images/{{icon}}.svg">
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Preview -->
+          <div class="row d-flex justify-content-center" style="margin-top:24px">
+            <h6 class="" style="color:#878787">Preview</h6>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="icon-preview">
+              <img id="icon-image" src="#" onerror="this.style.display='none'" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gutter -->
+
+
+    <!-- Profile form -->
+    <div class="col-8" style="padding: 0 26px">
+
+
+      <h6 style="color:#878787">Edit profile</h6>
       <form action="{% url 'profile' %}" method="post">
         {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
+
+        <div class="row mb-3">
+
+          <!-- First name -->
+          <div class="col">
+            <label for="first-name-input" class="form-label">First name:</label>
+            {{ form.first_name }}
+          </div>
+
+          <!--  last name-->
+          <div class="col">
+            <label for="last-name-input" class="form-label">Last name:</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+
+          <!-- Username -->
+          <div class="col">
+            <label for="username-input" class="form-label">Username:</label>
+            <!-- <input type="text" id="username-input" class="form-control" aria-label="Username"> -->
+            {{ form.username }}
+          </div>
+
+          <!-- Email address -->
+          <div class="col">
+            <label for="email-address-input" class="form-label">Email address:</label>
+            <!-- <input type="text" id="email-address-input" class="form-control" aria-label="Email"> -->
+            {{ form.email}}
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="row mb-3">
+          <div class="col">
+            <label for="bio-input" class="form-label">Bio:</label>
+            <!-- <textarea class="form-control" id="bio-input" rows="3"></textarea> -->
+            {{ form.bio }}
+
+          </div>
+        </div>
+
+        <div class="row mb-3">
+
+          <!-- Favourite book -->
+          <div class="col">
+              <label  class="form-label" for="favourite-book">Favourite book:</label>
+              {{ form.favourite_book }}
+            </div>
+
+          <!-- Favourite Character-->
+          <div class="col">
+            <label for="favourite-character" class="form-label">Favourite character:</label>
+            <!-- <input type="text" id="favourite-character" class="form-control" aria-label="Last name"> -->
+            {{ form.favourite_character }}
+          </div>
+
+        </div>
+
+
+        <div class="row mb-3">
+
+          <!-- Favourite genre -->
+          <div class="col">
+            <label for="favourite-genre-input" class="form-label">Favourite genre:</label>
+            <!-- <input type="text" id="favourite-genre-input" class="form-control" aria-label="First name"> -->
+            {{ form.favourite_genre }}
+          </div>
+
+          <!-- Favourite -->
+          <div class="col">
+            <label for="favourite-author-input" class="form-label">Favourite author:</label>
+            {{ form.favourite_author }}
+          </div>
+        </div>
+
+        <div class="row mb-3">
+
+          <!-- Want to read next -->
+          <div class="col">
+            <label  class="form-label" for="want-to-read-next">Want to read next:</label>
+            {{ form.want_to_read_next }}
+          </div>
+        </div>
+
+
+        <div class="row mb-3">
+          <div class="custom-control custom-checkbox">
+            {{ form.using_gravatar }}
+            <label class="custom-control-label" for="customCheck1">Use Gravatar</label>
+          </div>
+        </div>
+
+
+
+
+        <!-- {% include 'partials/bootstrap_form.html' with form=form %} -->
+        <input id="hidden-color" type="hidden" name="color" value="">
+        <input id="hidden-icon" type="hidden" name="icon" value="">
+
         <input type="submit" value="Update" class="btn btn-primary">
       </form>
+      <br>
     </div>
   </div>
 </div>
-<br>
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block javascript %}
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      preview = $(".icon-preview")
+      icon = $("#icon-image")
+      hidden_color = $("#hidden-color")
+      hidden_icon = $("#hidden-icon")
+      showCurrentAvatar();
+    })
+
+    const showCurrentAvatar = () => {
+      setColor('{{user.customavatar.color}}')
+      setIcon('{{user.customavatar.icon}}')
+    }
+
+    // Color
+    const setColor = (color) => {
+      preview.attr('id', color)
+      hidden_color.val(color)
+    }
+
+    // Icon
+    const setIcon = (iconName) => {
+      if (icon.is(":hidden")) {
+        icon.css("display", "inline-block")
+      }
+      icon.attr('src', `/static/images/${iconName}.svg` )
+      hidden_icon.val(iconName)
+    }
+
+  </script>
+
 {% endblock %}

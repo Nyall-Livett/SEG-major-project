@@ -432,7 +432,7 @@ a {
   cursor: pointer;
 }
 
-@media screen and (min-width: 1279px) {
+@media screen and (min-width: 1400px) {
   .rounded-color{
     height: 75px;
     width: 75px;

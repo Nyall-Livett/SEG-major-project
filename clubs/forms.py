@@ -147,8 +147,15 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
-        widgets = { 'bio': forms.Textarea() }
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
+        widgets = { 'bio': forms.Textarea()}
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        keys = list(self.fields)
+        keys.remove('using_gravatar')
+        for key in keys:
+            self.fields[key].widget.attrs['class'] = 'form-control'
 
 class ClubForm(forms.ModelForm):
     class Meta:
@@ -160,13 +167,6 @@ class ClubForm(forms.ModelForm):
             'description': forms.Textarea(),
             'maximum_members': forms.NumberInput(attrs={'min': 0, 'max': 64})
         }
-
-
-
-
-
-# 'hours': forms.NumberInput(attrs={'min': '0', 'class': 'yourClass', 'id': 'blah'}),
-
 
 class MeetingForm(forms.ModelForm):
     class Meta:
