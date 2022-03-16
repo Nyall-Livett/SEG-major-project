@@ -27,7 +27,7 @@ class SignUpForm(forms.ModelForm):
 
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
-        widgets = { 'bio': forms.Textarea() }
+        widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
 
     new_password = forms.CharField(
         label='Password',
@@ -157,7 +157,7 @@ class UserForm(forms.ModelForm):
 
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
-        widgets = { 'bio': forms.Textarea()}
+        widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
