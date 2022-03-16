@@ -26,7 +26,7 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
         widgets = { 'bio': forms.Textarea() }
 
     new_password = forms.CharField(
@@ -67,6 +67,15 @@ class SignUpForm(forms.ModelForm):
             want_to_read_next=self.cleaned_data.get('want_to_read_next'),
         )
         return user
+
+
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        keys = list(self.fields)
+        keys.remove('using_gravatar')
+        for key in keys:
+            self.fields[key].widget.attrs['class'] = 'form-control'
+
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
