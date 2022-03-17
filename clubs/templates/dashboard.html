@@ -147,6 +147,9 @@
   </div>
 </div>
 
+{% for c in user.clubs.all %}
+  {{ c.meetings.all }}
+{% endfor %}
 
 
 {% endblock %}
