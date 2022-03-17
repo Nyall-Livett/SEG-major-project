@@ -263,8 +263,13 @@ a {
 
 /* dashboard */
 
+.ggg{
+  display: flex;
+  flex-direction: column;
+}
+
 .p-16{
-  padding: 16px 0;
+  padding: 16px 0 0 16px;
 }
 
 .moment-card {
@@ -303,23 +308,18 @@ a {
   background-color: grey;
 }
 
-
-
 .collection-wrap{
   padding: 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: space-evenly;
 }
 
 .single-item-wrap{
   display: flex;
-  width: 80px;
-  flex-direction: column;
-  margin: 8px;
-  align-items: center;
-  max-width: 100px;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 16px;
 }
 
 .empty-moments{
@@ -330,7 +330,9 @@ a {
 }
 
 .book-details{
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px
 }
 
 .card-top{
