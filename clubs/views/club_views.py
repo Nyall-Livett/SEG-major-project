@@ -18,7 +18,6 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 import json
 import random
-
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
@@ -284,9 +283,6 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return URL to redirect the user too after valid form handling."""
         return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
-
-
-
 
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
