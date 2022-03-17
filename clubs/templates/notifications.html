@@ -139,12 +139,15 @@
     const addClass = () => {
       getSelectedIds().forEach((item, i) => {
         $(`#unread-indicator-${item}`).addClass('unread-indicator')
+        $(`#${item}`)[0].dataset.acted_upon = "False"
       })
     }
 
     const removeClass = () => {
       getSelectedIds().forEach((item, i) => {
         $(`#unread-indicator-${item}`).removeClass('unread-indicator')
+        $(`#${item}`)[0].dataset.acted_upon = "True"
+
       })
     }
 
