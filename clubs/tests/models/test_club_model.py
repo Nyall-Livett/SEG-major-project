@@ -83,9 +83,9 @@ class ClubModelTestCase(TestCase):
         self.default_club.maximum_members = 65
         self._assert_club_is_invalid()
 
-    def test_club_must_have_leader(self):
-        self.default_club.leader = None
-        self._assert_club_is_invalid()
+    # def test_club_must_have_leader(self):
+    #     self.default_club.leader = None
+    #     self._assert_club_is_invalid()
 
     def _assert_club_is_valid(self):
         try:

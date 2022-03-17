@@ -31,10 +31,8 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('delete_account/<int:user_id>', views.DeleteAccount.as_view(), name='delete_account'),
     path('delete_club/<int:club_id>', views.DeleteClub.as_view(), name='delete_club'),
-
     path('follow_requests/', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
     path('follow_requests/<int:optional_notification>', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
-
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
     path('club/<int:club_id>/<int:optional_notification>',views.ShowClubView.as_view(), name ='show_club'),
