@@ -29,8 +29,8 @@ class DashboardView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         club_list = list(Club.objects.all())
         clubs_range = range(len(club_list))
-        self.clubs_sample = list(random.sample(club_list, len(club_list) if len(club_list) < 7 else 6))
+        clubs_sample = list(random.sample(club_list, len(club_list) if len(club_list) < 4 else 3))
         context = super().get_context_data(**kwargs)
         context['form'] = MomentForm()
-        context['random_clubs'] = self.clubs_sample
+        context['random_clubs'] = clubs_sample
         return context
