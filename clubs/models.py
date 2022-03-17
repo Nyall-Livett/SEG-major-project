@@ -275,7 +275,6 @@ class BooksRead(models.Model):
         unique_together = ['reviewer', 'book']
 
 class CustomAvatar(models.Model):
-
     color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
     icon = models.CharField(blank=False, null=True, max_length=28, choices = AvatarIcon.choices)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
