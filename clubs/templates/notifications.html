@@ -1,33 +1,61 @@
 {% extends 'base_content.html' %}
 {% load bootstrap_pagination %}
 {% block content %}
+<div class="container" style="padding:0 26px;">
+  <div class="row">
 
-  <div class="container" style="padding:0px; padding-bottom:28px">
-
-    <div class="row">
-      <div class="container notification-options-panel">
-        <h2>{{object_list.count}} Notifications</h2>
-        <p class="notification-option-button"><b>Options:</b></p>
-        <p class="notification-option-button">Mark as
-            <a href="#" onclick="updateSelected(event, true, removeClass)">read</a>
-            <a href="#" onclick="updateSelected(event, false, addClass)">unread</a> <b> | </b>
-            <a href="#" onclick="deleteSelected(event, removeDeletedNotification)">delete</a> </p>
-            <span id="updated-tag">Updated</span>
-            <span id="none-selected-tag">Please select a notification</span>
+    <!-- Options -->
+    <div class="col-4">
+      <div class="row">
+        <div style="color:#878787">Options</div>
       </div>
+      <div class="wrap-100">
+        <div class="container card create-icon-container">
+
+          <div  style="color:#878787" class="updated-wrapper"> <h6>Selected: <span id="selected-count">0</span></h6> </div>
+
+          <h6 style="color:#878787">Select:</h6>
+          <div style="margin-top:4px;">
+            <input class="options-checkboxes" type="checkbox" id='select-all-checkbox' onchange='selectAllNotifications(this.checked, this);'> <span style="margin-left:4px;">All</span>
+          </div>
+          <div style="margin-top:4px;">
+            <input class="options-checkboxes" type="checkbox" id='select-unread-checkbox' onchange='selectNotifications("False", this);'> <span style="margin-left:4px;">Unread</span>
+          </div>
+          <div style="margin-top:4px;">
+            <input class="options-checkboxes" type="checkbox" id='select-read-checkbox' onchange='selectNotifications("True", this);'> <span style="margin-left:4px;">Read</span>
+          </div>
+
+          <h6 style="color:#878787; margin-top:16px;">Mark as:</h6>
+          <div style="margin-top:4px;">
+            <a href="#" onclick="updateSelected(event, true, removeClass)">Read</a>
+          </div>
+          <div style="margin-top:4px;">
+            <a href="#" onclick="updateSelected(event, false, addClass)">Unread</a>
+          </div>
+          <div style="margin-top:4px; padding-bottom:16px;">
+            <a href="#" onclick="deleteSelected(event, removeDeletedNotification)">Delete</a>
+          </div>
+        </div>
+      </div>
+      <span id="updated-tag">Updated</span>
+      <span id="none-selected-tag">Please select a notification</span>
     </div>
 
-    <div class="updated-wrapper"> <h5>Selected: <span id="selected-count">0</span></h5> </div>
 
-    <input type="checkbox" id='select-all-checkbox' onchange='selectAllNotifications(this.checked);'> Select all
-    {% for notification in object_list %}
-      {% include 'partials/notification_card.html' with notification=notification %}
-    {% empty %}
-      {% include 'partials/empty_notification_card.html'%}
-    {% endfor %}
+    <!-- Notifications -->
+    <div class="col-8" style="padding: 0 26px">
+      <h5 style="color:#878787">{{object_list.count}} Notifications</h5>
+      {% for notification in object_list %}
+        {% include 'partials/notification_card.html' with notification=notification %}
+      {% empty %}
+        {% include 'partials/empty_notification_card.html'%}
+      {% endfor %}
+    </div>
+
+
 
   </div>
-
+</div>
 
 {% endblock %}
 {% block javascript %}
@@ -38,8 +66,35 @@
       selected = []
       selectedCount = 0
       checkboxes = Array.from(document.getElementsByClassName('notification-checkbox'))
+      optionsCheckboxes = Array.from(document.getElementsByClassName('options-checkboxes'))
       selected_count = $('#selected-count')[0]
     })
+
+    const selectNotifications = (bool, checkbox) => {
+      // debugger
+      clearOptionCheckboxes(checkbox)
+      selectAllNotifications(false)
+
+      if (checkbox.checked === false) {
+        return
+      }
+
+      checkboxes.forEach((item, i) => {
+        if (item.dataset.acted_upon === bool) {
+          item.checked = bool
+          updateSelectedCheckbox(item)
+        }
+      });
+    }
+
+    const clearOptionCheckboxes = (selectedCheckbox) => {
+      optionsCheckboxes.forEach((item, i) => {
+        if (item.id != selectedCheckbox.id) {
+          item.checked = false
+        }
+      });
+    }
+
 
     const updateSelectedCheckbox = (checkbox) => {
       if (selected.includes(checkbox)) {
@@ -52,7 +107,10 @@
       updateSelectedNumber()
     }
 
-    const selectAllNotifications = (checked) => {
+    const selectAllNotifications = (checked, checkbox=null) => {
+      if (checkbox !== null) {
+        clearOptionCheckboxes(checkbox)
+      }
       checkboxes.forEach((item, i) => {
         if (checked != item.checked) {
           item.checked = checked
@@ -72,6 +130,8 @@
     const resetPage = () => {
       selectAllNotifications(false)
       $('#select-all-checkbox')[0].checked = false
+      $('#select-read-checkbox')[0].checked = false
+      $('#select-unread-checkbox')[0].checked = false
       selected_count.innerHTML = "0"
       selected = []
     }
