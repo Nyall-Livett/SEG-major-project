@@ -15,11 +15,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
 from django.http import JsonResponse
+from django.db import IntegrityError
 import json
 import random
-
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
@@ -90,9 +90,14 @@ class ShowClubView(LoginRequiredMixin, DetailView):
     template_name = 'show_club.html'
     pk_url_kwarg = 'club_id'
 
-    def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to club_list if club_id invalid."""
+    def get(self, request, club_id, optional_notification="", *args, **kwargs):
+        if optional_notification:
+            notification = Notification.objects.get(id=optional_notification)
+            if notification.receiver == request.user and notification.acted_upon == False:
+                notification.acted_upon = True
+                notification.save()
 
+        """Handle get request, and redirect to club_list if club_id invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
@@ -106,6 +111,7 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         authors = list(context['club'].members.all())
         context['posts'] = Post.objects.filter(author__in=authors, club = context['club'])[:20]
         return context
+
 
 class ClubListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -190,6 +196,28 @@ class EditMeetingView(LoginRequiredMixin, UpdateView):
     success_url="/dashboard" # posts list url
 
 
+class BookReviewView(LoginRequiredMixin, FormView):
+    """docstring for BookReviewView."""
+
+    template_name = "book_review.html"
+    form_class = BookReviewForm
+
+    def form_valid(self, form):
+        review = form.instance
+        review.reviewer = self.request.user
+        try:
+            review.save()
+            return super().form_valid(form)
+        except IntegrityError as e:
+            return render(self.request, "book_review.html")
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse('book_review')
+
+
+
+
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
 
@@ -255,9 +283,6 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return URL to redirect the user too after valid form handling."""
         return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
-
-
-
 
 
 class DeleteClub(LoginRequiredMixin, DeleteView):

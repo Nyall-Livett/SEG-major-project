@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from clubs import views
+from clubs.forms import BookAutocomplete
 
 
 
@@ -31,10 +32,12 @@ urlpatterns = [
     path('delete_account/<int:user_id>', views.DeleteAccount.as_view(), name='delete_account'),
     path('delete_club/<int:club_id>', views.DeleteClub.as_view(), name='delete_club'),
     path('follow_requests/', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
+    path('follow_requests/<int:optional_notification>', views.FollowRequestsListView.as_view(), name='follow_requests_page'),
     path('user/<int:user_id>', views.ShowUserView.as_view(), name='show_user'),
     path('club/<int:club_id>',views.ShowClubView.as_view(), name ='show_club'),
-    path('follow_toggle/<int:user_id>',views.follow_toggle, name ='follow_toggle'),
-    path('follow_request/<int:user_id>',views.follow_request, name ='follow_request'),
+    path('club/<int:club_id>/<int:optional_notification>',views.ShowClubView.as_view(), name ='show_club'),
+    path('follow_toggle/<int:user_id>', views.follow_toggle, name ='follow_toggle'),
+    path('follow_request/<int:user_id>', views.follow_request, name ='follow_request'),
     path('users/', views.UserListView.as_view(), name='user_list'),
     path('set_meeting/<int:club_id>', views.CreateMeetingView.as_view(), name='set_meeting'),
     path('start_meeting/<slug:pk>/', views.StartMeetingView.as_view(), name='start_meeting'),
@@ -52,6 +55,7 @@ urlpatterns = [
     path('books/', views.BookListView.as_view(), name='book_list'),
     path('upload_books/', views.UploadBooksView.as_view(), name='upload_books'),
     path('book/<int:book_id>',views.ShowBookView.as_view(), name ='show_book'),
+    path('book_review', views.BookReviewView.as_view(), name='book_review'),
     path('accept_request/<int:user_id>', views.accept_request, name='accept_request'),
     path('reject_request/<int:user_id>', views.reject_request, name='reject_request'),
     path('notifications/', views.NotificationListView.as_view(), name='notifications'),
@@ -64,4 +68,5 @@ urlpatterns = [
     path('previous_meetings/<int:club_id>', views.PreviousMeetingView.as_view(), name= 'previous_meetings'),
     path('member_list/<int:club_id>', views.MemberListView.as_view(), name='member_list'),
     path('change_theme/<int:club_id>', views.ChangeClubTheme.as_view(), name='change_theme'),
+    path('book-autocomplete', BookAutocomplete.as_view(), name='book-autocomplete'),
 ]

@@ -2,7 +2,22 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Club, Meeting, Post, Book, Moment
+from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
+from dal import autocomplete
+
+class BookAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        #if not self.request.user.is_authenticated:
+        #    return Book.objects.none()
+
+        qs = Book.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -11,8 +26,8 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
-        widgets = { 'bio': forms.Textarea() }
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
+        widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
 
     new_password = forms.CharField(
         label='Password',
@@ -52,6 +67,15 @@ class SignUpForm(forms.ModelForm):
             want_to_read_next=self.cleaned_data.get('want_to_read_next'),
         )
         return user
+
+
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        keys = list(self.fields)
+        keys.remove('using_gravatar')
+        for key in keys:
+            self.fields[key].widget.attrs['class'] = 'form-control'
+
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -132,8 +156,15 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next']
-        widgets = { 'bio': forms.Textarea() }
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
+        widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        keys = list(self.fields)
+        keys.remove('using_gravatar')
+        for key in keys:
+            self.fields[key].widget.attrs['class'] = 'form-control'
 
 class ClubForm(forms.ModelForm):
     class Meta:
@@ -146,20 +177,13 @@ class ClubForm(forms.ModelForm):
             'maximum_members': forms.NumberInput(attrs={'min': 0, 'max': 64})
         }
 
-
-
-
-
-# 'hours': forms.NumberInput(attrs={'min': '0', 'class': 'yourClass', 'id': 'blah'}),
-
-
 class MeetingForm(forms.ModelForm):
     class Meta:
         "Form options"
 
         model = Meeting
         fields = ['date', 'location', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea() }
+        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 class StartMeetingForm(forms.ModelForm):
     class Meta:
@@ -168,7 +192,7 @@ class StartMeetingForm(forms.ModelForm):
         fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
         #fields = ['next_book', 'notes']
         #widgets = { 'notes': forms.Textarea() }
-        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
+        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'next_book': autocomplete.ModelSelect2(url='book-autocomplete') , 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
     date = forms.CharField(disabled=True, required=False)
     location = forms.CharField(disabled=True, required=False)
     URL = forms.CharField(disabled=True, required=False)
@@ -178,10 +202,15 @@ class EditMeetingForm(forms.ModelForm):
         "Form options"
         model = Meeting
         fields = ['date', 'location', 'URL', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea() }
+        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 
+class BookReviewForm(forms.ModelForm):
+    class Meta:
 
+        model = BooksRead
+        fields = ['book', 'rating']
+        widgets = { 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
 
 
 class BookForm(forms.ModelForm):

@@ -9,7 +9,8 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.enums import NotificationType, MomentType
+from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
+
 
 import pytz
 
@@ -48,6 +49,7 @@ class User(AbstractUser):
     favourite_genre = models.CharField(max_length=50, blank=True)
     favourite_author = models.CharField(max_length=50, blank=True)
     want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_read')
+    using_gravatar = models.BooleanField(default=False)
 
     class Meta:
         """Model options."""
@@ -86,8 +88,6 @@ class User(AbstractUser):
     def now(self):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
-
-    #def applicants(self):
 
 
     def notification_count(self):
@@ -171,6 +171,10 @@ class Club(models.Model):
     applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
+
+    class Meta:
+        """Model options."""
+        ordering = ['-id']
 
     def add_or_remove_member(self, user):
         if user not in self.members.all():
@@ -257,4 +261,22 @@ class Meeting(models.Model):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
 
-    
+
+class BooksRead(models.Model):
+    """Book Read model - books read by a user with rating"""
+    RATINGS = [
+        ('like', 'like'),
+        ('neutral', 'neutral'),
+        ('dislike', 'dislike')
+    ]
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, blank=False, null=False, on_delete=models.CASCADE, related_name="reviewing")
+    rating = models.CharField(max_length=30, choices=RATINGS)
+
+    class Meta:
+        unique_together = ['reviewer', 'book']
+
+class CustomAvatar(models.Model):
+    color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
+    icon = models.CharField(blank=False, null=True, max_length=28, choices = AvatarIcon.choices)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
