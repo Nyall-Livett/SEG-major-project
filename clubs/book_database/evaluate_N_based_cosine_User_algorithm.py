@@ -31,7 +31,7 @@ simsMatrix = model.compute_similarities()
 
 leftOutTestSet = evalData.GetLOOCVTestSet()
 
-# Build up dict to lists of (int(movieID), predictedrating) pairs
+# Build up dict to lists of (isbn, predictedrating) pairs
 topN = defaultdict(list)
 k = 10
 for uiid in range(trainSet.n_users):

@@ -31,7 +31,7 @@ simsMatrix = model.compute_similarities()
 
 leftOutTestSet = evalData.GetLOOCVTestSet()
 
-# Build up dict to lists of (int(movieID), predictedrating) pairs
+# Build up dict to lists of (isbn, predictedrating) pairs
 topN = defaultdict(list)
 k = 10
 for uiid in range(trainSet.n_users):
@@ -44,7 +44,7 @@ for uiid in range(trainSet.n_users):
         similarityRow = simsMatrix[itemID]
         for innerID, score in enumerate(similarityRow):
             candidates[innerID] += score * (rating / 10.0)
-            
+
     # Build a dictionary of stuff the user has already seen
     watched = {}
     for itemID, rating in trainSet.ur[uiid]:
