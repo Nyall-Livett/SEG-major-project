@@ -272,7 +272,7 @@ class ProcessData:
 
 test = ProcessData()
 # # test.formatBooks()
-test.formatBooks()
+test.formatRatings()
 #
 # data = test.loadBooks()
 
