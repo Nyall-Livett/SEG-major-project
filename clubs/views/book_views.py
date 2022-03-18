@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm
 from django.views.generic.detail import DetailView
-
+from django.contrib.auth.decorators import login_required
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
 
@@ -108,3 +108,12 @@ class CreateBookView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse("book_list")
+@login_required
+def get_books_by_author(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book_name = book.name
+    book_author = book.author
+    
+    filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
+    context = {'books_by_author': filtered_by_author}
+    return render(request, 'books_by_author.html', context)
