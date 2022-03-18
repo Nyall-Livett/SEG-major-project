@@ -19,6 +19,26 @@ class ProcessData:
     current_directory = os.getcwd()
     ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
     booksPath = current_directory +  '/BX_Books_formated.csv'
+    preprocessedBooksPath = current_directory +  '/Preprocessed_Books_formatted.csv'
+
+
+    def formatPreprocessedBooks(self):
+        if not(os.path.exists(self.current_directory + '/Preprocessed_books_formatted.csv')):
+
+            preprocessedData = pd.read_csv(self.current_directory + '/Preprocessed_data.csv', sep=',', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+            preprocessedData.drop(columns = ['id', 'user_id', 'location','age', 'rating', 'city','state','country'],axis=1,inplace = True)
+            preprocessedData=preprocessedData.reindex(columns= ['isbn', 'book_title', 'book_author', 'year_of_publication', 'publisher', 'img_s', 'img_m', 'img_l', 'Category', 'Summary', 'Language'])
+
+            preprocessedData.rename(columns = {'isbn':'ISBN', 'book_title':'Book-Title', 'book_author':'Book-Author', 'year_of_publication':'Year-Of-Publication', 'publisher':'Publisher', 'img_s':'Image-URL-S', 'img_m':'Image-URL-M', 'img_l':'Image-URL-L'}, inplace=True)
+
+
+            preprocessedData.drop_duplicates(subset='ISBN', keep='first', inplace=True, ignore_index=True)
+
+
+            # Write DataFrame to a csv file
+            preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
+
 
 
     def formatPreprocessedRatings(self):
