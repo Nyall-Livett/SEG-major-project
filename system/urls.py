@@ -72,4 +72,5 @@ urlpatterns = [
     
     path('get_books_by_author/<int:book_id>', views.get_books_by_author, name='get_books_by_author'),
     path('get_books_by_publisher/<int:book_id>', views.get_books_by_publisher, name='get_books_by_publisher'),
+    path('get_recommended_books/<int:book_id>', views.get_recommended_books, name='get_recommended_books'),
 ]

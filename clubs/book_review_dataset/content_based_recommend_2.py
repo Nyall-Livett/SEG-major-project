@@ -83,6 +83,7 @@ def content_based_recommender(book_title):
 """Uses brief summary of the book to give recommendations"""
 def content_based_recommender_2(book_title):
     book_title = str(book_title)
+    books = []
     if book_title in df['book_title'].values:
         rating_counts = pd.DataFrame(df['book_title'].value_counts())
         rare_books = rating_counts[rating_counts['book_title'] <= 100].index
@@ -91,6 +92,7 @@ def content_based_recommender_2(book_title):
         if book_title in rare_books:
             
             random = pd.Series(common_books['book_title'].unique()).sample(5).values
+            books.append(random)
             print('There are no recommendations for this book')
             print('Try: \n')
             print('{}'.format(random[0]),'\n')
@@ -118,7 +120,7 @@ def content_based_recommender_2(book_title):
             index = common_books[common_books['book_title'] == book_title]['index'].values[0]
             sim_books = list(enumerate(cosine_sim[index]))
             sorted_sim_books = sorted(sim_books,key=lambda x:x[1],reverse=True)[1:6]
-            books = []
+            
             for i in range(len(sorted_sim_books)):
                 books.append(common_books[common_books['index'] == sorted_sim_books[i][0]]['book_title'].item())
             return books

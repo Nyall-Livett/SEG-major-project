@@ -157,3 +157,20 @@ def get_books_by_publisher(request, book_id):
     filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
     context = {'books_by_publisher': filtered_by_publisher}
     return render(request, 'books_by_publisher.html', context)
+
+@login_required
+def get_recommended_books(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book_name = book.name
+    get_recommended_books = content_based_recommender(book_name)       #"Harry Potter and the Order of the Phoenix (Book 5)"
+    recommended_books = []
+    try:
+        for i in get_recommended_books:
+            book = Book.objects.filter(name=i).first()
+            # print(book)
+            recommended_books.append(book)
+            # print(recommended_books)
+    except TypeError:
+        print("Lalala")
+    context = {'recommended_books': recommended_books}
+    return render(request, 'recommended_books.html', context)

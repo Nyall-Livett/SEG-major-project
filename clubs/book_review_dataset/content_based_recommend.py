@@ -1,6 +1,7 @@
 """This recommender uses the 'BX_Books.csv', 'BX-Users.csv' and 'BX-Book-Ratings.csv' datasets to give content based recommendations """
 
 import re
+import os
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
@@ -8,16 +9,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # books = pd.read_csv("Preprocessed_data.csv")
-books = pd.read_csv("BX_Books.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
-users = pd.read_csv("BX-Users.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
-ratings = pd.read_csv("BX-Book-Ratings.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
+current_directory = os.getcwd()
+# print(current_directory)
+books = pd.read_csv(current_directory + "/clubs/book_review_dataset/BX_Books.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
+users = pd.read_csv(current_directory + "/clubs/book_review_dataset/BX-Users.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
+ratings = pd.read_csv(current_directory + "/clubs/book_review_dataset/BX-Book-Ratings.csv", sep=';', encoding="latin-1", on_bad_lines='skip')
 books = books[['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L']]
 books.rename(columns = {'ISBN':'isbn', 'Book-Title':'book_title', 'Book-Author':'book_author', 'Year-Of-Publication':'year', 'Publisher':'publisher', 'Image-URL-S':'img_s', 'Image-URL-M':'img_m', 'Image-URL-L':'img_l'}, inplace=True)
 users.rename(columns = {'User-ID':'user_id', 'Location':'location', 'Age':'age'}, inplace=True)
 ratings.rename(columns = {'User-ID':'user_id', 'ISBN':'isbn', 'Book-Rating':'rating'}, inplace=True)
 
 # print(list(books.columns))
-print(books)
+# print(books)
 # print(list(users.columns))
 # print(users)
 # print(list(ratings.columns))
@@ -46,6 +49,7 @@ df.drop(index=df[df['rating'] == 0].index, inplace=True)
 def content_based_recommender(book_title):
     
     book_title = str(book_title)
+    books = []
     if book_title in df['book_title'].values:
         rating_counts = pd.DataFrame(df['book_title'].value_counts())
         rare_books = rating_counts[rating_counts['book_title'] <= 100].index
@@ -54,6 +58,7 @@ def content_based_recommender(book_title):
         if book_title in rare_books:
             
             random = pd.Series(common_books['book_title'].unique()).sample(5).values
+            print(random)
             print('There are no recommendations for this book')
             print('Try: \n')
             print('{}'.format(random[0]),'\n')
@@ -76,16 +81,17 @@ def content_based_recommender(book_title):
             sorted_sim_books = sorted(sim_books,key=lambda x:x[1],
                                       reverse=True)[1:6]
             
-            books = []
+
             for i in range(len(sorted_sim_books)):
+                print(i)
                 books.append(common_books[common_books['index'] == sorted_sim_books[i][0]]['book_title'].item())
             return books
 
     else:
       print('Cant find book in dataset, please check spelling')
 
-# book1 = content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)")
-# print(book1)
+book1 = content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)")
+print(book1)
 # book2 = content_based_recommender("The Testament")
 # print(book2)
 # book3 = content_based_recommender("1st to Die: A Novel")
