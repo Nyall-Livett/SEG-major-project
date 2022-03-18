@@ -40,17 +40,17 @@
         </div>
 
         <div class="row card s-40 p-16">
-
-          <!-- This is were the meetings go  -->
+       
           <div class="collection-wrap">
-            {% for club in random_clubs %}
+            {% for c in user.clubs.all %}
+            {% for a in c.meetings.all %}
               <div class="single-item-wrap">
-                <div class="book-image">
-                </div>
+                
                 <div class="book-details">
-                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                  <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
                 </div>
               </div>
+              {% endfor %}
             {% endfor %}
           </div>
           <!-- end meetings -->
@@ -147,9 +147,7 @@
   </div>
 </div>
 
-{% for c in user.clubs.all %}
-  {{ c.meetings.all }}
-{% endfor %}
+
 
 
 {% endblock %}
