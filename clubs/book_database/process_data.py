@@ -17,8 +17,8 @@ class ProcessData:
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
-    booksPath = current_directory +  '/BX_Books_formated.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_formatted.csv'
+    booksPath = current_directory +  '/BX_Books_formatted.csv'
     preprocessedBooksPath = current_directory +  '/Preprocessed_Books_formatted.csv'
 
 
@@ -100,10 +100,10 @@ class ProcessData:
     def formatRatings(self):
         counter = 0
 
-        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formated.csv")):
+        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted.csv")):
 
             with open(self.current_directory + "/BX-Book-Ratings.csv",'r', encoding="iso-8859-1") as csvfile:
-                with open(self.current_directory + "/BX-Book-Ratings_formated.csv", 'w') as csvoutput:
+                with open(self.current_directory + "/BX-Book-Ratings_formatted.csv", 'w') as csvoutput:
                     writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";")
                     reader = csv.reader(csvfile, delimiter=";", quotechar='"')
 
@@ -149,42 +149,17 @@ class ProcessData:
             book = ""
 
         return book
-        
+
     def formatBooks(self):
 
-        if not(os.path.exists(self.current_directory + "/BX_Books_formated.csv")):
+        if not(os.path.exists(self.current_directory + "/BX_Books_formatted.csv")):
 
             df = pd.read_csv(self.current_directory + '/Preprocessed_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            BXdf = pd.read_csv(self.current_directory + '/Preprocessed_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
 
-            with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
-                with open(self.current_directory + "/BX_Books_formatted.csv", 'w') as csvoutput:
-                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
-                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+            BXdf = pd.concat([BXdf,df], join = 'inner', ignore_index=True)
 
-                    row = next(reader)
-
-                    new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category', 'Restricted-Category', 'Summary', 'Language' ]
-
-                    writer.writerow(new_row)
-
-                    for row in reader:
-                        book = self.get_extra_info_from_csv(df,row[0])
-                        try:
-                            if (str(book[8]) == "nan"):
-                                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], book[9], book[9], "", ""]
-                            else:
-                                new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], book[8], book[9], book[10], book[11]]
-
-
-                            # if(row[8]==""):
-                            #     new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], book[9], book[9], "", ""]
-                        except:
-                            otherCategories = ["['Miscellaneous 1']", "['Miscellaneous 2']", "['Miscellaneous 3']", "['Miscellaneous 4']", "['Miscellaneous 5']",
-                                                "['Miscellaneous 6']", "['Miscellaneous 7']", "['Miscellaneous 8']", "['Miscellaneous 9']", "['Miscellaneous 10']"]
-
-                            miscellaneous = random.choice(otherCategories)
-                            new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], miscellaneous, miscellaneous, "", ""]
-                        writer.writerow(new_row)
+            BXdf.to_csv(path_or_buf=self.current_directory + '/cry.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
 
         print("The book csv has been formatted")
@@ -308,7 +283,7 @@ class ProcessData:
 
 test = ProcessData()
 # # test.formatBooks()
-test.formatRatings()
+test.formatBooks()
 #
 # data = test.loadBooks()
 
