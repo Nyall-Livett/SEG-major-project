@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
+from decouple import config
+
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,3 +150,10 @@ USERS_PER_PAGE = 10
 POSTS_PER_PAGE = 20
 BOOKS_PER_PAGE = 20
 MEETINGS_PER_PAGE = 10
+
+# S3 upload settings
+DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
+AWS_S3_ACCESS_KEY_ID = config('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = config('AWS_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_QUERYSTRING_AUTH = False
