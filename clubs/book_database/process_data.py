@@ -36,6 +36,8 @@ class ProcessData:
             preprocessedData.drop_duplicates(subset='ISBN', keep='first', inplace=True, ignore_index=True)
 
 
+            preprocessedData = preprocessedData.replace({'9': None})
+
             # Write DataFrame to a csv file
             preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
