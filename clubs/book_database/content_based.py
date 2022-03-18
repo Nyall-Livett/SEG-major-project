@@ -24,6 +24,7 @@ random.seed(0)
 evaluator = Evaluator(evaluationData, rankings)
 
 contentKNN = ContentKNNAlgorithm()
+print(contentKNN)
 evaluator.AddAlgorithm(contentKNN, "ContentKNN")
 
 # Just make random recommendations
@@ -32,4 +33,4 @@ evaluator.AddAlgorithm(Random, "Random")
 
 evaluator.Evaluate(False)
 
-evaluator.SampleTopNRecs(ml)
+evaluator.SampleTopNRecs(book_data)

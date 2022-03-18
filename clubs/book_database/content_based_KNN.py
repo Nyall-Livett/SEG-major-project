@@ -30,8 +30,8 @@ class ContentKNNAlgorithm(AlgoBase):
             if (thisRating % 100 == 0):
                 print(thisRating, " of ", self.trainset.n_items)
             for otherRating in range(thisRating+1, self.trainset.n_items):
-                thisisbn = int(self.trainset.to_raw_iid(thisRating))
-                otherisbn = int(self.trainset.to_raw_iid(otherRating))
+                thisisbn = (self.trainset.to_raw_iid(thisRating))
+                otherisbn = (self.trainset.to_raw_iid(otherRating))
                 genreSimilarity = self.computeGenreSimilarity(thisisbn, otherisbn, genres)
                 yearSimilarity = self.computeYearSimilarity(thisisbn, otherisbn, years)
                 #mesSimilarity = self.computeMiseEnSceneSimilarity(thisisbn, otherisbn, mes)
@@ -45,6 +45,8 @@ class ContentKNNAlgorithm(AlgoBase):
     def computeGenreSimilarity(self, book1, book2, genres):
         genres1 = genres[book1]
         genres2 = genres[book2]
+        if (len(genres2) == 0 or len(genres1)==0) :
+            return 0
         sumxx, sumxy, sumyy = 0, 0, 0
         for i in range(len(genres1)):
             x = genres1[i]

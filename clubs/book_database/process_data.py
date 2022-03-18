@@ -8,32 +8,108 @@ from collections import defaultdict
 import numpy as np
 import json
 from urllib.request import urlopen
+from evaluator import Evaluator
+import pandas as pd
+import random
 
 class ProcessData:
 
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
-    booksPath = current_directory +  '/BX_Books_formated.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_formatted.csv'
+    booksPath = current_directory +  '/BX_Books_formatted.csv'
+    preprocessedBooksPath = current_directory +  '/Preprocessed_Books_formatted.csv'
+
+
+    def formatPreprocessedBooks(self):
+        if not(os.path.exists(self.current_directory + '/Preprocessed_books_formatted.csv')):
+
+            preprocessedData = pd.read_csv(self.current_directory + '/Preprocessed_data.csv', sep=',', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+            preprocessedData.drop(columns = ['id', 'user_id', 'location','age', 'rating', 'city','state','country'],axis=1,inplace = True)
+            preprocessedData=preprocessedData.reindex(columns= ['isbn', 'book_title', 'book_author', 'year_of_publication', 'publisher', 'img_s', 'img_m', 'img_l', 'Category', 'Summary', 'Language'])
+
+            preprocessedData.rename(columns = {'isbn':'ISBN', 'book_title':'Book-Title', 'book_author':'Book-Author', 'year_of_publication':'Year-Of-Publication', 'publisher':'Publisher', 'img_s':'Image-URL-S', 'img_m':'Image-URL-M', 'img_l':'Image-URL-L'}, inplace=True)
+
+
+            preprocessedData.drop_duplicates(subset='ISBN', keep='first', inplace=True, ignore_index=True)
+
+
+            preprocessedData = preprocessedData.replace({'9': None})
+
+            #Write all categories to a file called category.csv
+
+            # categories = preprocessedData.Category.value_counts()
+            # categories.to_csv(path_or_buf=self.current_directory + '/all_categories.csv')
+
+
+            # Add the restricted category to the books
+
+
+            mostPopularCategories = ["['Fiction']","['Juvenile Fiction']","['Biography & Autobiography']","['History']","['Juvenile Nonfiction']","['Social Science']","['Business & Economics']",
+            "['Body, Mind & Spirit']","['Health & Fitness']","['Family & Relationships']","['Cooking']","['Humor']","['Computers']","['Psychology']","['Self-Help']","['Science']","['Travel']",
+            "['Poetry']","['Literary Criticism']","['Art']","['Sports & Recreation']","['Philosophy']","['Nature']","['Political Science']","['Drama']","['Reference']","['Performing Arts']",
+            "['Language Arts & Disciplines']","['Crafts & Hobbies']","['Education']","['Comics & Graphic Novels']","['Music']","['Medical']","['Pets']","['True Crime']","['Literary Collections']",
+            "['Detective and mystery stories']","['Gardening']","[""Children's stories""]","['Foreign Language Study']","['Animals']","['House & Home']","['Technology & Engineering']",
+            "['Adventure stories']","['Games & Activities']","['Photography']","['Games']","['Friendship']","['Law']","['Architecture']","['American fiction']","['Christian life']",
+            "['Brothers and sisters']","['Mathematics']","['Cats']","['English fiction']","['Antiques & Collectibles']","['Families']","['English language']","['Bible']","['Domestic fiction']",
+            "['Dogs']","['England']","['Adolescence']","['Science fiction']","['Australia']","['African Americans']","['Design']","['Adventure and adventurers']","['Great Britain']",
+            "['Fantasy fiction']","['United States']","['Christmas stories']","['Children']","['Bears']","['Conduct of life']","['Authors, American']","['Fantasy']","['Fairy tales']",
+            "['American poetry']","['Romance fiction']","['Actors']","[""Children's stories, American""]","['Transportation']","['French fiction']","['German fiction']","['Horror tales']",
+            "['Dinosaurs']","['Murder']","['France']","['Canada']","['Babysitters']","['Man-woman relationships']","['American literature']","['FICTION']","['Adultery']",
+            "[""Children's stories, American.""]","['Christian fiction']","['City and town life']","['Indians of North America']","['Brothers']","[""Children's stories, English""]",
+            "['Horror stories.']","['Death']","['Americans']","['Study Aids']","['Authors, English']","['Science fiction, American']","['Ghost stories']","['Bibles']","['Africa']","['Angels']",
+            "[""Children's literature""]","['Schools']"]
+
+            otherCategories = {'1':"['Miscellaneous 1']", '2':"['Miscellaneous 2']", '3':"['Miscellaneous 3']", '4':"['Miscellaneous 4']", '5':"['Miscellaneous 5']",
+                                '6':"['Miscellaneous 6']", '7':"['Miscellaneous 7']", '8':"['Miscellaneous 8']", '9':"['Miscellaneous 9']", '0':"['Miscellaneous 10']"}
+
+
+            preprocessedData.loc[(preprocessedData['Category'].isin(mostPopularCategories)),'Restricted-Category'] = preprocessedData['Category']
+
+            # Assign books with unpopular categories to one out of ten 'Miscellaneous' categories.
+
+            for x in range(10):
+                preprocessedData.loc[(~preprocessedData['Category'].isin(mostPopularCategories)) & (preprocessedData.index % 10 == x),'Restricted-Category'] = otherCategories.get(str(x))
+
+
+
+            # Write DataFrame to a csv file
+            preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
+
+
+
+    def formatPreprocessedRatings(self):
+        if not(os.path.exists(self.current_directory + '/Preprocessed_Ratings_formatted.csv')):
+
+            preprocessedData = pd.read_csv(self.current_directory + '/Preprocessed_data.csv', sep=',', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+
+            preprocessedData.drop(columns = ['id', 'location','age', 'book_title', 'book_author', 'year_of_publication', 'publisher', 'img_s', 'img_m', 'img_l', 'Summary', 'Language', 'Category' ,'city','state','country'],axis=1,inplace = True)
+
+            preprocessedData.rename(columns = {'user_id':'User-ID', 'isbn':'ISBN', 'rating':'Book-Rating'}, inplace=True)
+
+
+            preprocessedData.drop_duplicates(subset=['ISBN', 'User-ID'], keep='first', inplace=True, ignore_index=True)
+
+
+            preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_Ratings_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'] )
+
 
     def formatRatings(self):
 
-        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formated.csv")):
+        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted.csv")):
 
-            with open(self.current_directory + "/BX-Book-Ratings.csv",'r', encoding="iso-8859-1") as csvfile:
-                with open(self.current_directory + "/BX-Book-Ratings_formated.csv", 'w') as csvoutput:
-                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";")
-                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+            ratings = pd.read_csv(self.current_directory + '/BX-Book-Ratings.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            books = pd.read_csv(self.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            isbns = books['ISBN'].unique()
 
-                    row = next(reader)
-                    new_row = [row[0], row[1], row[2]]
+            ratings= ratings[(ratings['ISBN'].isin(isbns))]
+            ratings = ratings.head(1000)
 
-                    writer.writerow(new_row)
+            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted.csv', sep=';', line_terminator='\n', index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'])
 
-                    for row in reader:
-                        new_row = [row[0], row[1], row[2]]
-                        writer.writerow(new_row)
         print("finished loading ratings")
 
 
@@ -59,26 +135,20 @@ class ProcessData:
 
         return categories
 
-
     def formatBooks(self):
 
-        if not(os.path.exists(self.current_directory + "/BX_Books_formated.csv")):
+        if not(os.path.exists(self.current_directory + "/BX_Books_formatted.csv")):
 
-            with open(self.current_directory + "/BX_Books.csv",'r', encoding="iso-8859-1") as csvfile:
-                with open(self.current_directory + "/BX_Books_formated.csv", 'w') as csvoutput:
-                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";", quoting=csv.QUOTE_ALL)
-                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+            df = pd.read_csv(self.current_directory + '/Preprocessed_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            BXdf = pd.read_csv(self.current_directory + '/BX_Books.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            isbns = BXdf['ISBN'].unique()
 
-                    row = next(reader)
+            BXdf = pd.merge(BXdf, df, how='left', on=None, sort=False, copy=False, indicator=False, validate=None)
 
-                    new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], 'Category']
+            BXdf = BXdf.drop_duplicates(subset=['ISBN'], keep='first')
+            BXdf = BXdf.head(2000)
 
-                    writer.writerow(new_row)
-
-                    for row in reader:
-                        categories = self.get_book_categories(row)
-                        new_row = [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], categories]
-                        writer.writerow(new_row)
+            BXdf.to_csv(path_or_buf=self.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
 
         print("The book csv has been formatted")
@@ -94,7 +164,7 @@ class ProcessData:
 
         ratingsDataset = Dataset.load_from_file(self.ratingsPath, reader = reader)
 
-        with open(self.booksPath, newline = '\n', encoding= 'ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline = '\n', encoding= 'latin-1') as csvfile:
             bookReader = csv.reader(csvfile, delimiter=";", quotechar='"')
             next(bookReader)
 
@@ -149,7 +219,7 @@ class ProcessData:
         genres = defaultdict(list)
         genreIDs = {}
         maxGenreID = 0
-        with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline='', encoding='latin-1') as csvfile:
             bookReader = csv.reader(csvfile,   delimiter=";", quotechar='"')
             next(bookReader)
             for row in bookReader:
@@ -176,7 +246,7 @@ class ProcessData:
 
     def getYears(self):
         years = defaultdict(int)
-        with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline='', encoding='latin-1') as csvfile:
             bookReader = csv.reader(csvfile, delimiter = ';', quotechar= '"')
             next(bookReader)
             for row in bookReader:
@@ -200,10 +270,17 @@ class ProcessData:
             return 0
 
 
-# test = ProcessData()
+test = ProcessData()
+
+BXdf = pd.read_csv(test.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+BXdf = BXdf.head(10000)
+
+BXdf.to_csv(path_or_buf=test.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
+
 # test.formatBooks()
-# test.formatRatings()
-#
+test.formatRatings()
+# #
 # data = test.loadBooks()
 
 # ratings = test.getUserRatings(276725)
