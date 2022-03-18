@@ -171,6 +171,7 @@ class Club(models.Model):
     applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
+    image = models.ImageField(upload_to='media/', null=True)
 
     class Meta:
         """Model options."""
