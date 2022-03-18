@@ -17,7 +17,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-books = pd.read_csv("Preprocessed_data.csv")
+books = pd.read_csv("/Users/bdalam/Desktop/SEG-major-project/clubs/book_review_dataset/Preprocessed_data.csv")
 # print(books)
 
 counts = books['Category'].value_counts()
@@ -143,6 +143,8 @@ def content_based_recommender_2(book_title):
 # print(content_based_recommender("Tuesdays with Morrie: An Old Man, a Young Man, and Life's Greatest Lesson"))
 # print(content_based_recommender("Girl with a Pearl Earring"), '\n')
 
+# print(content_based_recommender("Dreamcatcher"))
+# print(content_based_recommender_2("Dreamcatcher"))
 
 
 # print("recommendation based on summary")
