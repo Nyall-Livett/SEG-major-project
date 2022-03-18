@@ -48,6 +48,9 @@
                 
                 <div class="book-details">
                   <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
+               
+                  </form>
+                 
                 </div>
               </div>
               {% endfor %}
@@ -58,7 +61,6 @@
         </div>
       </div>
     </div>
-
 
 
     <!-- Middle -->
@@ -146,9 +148,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 {% endblock %}
 {% block javascript %}
