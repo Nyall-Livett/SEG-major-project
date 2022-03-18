@@ -38,6 +38,43 @@ class ProcessData:
 
             preprocessedData = preprocessedData.replace({'9': None})
 
+            #Write all categories to a file called category.csv
+
+            # categories = preprocessedData.Category.value_counts()
+            # categories.to_csv(path_or_buf=self.current_directory + '/all_categories.csv')
+
+
+            # Add the restricted category to the books
+
+
+            mostPopularCategories = ["['Fiction']","['Juvenile Fiction']","['Biography & Autobiography']","['History']","['Juvenile Nonfiction']","['Social Science']","['Business & Economics']",
+            "['Body, Mind & Spirit']","['Health & Fitness']","['Family & Relationships']","['Cooking']","['Humor']","['Computers']","['Psychology']","['Self-Help']","['Science']","['Travel']",
+            "['Poetry']","['Literary Criticism']","['Art']","['Sports & Recreation']","['Philosophy']","['Nature']","['Political Science']","['Drama']","['Reference']","['Performing Arts']",
+            "['Language Arts & Disciplines']","['Crafts & Hobbies']","['Education']","['Comics & Graphic Novels']","['Music']","['Medical']","['Pets']","['True Crime']","['Literary Collections']",
+            "['Detective and mystery stories']","['Gardening']","[""Children's stories""]","['Foreign Language Study']","['Animals']","['House & Home']","['Technology & Engineering']",
+            "['Adventure stories']","['Games & Activities']","['Photography']","['Games']","['Friendship']","['Law']","['Architecture']","['American fiction']","['Christian life']",
+            "['Brothers and sisters']","['Mathematics']","['Cats']","['English fiction']","['Antiques & Collectibles']","['Families']","['English language']","['Bible']","['Domestic fiction']",
+            "['Dogs']","['England']","['Adolescence']","['Science fiction']","['Australia']","['African Americans']","['Design']","['Adventure and adventurers']","['Great Britain']",
+            "['Fantasy fiction']","['United States']","['Christmas stories']","['Children']","['Bears']","['Conduct of life']","['Authors, American']","['Fantasy']","['Fairy tales']",
+            "['American poetry']","['Romance fiction']","['Actors']","[""Children's stories, American""]","['Transportation']","['French fiction']","['German fiction']","['Horror tales']",
+            "['Dinosaurs']","['Murder']","['France']","['Canada']","['Babysitters']","['Man-woman relationships']","['American literature']","['FICTION']","['Adultery']",
+            "[""Children's stories, American.""]","['Christian fiction']","['City and town life']","['Indians of North America']","['Brothers']","[""Children's stories, English""]",
+            "['Horror stories.']","['Death']","['Americans']","['Study Aids']","['Authors, English']","['Science fiction, American']","['Ghost stories']","['Bibles']","['Africa']","['Angels']",
+            "[""Children's literature""]","['Schools']"]
+
+            otherCategories = {'1':"['Miscellaneous 1']", '2':"['Miscellaneous 2']", '3':"['Miscellaneous 3']", '4':"['Miscellaneous 4']", '5':"['Miscellaneous 5']",
+                                '6':"['Miscellaneous 6']", '7':"['Miscellaneous 7']", '8':"['Miscellaneous 8']", '9':"['Miscellaneous 9']", '0':"['Miscellaneous 10']"}
+
+
+            preprocessedData.loc[(preprocessedData['Category'].isin(mostPopularCategories)),'Restricted-Category'] = preprocessedData['Category']
+
+            # Assign books with unpopular categories to one out of ten 'Miscellaneous' categories.
+
+            for x in range(10):
+                preprocessedData.loc[(~preprocessedData['Category'].isin(mostPopularCategories)) & (preprocessedData.index % 10 == x),'Restricted-Category'] = otherCategories.get(str(x))
+
+
+
             # Write DataFrame to a csv file
             preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
