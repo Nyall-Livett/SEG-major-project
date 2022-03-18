@@ -101,14 +101,14 @@ class ProcessData:
 
         if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted.csv")):
 
-            preprocessedData = pd.read_csv(self.current_directory + '/BX-Book-Ratings.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            ratings = pd.read_csv(self.current_directory + '/BX-Book-Ratings.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
             books = pd.read_csv(self.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
             isbns = books['ISBN'].unique()
 
-            ratings= preprocessedData[(preprocessedData['ISBN'].isin(isbns))]
+            ratings= ratings[(ratings['ISBN'].isin(isbns))]
             ratings = ratings.head(1000)
 
-            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'])
+            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted.csv', sep=';', line_terminator='\n', index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'])
 
         print("finished loading ratings")
 
@@ -146,7 +146,7 @@ class ProcessData:
             BXdf = pd.merge(BXdf, df, how='left', on=None, sort=False, copy=False, indicator=False, validate=None)
 
             BXdf = BXdf.drop_duplicates(subset=['ISBN'], keep='first')
-            BXdf = BXdf.head(200000)
+            BXdf = BXdf.head(2000)
 
             BXdf.to_csv(path_or_buf=self.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
@@ -164,7 +164,7 @@ class ProcessData:
 
         ratingsDataset = Dataset.load_from_file(self.ratingsPath, reader = reader)
 
-        with open(self.booksPath, newline = '\n', encoding= 'ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline = '\n', encoding= 'latin-1') as csvfile:
             bookReader = csv.reader(csvfile, delimiter=";", quotechar='"')
             next(bookReader)
 
@@ -219,7 +219,7 @@ class ProcessData:
         genres = defaultdict(list)
         genreIDs = {}
         maxGenreID = 0
-        with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline='', encoding='latin-1') as csvfile:
             bookReader = csv.reader(csvfile,   delimiter=";", quotechar='"')
             next(bookReader)
             for row in bookReader:
@@ -246,7 +246,7 @@ class ProcessData:
 
     def getYears(self):
         years = defaultdict(int)
-        with open(self.booksPath, newline='', encoding='ISO-8859-1') as csvfile:
+        with open(self.booksPath, newline='', encoding='latin-1') as csvfile:
             bookReader = csv.reader(csvfile, delimiter = ';', quotechar= '"')
             next(bookReader)
             for row in bookReader:
@@ -271,9 +271,16 @@ class ProcessData:
 
 
 test = ProcessData()
-# # test.formatBooks()
+
+BXdf = pd.read_csv(test.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+BXdf = BXdf.head(10000)
+
+BXdf.to_csv(path_or_buf=test.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
+
+# test.formatBooks()
 test.formatRatings()
-#
+# #
 # data = test.loadBooks()
 
 # ratings = test.getUserRatings(276725)
