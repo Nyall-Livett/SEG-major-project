@@ -63,6 +63,18 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting.URL = ''
         self._assert_meeting_is_valid()
 
+    def test_passcode_may_be_blank(self):
+        self.default_meeting.passcode = ''
+        self._assert_meeting_is_valid()
+
+    def test_meeting_must_not_be_more_than_100_characters(self):
+        self.default_meeting.passcode = 'a' * 101
+        self._assert_meeting_is_invalid()
+
+    def test_meeting_may_be_less_than_100_or_100_characters(self):
+        self.default_meeting.passcode = 'a' * 100
+        self._assert_meeting_is_valid()
+
     def _assert_meeting_is_valid(self):
         try:
             self.default_meeting.full_clean()
