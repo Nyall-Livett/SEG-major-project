@@ -9,6 +9,8 @@ import numpy as np
 import json
 from urllib.request import urlopen
 from evaluator import Evaluator
+import pandas as pd
+import random
 
 class ProcessData:
 
@@ -17,6 +19,24 @@ class ProcessData:
     current_directory = os.getcwd()
     ratingsPath = current_directory + '/BX-Book-Ratings_formated.csv'
     booksPath = current_directory +  '/BX_Books_formated.csv'
+
+
+    def formatPreprocessedRatings(self):
+        if not(os.path.exists(self.current_directory + '/Preprocessed_Ratings_formatted.csv')):
+
+            preprocessedData = pd.read_csv(self.current_directory + '/Preprocessed_data.csv', sep=',', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+
+
+            preprocessedData.drop(columns = ['id', 'location','age', 'book_title', 'book_author', 'year_of_publication', 'publisher', 'img_s', 'img_m', 'img_l', 'Summary', 'Language', 'Category' ,'city','state','country'],axis=1,inplace = True)
+
+            preprocessedData.rename(columns = {'user_id':'User-ID', 'isbn':'ISBN', 'rating':'Book-Rating'}, inplace=True)
+
+
+            preprocessedData.drop_duplicates(subset=['ISBN', 'User-ID'], keep='first', inplace=True, ignore_index=True)
+
+
+            preprocessedData.to_csv(path_or_buf=self.current_directory + '/Preprocessed_Ratings_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'] )
+
 
     def formatRatings(self):
         counter = 0
