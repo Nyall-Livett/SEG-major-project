@@ -1,13 +1,13 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="fluid-container" style="padding:0 26px;">
+<div class="container" style="padding:0 26px;">
   <div class="row">
     <div class="col-4">
       <div class="row">
         <div style="color:#878787">Create your own avatar</div>
         <small style="color:#878787">(You can use gravatar if you prefer)</small>
       </div>
-      <div class="create-icon-wrap">
+      <div class="wrap-100">
         <div class="container card create-icon-container">
 
           <!-- Choose color -->
@@ -77,37 +77,168 @@
       </div>
     </div>
 
-    <!-- Gutter -->
-    <!-- <div class="col-1"></div> -->
 
     <!-- Sign up form -->
     <div class="col-8" style="padding: 0 26px">
-
-
-      <h6 style="color:#878787">Sign up form</h6>
+      <h5 style="color:#878787">Sign up</h5>
+      <br>
+      <h6 style="color:#878787">Account</h6>
       <form action="{% url 'sign_up' %}" method="post">
         {% csrf_token %}
 
 
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <input id="hidden-color" type="hidden" name="color" value="">
-        <input id="hidden-icon" type="hidden" name="icon" value="">
+                <div class="row mb-3">
 
-        <input type="submit" value="Sign up" class="btn btn-primary">
+                  <!-- First name -->
+                  <div class="col">
+                    <label for="first-name-input" class="form-label">First name:</label>
+                    {{ form.first_name }}
+                    {{ form.first_name.errors }}
+                  </div>
+
+                  <!--  last name-->
+                  <div class="col">
+                    <label for="last-name-input" class="form-label">Last name:</label>
+                    {{ form.last_name }}
+                    {{ form.last_name.errors }}
+
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+
+                  <!-- Username -->
+                  <div class="col">
+                    <label for="username-input" class="form-label">Username:</label>
+                    <!-- <input type="text" id="username-input" class="form-control" aria-label="Username"> -->
+                    {{ form.username }}
+                    {{ form.username.errors }}
+
+                  </div>
+
+                  <!-- Email address -->
+                  <div class="col">
+                    <label for="email-address-input" class="form-label">Email address:</label>
+                    <!-- <input type="text" id="email-address-input" class="form-control" aria-label="Email"> -->
+                    {{ form.email}}
+                    {{ form.email.errors}}
+
+                  </div>
+                </div>
+
+                <!-- Password -->
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="password-input" class="form-label">Password:</label>
+                    {{ form.new_password }}
+                    {{ form.new_password.errors }}
+                  </div>
+                </div>
+
+                <!-- Password Confirmation-->
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="password-input" class="form-label">Confirm password:</label>
+                    {{ form.password_confirmation }}
+                    {{ form.password_confirmation.errors }}
+                  </div>
+                </div>
+
+                <br>
+                <br>
+                <h6 style="color:#878787">Profile</h6>
+
+                <!-- Bio -->
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="bio-input" class="form-label">Bio:</label>
+                    <!-- <textarea class="form-control" id="bio-input" rows="3"></textarea> -->
+                    {{ form.bio }}
+                    {{ form.bio.errors }}
+                  </div>
+                </div>
+
+
+                <div class="row mb-3">
+
+                  <!-- Favourite book -->
+                  <div class="col">
+                      <label  class="form-label" for="favourite-book">Favourite book:</label>
+                      {{ form.favourite_book }}
+                      {{ form.favourite_book.errors }}
+
+                    </div>
+
+                  <!-- Favourite Character-->
+                  <div class="col">
+                    <label for="favourite-character" class="form-label">Favourite character:</label>
+                    <!-- <input type="text" id="favourite-character" class="form-control" aria-label="Last name"> -->
+                    {{ form.favourite_character }}
+                    {{ form.favourite_character.errors }}
+
+                  </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+
+                  <!-- Favourite genre -->
+                  <div class="col">
+                    <label for="favourite-genre-input" class="form-label">Favourite genre:</label>
+                    <!-- <input type="text" id="favourite-genre-input" class="form-control" aria-label="First name"> -->
+                    {{ form.favourite_genre }}
+                    {{ form.favourite_genre.errors }}
+
+                  </div>
+
+                  <!-- Favourite -->
+                  <div class="col">
+                    <label for="favourite-author-input" class="form-label">Favourite author:</label>
+                    {{ form.favourite_author }}
+                    {{ form.favourite_author.errors }}
+
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+
+                  <!-- Want to read next -->
+                  <div class="col">
+                    <label  class="form-label" for="want-to-read-next">Want to read next:</label>
+                    {{ form.want_to_read_next }}
+                    {{ form.want_to_read_next.errors }}
+
+                  </div>
+                </div>
+
+
+                <div class="row mb-3">
+                  <div class="custom-control custom-checkbox">
+                    {{ form.using_gravatar }}
+                    {{ form.using_gravatar.errors }}
+
+                    <label class="custom-control-label" for="customCheck1">Use Gravatar</label>
+                  </div>
+                </div>
+
+
+                <input id="hidden-color" type="hidden" name="color" value="">
+                <input id="hidden-icon" type="hidden" name="icon" value="">
+
+                <input type="submit" value="Sign up" class="btn btn-primary">
+
       </form>
+      {{ form.media }}
       <br>
     </div>
+
+
+
   </div>
 </div>
 
-
 {% endblock %}
-
-
-
-
-
-
 {% block javascript %}
 
   <script type="text/javascript">

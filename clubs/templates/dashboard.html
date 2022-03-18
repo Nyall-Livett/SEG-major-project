@@ -2,32 +2,64 @@
 {% block content %}
 {% load humanize %}
 
-<div class="container-fluid" style="padding:0 26px; height:100%">
+<div class="container" style="padding:0 26px; height:100%">
 
   <div class="row" style="height:100%">
 
     <!-- Left -->
-    <div class="col-sm-2" style="height:100%" >
-      <div class="row">
-        <div>
-          <p style="color:#878787">Recommended reads</p>
+    <div class="col-sm-2">
+
+
+      <div class="" >
+        <div class="row">
+          <div>
+            <p style="color:#878787">Recommended reads</p>
+          </div>
+        </div>
+
+        <div class="row card s-40 p-16">
+          <div class="collection-wrap">
+            {% for club in random_clubs %}
+              <div class="single-item-wrap">
+                <div class="book-image">
+                </div>
+                <div class="book-details">
+                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
 
-      <div class="row card s-40 p-16">
-        <div class="collection-wrap">
-          {% for club in random_clubs %}
-            <div class="single-item-wrap">
-              <div class="book-image">
+      <div>
+        <div class="row">
+          <div>
+            <p style="color:#878787">Upcoming meetings</p>
+          </div>
+        </div>
+
+        <div class="row card s-40 p-16">
+
+          <!-- This is were the meetings go  -->
+          <div class="collection-wrap">
+            {% for club in random_clubs %}
+              <div class="single-item-wrap">
+                <div class="book-image">
+                </div>
+                <div class="book-details">
+                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                </div>
               </div>
-              <div class="book-details">
-                <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
-              </div>
-            </div>
-          {% endfor %}
+            {% endfor %}
+          </div>
+          <!-- end meetings -->
+
         </div>
       </div>
     </div>
+
+
 
     <!-- Middle -->
     <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
@@ -98,11 +130,13 @@
           <div class="collection-wrap">
 
             {% for club in random_clubs %}
-              <div class="single-item-wrap">
-                <div class="book-image">
-                </div>
+
+              <div class=" single-item-wrap">
+                <div class="book-image "></div>
                 <div class="book-details">
-                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name|capfirst}}</small></a>
+                  <small style="font-size:12px; color:#878787">Members: {{club.member_count}}</small>
+                  <small style="font-size:12px; color:#878787">Leader: <a href="{% url 'show_user' club.leader.id %}"> {{club.leader}}</a></small>
                 </div>
               </div>
             {% endfor %}

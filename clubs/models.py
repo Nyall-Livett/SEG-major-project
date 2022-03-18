@@ -89,8 +89,6 @@ class User(AbstractUser):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
 
-    #def applicants(self):
-
 
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
@@ -173,6 +171,10 @@ class Club(models.Model):
     applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
+
+    class Meta:
+        """Model options."""
+        ordering = ['-id']
 
     def add_or_remove_member(self, user):
         if user not in self.members.all():
@@ -275,7 +277,6 @@ class BooksRead(models.Model):
         unique_together = ['reviewer', 'book']
 
 class CustomAvatar(models.Model):
-
     color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
     icon = models.CharField(blank=False, null=True, max_length=28, choices = AvatarIcon.choices)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
