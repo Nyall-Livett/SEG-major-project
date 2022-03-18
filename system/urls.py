@@ -70,4 +70,5 @@ urlpatterns = [
     path('change_theme/<int:club_id>', views.ChangeClubTheme.as_view(), name='change_theme'),
     path('book-autocomplete', BookAutocomplete.as_view(), name='book-autocomplete'),
     path('get_books_by_author/<int:book_id>', views.get_books_by_author, name='get_books_by_author'),
+    path('get_books_by_publisher/<int:book_id>', views.get_books_by_publisher, name='get_books_by_publisher'),
 ]

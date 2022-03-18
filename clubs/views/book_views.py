@@ -117,3 +117,13 @@ def get_books_by_author(request, book_id):
     filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
     context = {'books_by_author': filtered_by_author}
     return render(request, 'books_by_author.html', context)
+
+@login_required
+def get_books_by_publisher(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book_name = book.name
+    book_publisher = book.publisher
+    
+    filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
+    context = {'books_by_publisher': filtered_by_publisher}
+    return render(request, 'books_by_publisher.html', context)
