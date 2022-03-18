@@ -13,7 +13,7 @@ book_data = book_ratings.loadBooks()
 
 trainSet = book_data.build_full_trainset()
 
-sim_options = {'name': 'cosine',
+sim_options = {'name': 'msd',
                'user_based': True
                }
 

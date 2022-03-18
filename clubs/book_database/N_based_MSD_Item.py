@@ -7,48 +7,39 @@ from operator import itemgetter
 testSubject = '276746'
 k = 10
 
-# Load our data set and compute the user similarity matrix
 book_ratings = ProcessData()
 book_data = book_ratings.loadBooks()
 
 trainSet = book_data.build_full_trainset()
 
-sim_options = {'name': 'cosine',
-               'user_based': True
+sim_options = {'name': 'msd',
+               'user_based': False
                }
 
 model = KNNBasic(sim_options=sim_options)
 model.fit(trainSet)
 simsMatrix = model.compute_similarities()
 
-# Get top N similar users to our test subject
-# (Alternate approach would be to select users up to some similarity threshold - try it!)
 testUserInnerID = trainSet.to_inner_uid(testSubject)
-similarityRow = simsMatrix[testUserInnerID]
 
-similarUsers = []
-for innerID, score in enumerate(similarityRow):
-    if (innerID != testUserInnerID):
-        similarUsers.append( (innerID, score) )
+# Get the top K items we rated
+testUserRatings = trainSet.ur[testUserInnerID]
+kNeighbors = heapq.nlargest(k, testUserRatings, key=lambda t: t[1])
 
-kNeighbors = heapq.nlargest(k, similarUsers, key=lambda t: t[1])
-
-# Not getting the top N users with high similarity, we try to get all the users with similarity
-# higher than 0.95
+# Not getting the top N books, we try to get all the books with rating
+# higher than 8.0
 
 # kNeighbors = []
-# for rating in similarUsers:
-#     if rating[1] > 0.95:
+# for rating in testUserRatings:
+#     if rating[1] > 8.0:
 #         kNeighbors.append(rating)
 
-# Get the stuff they rated, and add up ratings for each item, weighted by user similarity
+# Get similar items to stuff we liked (weighted by rating)
 candidates = defaultdict(float)
-for similarUser in kNeighbors:
-    innerID = similarUser[0]
-    userSimilarityScore = similarUser[1]
-    theirRatings = trainSet.ur[innerID]
-    for rating in theirRatings:
-        candidates[rating[0]] += (rating[1]/10.0) * userSimilarityScore
+for itemID, rating in kNeighbors:
+    similarityRow = simsMatrix[itemID]
+    for innerID, score in enumerate(similarityRow):
+        candidates[innerID] += score * (rating / 10.0)
 
 # Build a dictionary of stuff the user has already seen
 watched = {}
