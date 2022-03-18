@@ -23,7 +23,7 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditM
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
-from clubs.zoom_api_url_generator_helper import getZoomMeetingURL, create_JSON_meeting_data, convertDateTime
+from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -166,7 +166,9 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             start_time = convertDateTime(form.cleaned_data['date'])
             meet_desc = form.cleaned_data['notes']
             json_data = create_JSON_meeting_data(title, start_time, meet_desc)
-            obj.URL = getZoomMeetingURL(json_data)
+            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            obj.URL = meet_url_pass[0]
+            obj.passcode = meet_url_pass[1]
 
             list = []
             for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
