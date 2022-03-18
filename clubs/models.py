@@ -252,6 +252,7 @@ class Meeting(models.Model):
     date = models.DateTimeField("date", default=timezone.now)
     location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
+    passcode = models.CharField(blank=True, null=True, max_length=100)
     chosen_member = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="book")
     next_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="next_book")
@@ -260,7 +261,6 @@ class Meeting(models.Model):
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
-
 
 class BooksRead(models.Model):
     """Book Read model - books read by a user with rating"""
