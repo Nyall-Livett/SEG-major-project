@@ -98,25 +98,18 @@ class ProcessData:
 
 
     def formatRatings(self):
-        counter = 0
 
         if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted.csv")):
 
-            with open(self.current_directory + "/BX-Book-Ratings.csv",'r', encoding="iso-8859-1") as csvfile:
-                with open(self.current_directory + "/BX-Book-Ratings_formatted.csv", 'w') as csvoutput:
-                    writer = csv.writer(csvoutput, lineterminator='\n',  delimiter=";")
-                    reader = csv.reader(csvfile, delimiter=";", quotechar='"')
+            preprocessedData = pd.read_csv(self.current_directory + '/BX-Book-Ratings.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            books = pd.read_csv(self.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="latin-1", on_bad_lines='skip', quotechar = '"')
+            isbns = books['ISBN'].unique()
 
-                    row = next(reader)
-                    new_row = [row[0], row[1], row[2]]
+            ratings= preprocessedData[(preprocessedData['ISBN'].isin(isbns))]
+            ratings = ratings.head(1000)
 
-                    writer.writerow(new_row)
+            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'])
 
-                    for row in reader:
-                        if (counter < 10000):
-                            new_row = [row[0], row[1], row[2]]
-                            writer.writerow(new_row)
-                            counter+=1
         print("finished loading ratings")
 
 
@@ -142,14 +135,6 @@ class ProcessData:
 
         return categories
 
-    def get_extra_info_from_csv(self, df, isbn):
-        try:
-            book = df.loc[df['ISBN'] == isbn].values[0]
-        except:
-            book = ""
-
-        return book
-
     def formatBooks(self):
 
         if not(os.path.exists(self.current_directory + "/BX_Books_formatted.csv")):
@@ -159,7 +144,7 @@ class ProcessData:
 
             BXdf = pd.concat([BXdf,df], join = 'inner', ignore_index=True)
 
-            BXdf.to_csv(path_or_buf=self.current_directory + '/cry.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
+            BXdf.to_csv(path_or_buf=self.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'] )
 
 
         print("The book csv has been formatted")
