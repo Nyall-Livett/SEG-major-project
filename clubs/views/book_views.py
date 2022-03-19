@@ -51,8 +51,8 @@ class UploadBooksView(LoginRequiredMixin, FormView):
                             image_url_s = book[5].strip('"'),
                             image_url_m = book[6].strip('"'),
                             image_url_l = book[7].strip('"'),
-                            category = book[8].strip('"'),
-                            grouped_category = book[9].strip('"'),
+                            category = book[8].strip('"').strip("'[]"),
+                            grouped_category = book[9].strip('"').strip("'[]"),
                             description = book[10].strip('"')
                         )
                     except IndexError:
