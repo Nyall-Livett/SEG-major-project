@@ -143,10 +143,10 @@ class ProcessData:
             BXdf = pd.read_csv(self.current_directory + '/BX_Books.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
             isbns = BXdf['ISBN'].unique()
 
-            BXdf = pd.merge(BXdf, df, how='left', on=None, sort=False, copy=False, indicator=False, validate=None)
+            BXdf = pd.merge(BXdf, df, how='inner', on=None, sort=False, copy=False, indicator=False, validate=None)
 
             BXdf = BXdf.drop_duplicates(subset=['ISBN'], keep='first')
-            BXdf = BXdf.head(200000)
+            BXdf = BXdf.head(230000)
             print(BXdf)
 
             BXdf.to_csv(path_or_buf=self.current_directory + '/BX_Books_formatted.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'], encoding="iso-8859-1" )
