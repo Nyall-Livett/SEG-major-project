@@ -104,7 +104,9 @@
                       </div>
                   </div>
               </div>
+              {% if request.user.id == user.id %}
               <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_account' user.id %}">Delete Account</a>
+              {% endif %}
           </div>
       </div>
   </div>
