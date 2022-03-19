@@ -26,6 +26,8 @@ class Book(models.Model):
     image_url_s = models.URLField(max_length=200, blank=True)
     image_url_m = models.URLField(max_length=200, blank=True)
     image_url_l = models.URLField(max_length=200, blank=True)
+    category = models.CharField(max_length=64, blank=True)
+    grouped_category =  models.CharField(max_length=64, blank=True)
 
     class Meta:
         """Model options."""

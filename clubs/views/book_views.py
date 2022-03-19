@@ -38,23 +38,36 @@ class UploadBooksView(LoginRequiredMixin, FormView):
         io_string = io.StringIO(data)
 
 
-
-
         for book in csv.reader(io_string, delimiter = ';', quotechar='"'):
             if(book[0] != 'ISBN'):
                 try:
-                    _, created = Book.objects.update_or_create(
-                        isbn = book[0].strip('"'),
-                        name = book[1].strip('"'),
-                        author = book[2].strip('"'),
-                        publication_year = book[3].strip('"'),
-                        publisher = book[4].strip('"'),
-                        image_url_s = book[5].strip('"'),
-                        image_url_m = book[6].strip('"'),
-                        image_url_l = book[7].strip('"')
-                    )
-                except ValueError:
-                    messages.add_message(self.request, messages.WARNING, f"{self.book.name} could not be added to the system.")
+                    try:
+                        _, created = Book.objects.update_or_create(
+                            isbn = book[0].strip('"'),
+                            name = book[1].strip('"'),
+                            author = book[2].strip('"'),
+                            publication_year = book[3].strip('"'),
+                            publisher = book[4].strip('"'),
+                            image_url_s = book[5].strip('"'),
+                            image_url_m = book[6].strip('"'),
+                            image_url_l = book[7].strip('"'),
+                            category = book[8].strip('"').strip("'[]"),
+                            grouped_category = book[9].strip('"').strip("'[]"),
+                            description = book[10].strip('"')
+                        )
+                    except IndexError:
+                        _, created = Book.objects.update_or_create(
+                            isbn = book[0].strip('"'),
+                            name = book[1].strip('"'),
+                            author = book[2].strip('"'),
+                            publication_year = book[3].strip('"'),
+                            publisher = book[4].strip('"'),
+                            image_url_s = book[5].strip('"'),
+                            image_url_m = book[6].strip('"'),
+                            image_url_l = book[7].strip('"'),
+                        )
+                except IndexError:
+                    messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")
 
         return super().form_valid(form)
 
