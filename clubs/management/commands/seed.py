@@ -18,8 +18,6 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        self.seed_books()
-        print('Book seeding complete')
         self.seed_users()
         print()
         self.seed_clubs()
@@ -33,6 +31,8 @@ class Command(BaseCommand):
             print()
         print()
         print('Users, Clubs and Posts seeding complete.')
+        self.seed_books()
+        print('Book seeding complete')
 
     def seed_users(self):
         user_count = User.objects.all().count()
