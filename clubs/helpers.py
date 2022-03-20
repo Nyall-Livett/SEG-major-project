@@ -19,3 +19,11 @@ def generate_favourite_ratings(book,user):
     with open(rating_path,'a+') as rating_file:
         csv_writer = csv.writer(rating_file,delimiter=";")
         csv_writer.writerow([f"{user_id}",f'{isbn}','8'])
+
+def generate_ratings(book,user):
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
+    isbn = book.isbn
+    user_id = user
+    with open(rating_path,'a+') as rating_file:
+        csv_writer = csv.writer(rating_file,delimiter=";")
+        csv_writer.writerow([f"{user_id}",f'{isbn}','6'])

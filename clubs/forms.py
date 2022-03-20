@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
-from .helpers import generate_favourite_ratings
+from .helpers import generate_favourite_ratings,generate_ratings
 
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

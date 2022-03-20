@@ -18,6 +18,7 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 import json
 import random
+from ..helpers import generate_favourite_ratings,generate_ratings
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
@@ -209,6 +210,7 @@ class BookReviewView(LoginRequiredMixin, FormView):
         review.reviewer = self.request.user
         try:
             review.save()
+            generate_ratings(review.book,review.reviewer.id)
             return super().form_valid(form)
         except IntegrityError as e:
             return render(self.request, "book_review.html")
@@ -280,7 +282,7 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     fields = ['theme']
     template_name = 'change_theme.html'
     pk_url_kwarg = 'club_id'
-    
+
     def get_context_data(self, **kwargs):
         """Return context data"""
 
@@ -297,7 +299,7 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
             return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
         else:
             raise Http404("Object you are looking for doesn't exist")
-        
+
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
