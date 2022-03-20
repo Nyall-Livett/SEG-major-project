@@ -287,18 +287,6 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
         return context
-    
-    # def updateTheme(self, request, *args, **kwargs):
-    #     self.club = Club.objects.get(id=self.kwargs.get('club_id'))
-    #     self.user = self.request.user
-    #     club_leader = self.club.leader.id
-    #     print("called")
-    #     """Return URL to redirect the user too after valid form handling."""
-    #     if self.user.id is club_leader:
-    #         return super(ChangeClubTheme, self).updateTheme(request, *args, **kwargs)
-    #     else:
-    #         raise Http404("Object you are looking for doesn't exist")
-
 
     def get_success_url(self):
         self.club = Club.objects.get(id=self.kwargs.get('club_id'))
