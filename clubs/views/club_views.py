@@ -23,7 +23,7 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditM
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
-from clubs.zoom_api_url_generator_helper import getZoomMeetingURL, create_JSON_meeting_data, convertDateTime
+from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -166,7 +166,9 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             start_time = convertDateTime(form.cleaned_data['date'])
             meet_desc = form.cleaned_data['notes']
             json_data = create_JSON_meeting_data(title, start_time, meet_desc)
-            obj.URL = getZoomMeetingURL(json_data)
+            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            obj.URL = meet_url_pass[0]
+            obj.passcode = meet_url_pass[1]
 
             list = []
             for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
@@ -278,12 +280,24 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     fields = ['theme']
     template_name = 'change_theme.html'
     pk_url_kwarg = 'club_id'
-    #success_url="/club/"
+    
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
 
     def get_success_url(self):
+        self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        self.user = self.request.user
+        club_leader = self.club.leader.id
         """Return URL to redirect the user too after valid form handling."""
-        return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
-
+        if self.user.id is club_leader:
+            return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
+        else:
+            raise Http404("Object you are looking for doesn't exist")
+        
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
@@ -297,8 +311,6 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-
-        # context['previous_url'] = self.request.META.get('HTTP_REFERER')
         return context
 
     def delete(self, request, *args, **kwargs):

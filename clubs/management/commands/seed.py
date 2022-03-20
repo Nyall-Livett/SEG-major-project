@@ -2,7 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
-from clubs.models import User, Post, Club
+from clubs.models import User, Post, Club, Book
+import os, csv
 
 class Command(BaseCommand):
     """The database seeder."""
@@ -30,6 +31,8 @@ class Command(BaseCommand):
             print()
         print()
         print('Users, Clubs and Posts seeding complete.')
+        self.seed_books()
+        print('Book seeding complete')
 
     def seed_users(self):
         user_count = User.objects.all().count()
@@ -126,3 +129,38 @@ class Command(BaseCommand):
     def _club_name(self, name):
         name = f'{name} Book Club'
         return name
+
+    def seed_books(self):
+        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted.csv'
+        with open(csv_file, encoding ='ISO-8859-1') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
+            for book in csv_reader:
+                if(book[0] != 'ISBN'):
+                    try:
+                        try:
+                            _, created = Book.objects.update_or_create(
+                                isbn = book[0].strip('"'),
+                                name = book[1].strip('"'),
+                                author = book[2].strip('"'),
+                                publication_year = book[3].strip('"'),
+                                publisher = book[4].strip('"'),
+                                image_url_s = book[5].strip('"'),
+                                image_url_m = book[6].strip('"'),
+                                image_url_l = book[7].strip('"'),
+                                category = book[8].strip('"').strip("'[]"),
+                                grouped_category = book[9].strip('"').strip("'[]"),
+                                description = book[10].strip('"')
+                            )
+                        except IndexError:
+                            _, created = Book.objects.update_or_create(
+                                isbn = book[0].strip('"'),
+                                name = book[1].strip('"'),
+                                author = book[2].strip('"'),
+                                publication_year = book[3].strip('"'),
+                                publisher = book[4].strip('"'),
+                                image_url_s = book[5].strip('"'),
+                                image_url_m = book[6].strip('"'),
+                                image_url_l = book[7].strip('"'),
+                            )
+                    except IndexError:
+                        messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")

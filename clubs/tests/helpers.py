@@ -1,6 +1,8 @@
 from django.urls import reverse
 from with_asserts.mixin import AssertHTMLMixin
 from clubs.models import Post
+import urllib.request
+import fnmatch
 
 
 def reverse_with_next(url_name, next_url):
@@ -35,3 +37,19 @@ class MenuTesterMixin(AssertHTMLMixin):
     def assert_no_menu(self, response):
         for url in self.menu_urls:
             self.assertNotHTML(response, f'a[href="{url}"]')
+
+def isUrlLegit(url):
+    if(url == None):
+        return False
+    url_chk = url.split('/')
+    if fnmatch.fnmatch(url_chk[0], 'http*'):
+        url = url
+    else:
+        url = 'http://%s' %(url)
+
+    try:
+        response = urllib.request.urlopen(url).read()
+        if response:
+            return True
+    except Exception:
+        return False
