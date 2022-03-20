@@ -280,12 +280,36 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     fields = ['theme']
     template_name = 'change_theme.html'
     pk_url_kwarg = 'club_id'
-    #success_url="/club/"
+    
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
+    
+    # def updateTheme(self, request, *args, **kwargs):
+    #     self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+    #     self.user = self.request.user
+    #     club_leader = self.club.leader.id
+    #     print("called")
+    #     """Return URL to redirect the user too after valid form handling."""
+    #     if self.user.id is club_leader:
+    #         return super(ChangeClubTheme, self).updateTheme(request, *args, **kwargs)
+    #     else:
+    #         raise Http404("Object you are looking for doesn't exist")
+
 
     def get_success_url(self):
+        self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        self.user = self.request.user
+        club_leader = self.club.leader.id
         """Return URL to redirect the user too after valid form handling."""
-        return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
-
+        if self.user.id is club_leader:
+            return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
+        else:
+            raise Http404("Object you are looking for doesn't exist")
+        
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
@@ -299,8 +323,6 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-
-        # context['previous_url'] = self.request.META.get('HTTP_REFERER')
         return context
 
     def delete(self, request, *args, **kwargs):

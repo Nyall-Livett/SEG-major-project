@@ -6,9 +6,13 @@
     <div class="col-12">
       <h1>Change theme</h1>
       <form method="post">
+        {% if user == club.leader %}
         {% csrf_token %}
         {% include 'partials/bootstrap_form.html' with form=form %}
         <input type="submit" value="change" class="btn btn-primary">
+        {% else %}
+        <a>Only club leader can change theme</a>
+        {% endif %}
       </form>
       <br>
     </div>
