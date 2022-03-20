@@ -1,5 +1,5 @@
-from evaluation_data import EvaluationData
-from evaluated_algorithm import EvaluatedAlgorithm
+from .evaluation_data import EvaluationData
+from .evaluated_algorithm import EvaluatedAlgorithm
 
 class Evaluator:
 

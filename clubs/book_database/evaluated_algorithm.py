@@ -1,5 +1,5 @@
-from recommender_metrics import RecommenderMetrics
-from evaluation_data import EvaluationData
+from .recommender_metrics import RecommenderMetrics
+from .evaluation_data import EvaluationData
 
 class EvaluatedAlgorithm:
 
