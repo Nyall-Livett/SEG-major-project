@@ -164,13 +164,13 @@ def get_recommended_books(request, book_id):
     book_name = book.name
     get_recommended_books = content_based_recommender(book_name)       #"Harry Potter and the Order of the Phoenix (Book 5)"
     recommended_books = []
-    try:
-        for i in get_recommended_books:
-            book = Book.objects.filter(name=i).first()
+    for i in get_recommended_books:
+        book = Book.objects.filter(name=i).first()
             # print(book)
-            recommended_books.append(book)
+
+        recommended_books.append(book)
             # print(recommended_books)
-    except TypeError:
-        print("Lalala")
+    # except TypeError:
+    #     print("Lalala")
     context = {'recommended_books': recommended_books}
     return render(request, 'recommended_books.html', context)
