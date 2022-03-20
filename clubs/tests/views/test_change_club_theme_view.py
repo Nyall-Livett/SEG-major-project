@@ -34,7 +34,7 @@ class ChangeClubThemeTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test_only_leader_can_change_club_theme(self):
+    def test__leader_can_access_change_club_theme(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
