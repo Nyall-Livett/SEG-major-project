@@ -18,7 +18,7 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 import json
 import random
-from ..helpers import generate_favourite_ratings,generate_ratings
+from ..helpers import generate_ratings
 from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
@@ -210,7 +210,7 @@ class BookReviewView(LoginRequiredMixin, FormView):
         review.reviewer = self.request.user
         try:
             review.save()
-            generate_ratings(review.book,review.reviewer.id)
+            generate_ratings(review.book,review.reviewer.id,review.rating)
             return super().form_valid(form)
         except IntegrityError as e:
             return render(self.request, "book_review.html")

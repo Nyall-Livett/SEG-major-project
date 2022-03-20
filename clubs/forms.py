@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
-from .helpers import generate_favourite_ratings,generate_ratings
 
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -67,8 +66,6 @@ class SignUpForm(forms.ModelForm):
             favourite_author=self.cleaned_data.get('favourite_author'),
             want_to_read_next=self.cleaned_data.get('want_to_read_next'),
         )
-        favourite_book=self.cleaned_data.get('favourite_book')
-        generate_favourite_ratings(favourite_book,user.id)
         return user
 
 
