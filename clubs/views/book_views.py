@@ -8,7 +8,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
 from clubs.models import Book, BooksRead
-from clubs.book_review_dataset.content_based_recommend_2 import content_based_recommender
+from clubs.book_review_dataset.content_based_recommend import content_based_recommender
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
