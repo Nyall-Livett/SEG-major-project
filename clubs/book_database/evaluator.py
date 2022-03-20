@@ -1,5 +1,5 @@
-from evaluation_data import EvaluationData
-from evaluated_algorithm import EvaluatedAlgorithm
+from clubs.book_database.evaluation_data import EvaluationData
+from clubs.book_database.evaluated_algorithm import EvaluatedAlgorithm
 
 class Evaluator:
 

@@ -1,5 +1,5 @@
-from recommender_metrics import RecommenderMetrics
-from evaluation_data import EvaluationData
+from clubs.book_database.recommender_metrics import RecommenderMetrics
+from clubs.book_database.evaluation_data import EvaluationData
 
 class EvaluatedAlgorithm:
 

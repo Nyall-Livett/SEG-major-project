@@ -1,11 +1,11 @@
-from process_data import ProcessData
+from clubs.book_database.process_data import ProcessData
 from surprise import KNNBasic
 import heapq
 from collections import defaultdict
 from operator import itemgetter
 from surprise.model_selection import LeaveOneOut
-from recommender_metrics import RecommenderMetrics
-from evaluation_data import EvaluationData
+from clubs.book_database.recommender_metrics import RecommenderMetrics
+from clubs.book_database.evaluation_data import EvaluationData
 
 def LoadBookData():
     book_ratings = ProcessData()
@@ -15,50 +15,54 @@ def LoadBookData():
     rankings = book_ratings.getPopularityRanks()
     return (book_ratings, book_data, rankings)
 
-book_ratings, book_data, rankings = LoadBookData()
+def getTopNBooks(k=10):
 
-evalData = EvaluationData(book_data, rankings)
 
-# Train on leave-One-Out train set
-trainSet = evalData.GetLOOCVTrainSet()
-sim_options = {'name': 'cosine',
-               'user_based': False
-               }
+    book_ratings, book_data, rankings = LoadBookData()
 
-model = KNNBasic(sim_options=sim_options)
-model.fit(trainSet)
-simsMatrix = model.compute_similarities()
+    evalData = EvaluationData(book_data, rankings)
 
-leftOutTestSet = evalData.GetLOOCVTestSet()
+    # Train on leave-One-Out train set
+    trainSet = evalData.GetLOOCVTrainSet()
+    sim_options = {'name': 'cosine',
+                   'user_based': False
+                   }
 
-# Build up dict to lists of (isbn, predictedrating) pairs
-topN = defaultdict(list)
-k = 10
-for uiid in range(trainSet.n_users):
-    # Get top N similar users to this one
-    userRatings = trainSet.ur[uiid]
-    kNeighbors = heapq.nlargest(k, userRatings, key=lambda t: t[1])
+    model = KNNBasic(sim_options=sim_options)
+    model.fit(trainSet)
+    simsMatrix = model.compute_similarities()
 
-    candidates = defaultdict(float)
-    for itemID, rating in kNeighbors:
-        similarityRow = simsMatrix[itemID]
-        for innerID, score in enumerate(similarityRow):
-            candidates[innerID] += score * (rating / 10.0)
+    leftOutTestSet = evalData.GetLOOCVTestSet()
 
-    # Build a dictionary of stuff the user has already seen
-    watched = {}
-    for itemID, rating in trainSet.ur[uiid]:
-        watched[itemID] = 1
+    # Build up dict to lists of (isbn, predictedrating) pairs
+    topN = defaultdict(list)
+    k = 10
+    for uiid in range(trainSet.n_users):
+        # Get top N similar users to this one
+        userRatings = trainSet.ur[uiid]
+        kNeighbors = heapq.nlargest(k, userRatings, key=lambda t: t[1])
 
-    # Get top-rated items from similar users:
-    pos = 0
-    for itemID, ratingSum in sorted(candidates.items(), key=itemgetter(1), reverse=True):
-        if not itemID in watched:
-            isbn = trainSet.to_raw_iid(itemID)
-            topN[int(trainSet.to_raw_uid(uiid))].append( ((isbn), 0.0) )
-            pos += 1
-            if (pos > 40):
-                break
+        candidates = defaultdict(float)
+        for itemID, rating in kNeighbors:
+            similarityRow = simsMatrix[itemID]
+            for innerID, score in enumerate(similarityRow):
+                candidates[innerID] += score * (rating / 10.0)
 
-# Measure
-print("HR", RecommenderMetrics.HitRate(topN, leftOutTestSet))
+        # Build a dictionary of stuff the user has already seen
+        watched = {}
+        for itemID, rating in trainSet.ur[uiid]:
+            watched[itemID] = 1
+
+        # Get top-rated items from similar users:
+        pos = 0
+        for itemID, ratingSum in sorted(candidates.items(), key=itemgetter(1), reverse=True):
+            if not itemID in watched:
+                isbn = trainSet.to_raw_iid(itemID)
+                topN[int(trainSet.to_raw_uid(uiid))].append( ((isbn), 0.0) )
+                pos += 1
+                if (pos > 40):
+                    break
+
+    # Measure
+    print("HR", RecommenderMetrics.HitRate(topN, leftOutTestSet))
+    return topN

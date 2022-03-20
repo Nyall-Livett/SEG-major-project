@@ -221,6 +221,7 @@ class Book(models.Model):
     image_url_s = models.URLField(max_length=200, blank=True)
     image_url_m = models.URLField(max_length=200, blank=True)
     image_url_l = models.URLField(max_length=200, blank=True)
+    rating = models.FloatField(default=0,null=True, blank=True)
 
     class Meta:
         """Model options."""

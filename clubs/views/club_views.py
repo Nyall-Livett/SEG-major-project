@@ -24,7 +24,7 @@ from clubs.models import Book, Club, Meeting, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.enums import NotificationType
-
+from clubs.book_database import evaluate_N_based_cosine_item_algorithm
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""
@@ -134,6 +134,13 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     template_name = "set_meeting.html"
     form_class = MeetingForm
 
+    def getTopNBooks(self):
+        topN = evaluate_N_based_cosine_item_algorithm.getTopNBooks()
+        new_topN=list()
+        for l in topN:
+            new_topN.extend(topN[l])
+        return new_topN
+
     def form_valid(self, form):
         meeting = form.instance
         #meeting.date = form['date']
@@ -145,6 +152,14 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     def get(self, request):
 
         form = MeetingForm()
+        topN = self.getTopNBooks()
+        print(topN[:5])
+        for i in topN:
+            if Book.objects.filter(isbn=i[0]).exists():
+                book = Book.objects.get(isbn=i[0])
+                book.rating = i[1]
+                book.save()
+        form.fields['book'].queryset = Book.objects.all().order_by('-rating')
         context = {
             'form': form
         }

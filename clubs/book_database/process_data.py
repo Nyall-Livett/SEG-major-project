@@ -8,7 +8,7 @@ from collections import defaultdict
 import numpy as np
 import json
 from urllib.request import urlopen
-from evaluator import Evaluator
+from clubs.book_database.evaluator import Evaluator
 import pandas as pd
 import random
 
@@ -17,8 +17,8 @@ class ProcessData:
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/BX-Book-Ratings_formatted.csv'
-    booksPath = current_directory +  '/BX_Books_formatted.csv'
+    ratingsPath = current_directory + '/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    booksPath = current_directory +  '/clubs/book_database//BX_Books_formatted.csv'
     preprocessedBooksPath = current_directory +  '/Preprocessed_Books_formatted.csv'
 
 
