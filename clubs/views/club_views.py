@@ -284,7 +284,7 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """Return URL to redirect the user too after valid form handling."""
-        return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
+        return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
 
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
