@@ -24,6 +24,11 @@
                                       </div>
                                   </div>
 
+                                  <br><br>
+                                  <a href={% url 'book_review'  %}>
+                                      <button type="button" class="btn btn-primary">Add Book Read</button>
+                                  </a>
+
                                   {% else %}
                                     <h3 class="f-w-600">{{user.first_name}} {{user.last_name}}</h3>
                                     {% include 'partials/follow_unfollow.html' with following=following request_sent=request_sent %}
@@ -43,12 +48,52 @@
                                       <p class="text-muted">{{user.bio}}</p>
                                   </div>
 
-                                  {% if following %}
+                                  {% if following or user.id == request.user.id %}
+                                  <br>
+                                  <br>
                                   <div>
                                     <h5 class="m-b-10 f-w-600">Clubs joined:</h5>
                                     {% for club in user.clubs.all %}
                                     <m class= "text-muted">{{ club.name }}, </m>
                                     {% endfor %}
+                                  </div>
+                                  <br>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Book:</h5>
+                                      <p class="text-muted">{{user.favourite_book}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Character:</h5>
+                                      <p class="text-muted">{{user.favourite_character}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Genre:</h5>
+                                      <p class="text-muted">{{user.favourite_genre}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Favourite Author:</h5>
+                                      <p class="text-muted">{{user.favourite_author}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Want to read next:</h5>
+                                      <p class="text-muted">{{user.want_to_read_next}}</p>
+                                  </div>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Books Read:</h5>
+                                      <table class="table">
+                                        <tr>
+                                          <th>Book</th>
+                                          <th>Rating</th>
+                                        </tr>
+                                        {% for review in reviews %}
+                                        {% if review.reviewer == user %}
+                                          <tr>
+                                            <td>{{review.book}}</td>
+                                            <td>{{review.rating}}</td>
+                                          <tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                      </table>
                                   </div>
                                   {% endif %}
 
@@ -59,11 +104,14 @@
                       </div>
                   </div>
               </div>
+              {% if request.user.id == user.id %}
               <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_account' user.id %}">Delete Account</a>
+              {% endif %}
           </div>
       </div>
   </div>
 </div>
+
 
 
 {% endblock %}

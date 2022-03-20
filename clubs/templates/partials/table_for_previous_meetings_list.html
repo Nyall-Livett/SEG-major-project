@@ -1,7 +1,9 @@
 <table class="table">
         <tr>
           <td><b>Date:</b></td>
+          <td><b>Location:</b></td>
           <td><b>Book:</b></td>
+          <td><b>Next Book:</b></td>
           <td><b>Chosen Member:</b></td>
           <td><b>Notes:</b></td>
         </tr>
@@ -9,8 +11,10 @@
         {% if meeting.date < user.now %}
         <tr>
           <td>{{ meeting.date }}</td>
-          <td>{{ meeting.book }}</td>
-          <td>{{ meeting.chosen_member }}</td>
+          <td>{{ meeting.location }}</td>
+          <td><a href="/book/{{meeting.book.id}}">{{ meeting.book }}</a></td>
+          <td><a href="/book/{{meeting.next_book.id}}">{{ meeting.next_book }}</a></td>
+          <td><a href="/user/{{meeting.chosen_member.id}}">{{ meeting.chosen_member }}</a></td>
           <td>{{ meeting.notes }}</td>
         </tr>
         {% endif %}

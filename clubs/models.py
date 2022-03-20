@@ -9,11 +9,32 @@ from libgravatar import Gravatar
 from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from clubs.enums import NotificationType
+from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
+
 
 import pytz
-import random
 
+# default values are used for any existing instances of books.
+class Book(models.Model):
+    """Book model"""
+    isbn = models.CharField(max_length=13, unique=True, blank=False)
+    name = models.CharField(max_length=64, blank=False)
+    description = models.CharField(max_length=2048, blank=True)
+    author = models.CharField(max_length=64, blank=False)
+    publication_year = models.CharField(max_length=4, blank=True)
+    publisher = models.CharField(max_length=64, blank=True)
+    image_url_s = models.URLField(max_length=200, blank=True)
+    image_url_m = models.URLField(max_length=200, blank=True)
+    image_url_l = models.URLField(max_length=200, blank=True)
+    category = models.CharField(max_length=64, blank=True)
+    grouped_category =  models.CharField(max_length=64, blank=True)
+
+    class Meta:
+        """Model options."""
+        ordering = ['isbn']
+
+    def __str__(self):
+        return self.name
 
 class User(AbstractUser):
     """User model used for authentication and microblog authoring."""
@@ -25,6 +46,12 @@ class User(AbstractUser):
     bio = models.CharField(max_length=520, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
     follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
+    favourite_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='fav_book')
+    favourite_character = models.CharField(max_length=50, blank=True)
+    favourite_genre = models.CharField(max_length=50, blank=True)
+    favourite_author = models.CharField(max_length=50, blank=True)
+    want_to_read_next = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='next_read')
+    using_gravatar = models.BooleanField(default=False)
 
     class Meta:
         """Model options."""
@@ -41,7 +68,7 @@ class User(AbstractUser):
 
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
-        return self.gravatar(size=60)
+        return self.gravatar(size=50)
 
     def future_meetings(self):
         utc=pytz.UTC
@@ -63,8 +90,6 @@ class User(AbstractUser):
     def now(self):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
-
-    #def applicants(self):
 
 
     def notification_count(self):
@@ -149,6 +174,10 @@ class Club(models.Model):
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
 
+    class Meta:
+        """Model options."""
+        ordering = ['-id']
+
     def add_or_remove_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
@@ -195,6 +224,16 @@ class Notification(models.Model):
     associated_user = models.IntegerField(blank=True, null=True)
     associated_club = models.IntegerField(blank=True, null=True)
 
+class Moment(models.Model):
+    """docstring for Moments."""
+
+    body = models.CharField(blank=False, max_length=128)
+    type = models.IntegerField(blank=False, choices = MomentType.choices)
+    likes = models.IntegerField(blank=False, default = 0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(default=timezone.now, blank=False)
+    associated_user = models.IntegerField(blank=True, null=True)
+    associated_club = models.IntegerField(blank=True, null=True)
 
 
 class Post(models.Model):
@@ -209,43 +248,37 @@ class Post(models.Model):
         """Model options."""
         ordering = ['-created_at']
 
-# default values are used for any existing instances of books.
-class Book(models.Model):
-    """Book model"""
-    isbn = models.CharField(max_length=13, unique=True, blank=False)
-    name = models.CharField(max_length=64, blank=False)
-    description = models.CharField(max_length=2048, blank=True)
-    author = models.CharField(max_length=64, blank=False)
-    publication_year = models.CharField(max_length=4, blank=True)
-    publisher = models.CharField(max_length=64, blank=True)
-    image_url_s = models.URLField(max_length=200, blank=True)
-    image_url_m = models.URLField(max_length=200, blank=True)
-    image_url_l = models.URLField(max_length=200, blank=True)
-
-    class Meta:
-        """Model options."""
-        ordering = ['isbn']
-
-    def __str__(self):
-        return self.name
-
 class Meeting(models.Model):
     """Meeting model"""
-    date = models.DateTimeField("date", default=timezone.now)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
-    members = models.ManyToManyField(User, related_name="members")
-    chosen_member = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    date = models.DateTimeField("date", default=timezone.now)
+    location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
+    passcode = models.CharField(blank=True, null=True, max_length=100)
+    chosen_member = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="book")
+    next_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name="next_book")
     notes = models.CharField(max_length=300, blank=True)
-
 
     def add_meeting(self, meeting):
         if meeting not in self.meeting.all():
             meeting.meeting_members.add(self)
 
-    def get_random_member(self):
-        list = []
-        for i in self.members.all():
-            list.append(i)
-        return random.choice(list)
+class BooksRead(models.Model):
+    """Book Read model - books read by a user with rating"""
+    RATINGS = [
+        ('like', 'like'),
+        ('neutral', 'neutral'),
+        ('dislike', 'dislike')
+    ]
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, blank=False, null=False, on_delete=models.CASCADE, related_name="reviewing")
+    rating = models.CharField(max_length=30, choices=RATINGS)
+
+    class Meta:
+        unique_together = ['reviewer', 'book']
+
+class CustomAvatar(models.Model):
+    color = models.CharField(blank=False, null=True, max_length=28, choices = AvatarColor.choices)
+    icon = models.CharField(blank=False, null=True, max_length=28, choices = AvatarIcon.choices)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -1,3 +1,22 @@
+
+html, body {
+  height: 100vh;
+}
+
+body {
+  padding-top: 75px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.abt {
+  margin-top:6cm
+}
+
+
+
 /*Customization for the main body of the landing page*/
 .home-body{
     position: fixed;
@@ -130,7 +149,7 @@
 .notification-card {
   min-height: 100px;
   border-radius: 6px;
-  margin-top: 24px;
+  margin-top: 8px;
   overflow: hidden;
   background-color: white;
   box-shadow: 0px 4px 5px #cfcfcf;
@@ -201,33 +220,31 @@
 }
 
 .notification-checkbox {
-  margin-top: 24px;
+  margin-top: 8px;
 }
 
 .updated-wrapper {
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  padding-top: 4px;
 }
 
 #updated-tag {
-  display: flex;
   align-items: center;
   padding: 5px 20px 5px 20px;
   background-color: lightgreen;
-  margin-left: 24px;
   color: white;
-  border-radius: 10px;
+  border-radius: 6px;
   display: none;
 }
 
 #none-selected-tag {
-  display: flex;
   align-items: center;
   padding: 5px 20px 5px 20px;
   background-color: lightblue;
-  margin-left: 24px;
   color: white;
-  border-radius: 10px;
+  border-radius: 6px;
   display: none;
 }
 
@@ -248,4 +265,221 @@
 }
 .flex {
   display: flex;
+}
+
+/* dashboard */
+
+.ggg{
+  display: flex;
+  flex-direction: column;
+}
+
+.p-16{
+  padding: 16px 0 0 16px;
+}
+
+.moment-card {
+  /* min-height: 120px; */
+  width: 100%;
+}
+
+.moment-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+/* moments */
+
+.moments-header{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+#moment-wrapper {
+  padding-bottom: 64px;
+  overflow: scroll;
+  overflow-x:hidden;
+}
+
+.book-image{
+  height: 75px;
+  width: 50px;
+  background-color: grey;
+}
+
+.collection-wrap{
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.single-item-wrap{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.empty-moments{
+  margin-top:50px;
+  display: flex;
+  justify-content: center;
+  color: #8c8c8c
+}
+
+.book-details{
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px
+}
+
+.card-top{
+  display: flex;
+  flex-direction: row;
+}
+
+.card-bottom{
+  padding-top: 8px;
+  padding-left: 8px;
+  color: #535353;
+}
+
+.align-text{
+  display: flex;
+  align-items: center;
+}
+
+.new-club-holder{
+  height: 100px;
+  width: 75px;
+  background-color: lightgray;
+}
+
+.moment-content{
+  display: flex;
+}
+
+.moment-buttons{
+  margin-top: 8px;
+  padding-bottom: 8px;
+  height:20px;
+  width: 100%;
+}
+
+/* create icon */
+
+.icon-preview{
+  height: 125px;
+  width: 125px;
+  background-color: lightgrey;
+  border-radius: 50%;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#icon-image {
+  height: 100px;
+  width: 100px
+}
+
+.wrap-100 {
+  width: 100%;
+}
+
+.create-icon-container{
+  width: inherit;
+  height: 100%;
+  margin-top: 16px;
+  background-color: white;
+}
+
+.rounded-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.square-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.rounded-container{
+  height: 100px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.square-container{
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+  padding: 0;
+  margin: 4px 4px;
+}
+
+.rounded-color{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1400px) {
+  .rounded-color{
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+#blue {
+  background-color: #70bbfb;
+}
+
+#red {
+  background-color: #ff7d7d;
+}
+
+#yellow {
+  background-color: #f1fc5a;
+}
+
+#green {
+  background-color: #55d634;
+}
+
+.sb {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.moment-avatar{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.select2-container .select2-selection--single  {
+  height: 38px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 6px !important;
 }

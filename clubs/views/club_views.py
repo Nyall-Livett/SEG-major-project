@@ -14,16 +14,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django import forms
-from clubs.forms import MeetingForm, StartMeetingForm
 from django.http import JsonResponse
+from django.db import IntegrityError
 import json
-
-from clubs.forms import BookForm
-
+import random
 from clubs.models import Book, Club, Meeting, User, Notification, Post
-from clubs.forms import ClubForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.factories.notification_factory import CreateNotification
-from clubs.enums import NotificationType
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import NotificationType, MomentType
+from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 
 
 class CreateClubView(LoginRequiredMixin, FormView):
@@ -40,6 +40,8 @@ class CreateClubView(LoginRequiredMixin, FormView):
         notifier = CreateNotification()
         notifier.notify(NotificationType.CLUB_CREATED, self.request.user, {'club': club})
         messages.add_message(self.request, messages.SUCCESS, f"You have successfully created {club.name}.")
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.CLUB_CREATED, self.request.user, {'club': club})
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -62,6 +64,7 @@ class TransferClubLeadership(LoginRequiredMixin, View):
                 club.save()
                 notifier = CreateNotification()
                 notifier.notify(NotificationType.CLUB_RECEIVED, new_leader, {'club': club})
+                messages.add_message(self.request, messages.SUCCESS, f"You have successfully transferred leadership of {club.name}.")
                 return JsonResponse({
                     'redirect_url': reverse('show_club', args=[club_id])
                 }, status=200)
@@ -87,9 +90,14 @@ class ShowClubView(LoginRequiredMixin, DetailView):
     template_name = 'show_club.html'
     pk_url_kwarg = 'club_id'
 
-    def get(self, request, *args, **kwargs):
-        """Handle get request, and redirect to club_list if club_id invalid."""
+    def get(self, request, club_id, optional_notification="", *args, **kwargs):
+        if optional_notification:
+            notification = Notification.objects.get(id=optional_notification)
+            if notification.receiver == request.user and notification.acted_upon == False:
+                notification.acted_upon = True
+                notification.save()
 
+        """Handle get request, and redirect to club_list if club_id invalid."""
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
@@ -103,6 +111,7 @@ class ShowClubView(LoginRequiredMixin, DetailView):
         authors = list(context['club'].members.all())
         context['posts'] = Post.objects.filter(author__in=authors, club = context['club'])[:20]
         return context
+
 
 class ClubListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -132,69 +141,83 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
     """docstring for CreateMeetingView."""
     http_method_names = ['get', 'post']
     template_name = "set_meeting.html"
+    pk_url_kwarg = 'club_id'
     form_class = MeetingForm
 
-    def form_valid(self, form):
-        meeting = form.instance
-        #meeting.date = form['date']
-        meeting.save()
-
-        meeting.add_meeting(self.request.meeting)
-        return super().form_valid(form)
-
-    def get(self, request):
-
+    def get(self, request, **kwargs):
         form = MeetingForm()
         context = {
-            'form': form
+            'form': form,
+            'club': Club.objects.get(id=self.kwargs.get('club_id'))
         }
         return render(request,"set_meeting.html", context)
 
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         form = MeetingForm(request.POST)
-        #form.save()
-        print('--------------------')
-        print(request.POST)
-        print('--------------------')
-        #form['date'] = date.today()#dateutil.parser.parse(request.POST['date'])
-        form.save()
         if form.is_valid():
-            print("validatation succeed!")
-            #print(form['date'])
-            form.save()
-            #print(form)
-            context = {
-            'form': form
-            }
-            #message.add_message(request, messages.ERROR, "This is invaild!")
-            return render(request,"set_meeting.html", context)
+            obj = form.save(commit=False)
+
+            # Set club, URL and chosen member before save
+            obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
+
+            # get meeting title, start time, meeting description and generate a zoom meeting URL
+            title = obj.club.name
+            start_time = convertDateTime(form.cleaned_data['date'])
+            meet_desc = form.cleaned_data['notes']
+            json_data = create_JSON_meeting_data(title, start_time, meet_desc)
+            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            obj.URL = meet_url_pass[0]
+            obj.passcode = meet_url_pass[1]
+
+            list = []
+            for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
+                list.append(i)
+            obj.chosen_member = random.choice(list)
+            obj.save()
+            return redirect('show_club', self.kwargs.get('club_id'))
 
         else:
-            print("validatation failed")
-            print('-----------------------------------')
-            print(form)
-            print('-----------------------------------')
-            print(form.errors.as_data())
-            #return Http404
+            context = {
+                'form': form,
+                'club': Club.objects.get(id=self.kwargs.get('club_id'))
+            }
 
-        context = {
-            'form': form
-        }
-        #message.add_message(request, messages.ERROR, "This is invaild!")
         return render(request,"set_meeting.html", context)
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = ['notes'] # fields
+    form_class = StartMeetingForm
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    fields = '__all__' # fields
+    form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
+
+
+class BookReviewView(LoginRequiredMixin, FormView):
+    """docstring for BookReviewView."""
+
+    template_name = "book_review.html"
+    form_class = BookReviewForm
+
+    def form_valid(self, form):
+        review = form.instance
+        review.reviewer = self.request.user
+        try:
+            review.save()
+            return super().form_valid(form)
+        except IntegrityError as e:
+            return render(self.request, "book_review.html")
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse('book_review')
+
+
 
 
 class JoinRemoveClubView(LoginRequiredMixin, View):
@@ -235,7 +258,8 @@ class acceptClubapplication(LoginRequiredMixin, View):
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
         self.club.acceptmembership(self.user)
-
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
         return redirect('pending_requests', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):
@@ -256,15 +280,24 @@ class ChangeClubTheme(LoginRequiredMixin, UpdateView):
     fields = ['theme']
     template_name = 'change_theme.html'
     pk_url_kwarg = 'club_id'
-    #success_url="/club/"
+    
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
+        return context
 
     def get_success_url(self):
+        self.club = Club.objects.get(id=self.kwargs.get('club_id'))
+        self.user = self.request.user
+        club_leader = self.club.leader.id
         """Return URL to redirect the user too after valid form handling."""
-        return reverse('change_theme', kwargs = {'club_id' : self.kwargs.get('club_id')})
-
-
-
-
+        if self.user.id is club_leader:
+            return reverse('show_club', kwargs = {'club_id' : self.kwargs.get('club_id')})
+        else:
+            raise Http404("Object you are looking for doesn't exist")
+        
 
 class DeleteClub(LoginRequiredMixin, DeleteView):
     """View that allows a user to delete their club"""
@@ -278,8 +311,6 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
         context = super().get_context_data(**kwargs)
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-
-        # context['previous_url'] = self.request.META.get('HTTP_REFERER')
         return context
 
     def delete(self, request, *args, **kwargs):
@@ -296,41 +327,4 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         # self.delete_account_url =  f'/delete_account/{self.user.id}'
-
         return reverse('club_list')
-
-# """@login_required
-# def join_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         if club.members.count() >= club.maximum_members:
-#             messages.add_message(request, messages.WARNING,
-#                 f" Cannot join {club.name}. Member capacity has been reached")
-#             return redirect('club_list')
-#         else:
-#             club.add_or_remove_member(user)
-#             notifier = CreateNotification()
-#             notifier.notify(NotificationType.CLUB_ACCEPTED, request.user, {'club_name': club.name})
-#             messages.add_message(request, messages.SUCCESS,
-#                 f"You have successfully joined {club.name} ")
-#             return redirect('club_list')
-
-
-#     except ObjectDoesNotExist:
-#         return redirect('club_list')
-#     else:
-#         return redirect('club_list', user_id=user_id)
-
-# @login_required
-# def leave_club(request, user_id,club_id):
-#     club = Club.objects.get(id=club_id)
-#     user = User.objects.get(id=user_id)
-#     try:
-#         club.add_or_remove_member(user)
-#         messages.add_message(request, messages.SUCCESS,
-#             f"You have left {club.name} ")
-#         return redirect('club_list')
-#     except ObjectDoesNotExist:
-#     def redirect(self):
-#         return redirect('club_list')

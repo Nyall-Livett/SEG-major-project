@@ -2,15 +2,16 @@
 
 {% load humanize %}
 
-<div class="row" id="notification-card-{{notification.id}}">
-  <!-- input -->
+<div class="row" id="notification-card-{{notification.id}}" style="margin-bottom:16px">
+
+  <!-- Checkbox -->
   <div class="checkbox-wrapper">
-    <input type="checkbox" id={{notification.id}} onchange="updateSelectedCheckbox(this)" class="notification-checkbox">
+    <input type="checkbox" id={{notification.id}} data-acted_upon={{notification.acted_upon}} onchange="updateSelectedCheckbox(this)" class="notification-checkbox">
   </div>
 
-  <!-- notification card -->
+  <!-- Notification card -->
   <div class="col-11">
-    <div class="row notification-card">
+    <div class="row notification-card" >
 
 
       <div class="col-1 unread-indicator-parent">
@@ -43,9 +44,9 @@
         </div>
       </div>
       {% if notification.type|render_buttons:0 %}
-        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user %}
+        {% include 'partials/notification_buttons/friend_request.html' with user=notification.associated_user notification=notification %}
       {% else  %}
-        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club %}
+        {% include 'partials/notification_buttons/view_club_buttons.html' with club=notification.associated_club notification=notification%}
       {% endif  %}
     </div>
   </div>

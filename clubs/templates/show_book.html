@@ -20,6 +20,19 @@
                                       <h5 class="m-b-10 f-w-600">ISBN:</h5>
                                       <p class="text-muted">{{ book.isbn }}</p>
                                   </div>
+                                  {% if  book.description  != "" %}
+                                    <div>
+                                        <h5 class="m-b-10 f-w-600">Description:</h5>
+                                        <p class="text-muted">{{ book.description }}</p>
+                                    </div>
+                                  {%endif%}
+                                  {% if  book.grouped_category  != "" %}
+                                    <div>
+                                        <h5 class="m-b-10 f-w-600">Theme:</h5>
+                                        <p class="text-muted">{{ book.grouped_category }}</p
+                                    </div>
+                                  {%endif%}
+
 
                                   <div>
                                       <h5 class="m-b-10 f-w-600">Publisher:</h5>
@@ -29,12 +42,60 @@
                                       <p class="text-muted">{{book.publisher}} - {{book.publication_year}}</p>
                                       {% endif %}
                                   </div>
+
+                                  <div>
+                                    <script>
+                                      var liked = 0;
+                                      var neutral = 0;
+                                      var disliked = 0;
+                                    </script>
+                                    {% for review in reviews %}
+                                    {% if review.book == book %}
+                                      {% if review.rating == 'like' %}
+                                        <script>
+                                          liked++;
+                                        </script>
+                                      {% elif review.rating == 'dislike' %}
+                                        <script>
+                                          disliked++;
+                                        </script>
+                                      {% else %}
+                                        <script>
+                                          neutral++;
+                                        </script>
+                                      {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    <h5 class="m-b-10 f-w-600">Reviews:</h5>
+                                    <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <hr>
+                                    <p><b>Read by: </b><script> document.write(liked+disliked+neutral); </script></p>
+                                  </div>
+
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Other Books by the author</h1>
+            <a class="btn btn-primary" href="{% url 'get_books_by_author' book.id %}">Show</a>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Other Books by the Publisher</h1>
+            <a class="btn btn-primary" href="{% url 'get_books_by_publisher' book.id %}">Show</a>
+          </div>
+        </div>
       </div>
   </div>
 </div>

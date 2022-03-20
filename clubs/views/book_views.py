@@ -7,14 +7,13 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
-from clubs.models import Book
+from clubs.models import Book, BooksRead
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm
 from django.views.generic.detail import DetailView
-
-
+from django.contrib.auth.decorators import login_required
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
 
@@ -39,23 +38,36 @@ class UploadBooksView(LoginRequiredMixin, FormView):
         io_string = io.StringIO(data)
 
 
-
-
         for book in csv.reader(io_string, delimiter = ';', quotechar='"'):
             if(book[0] != 'ISBN'):
                 try:
-                    _, created = Book.objects.update_or_create(
-                        isbn = book[0].strip('"'),
-                        name = book[1].strip('"'),
-                        author = book[2].strip('"'),
-                        publication_year = book[3].strip('"'),
-                        publisher = book[4].strip('"'),
-                        image_url_s = book[5].strip('"'),
-                        image_url_m = book[6].strip('"'),
-                        image_url_l = book[7].strip('"')
-                    )
-                except ValueError:
-                    messages.add_message(self.request, messages.WARNING, f"{self.book.name} could not be added to the system.")
+                    try:
+                        _, created = Book.objects.update_or_create(
+                            isbn = book[0].strip('"'),
+                            name = book[1].strip('"'),
+                            author = book[2].strip('"'),
+                            publication_year = book[3].strip('"'),
+                            publisher = book[4].strip('"'),
+                            image_url_s = book[5].strip('"'),
+                            image_url_m = book[6].strip('"'),
+                            image_url_l = book[7].strip('"'),
+                            category = book[8].strip('"').strip("'[]"),
+                            grouped_category = book[9].strip('"').strip("'[]"),
+                            description = book[10].strip('"')
+                        )
+                    except IndexError:
+                        _, created = Book.objects.update_or_create(
+                            isbn = book[0].strip('"'),
+                            name = book[1].strip('"'),
+                            author = book[2].strip('"'),
+                            publication_year = book[3].strip('"'),
+                            publisher = book[4].strip('"'),
+                            image_url_s = book[5].strip('"'),
+                            image_url_m = book[6].strip('"'),
+                            image_url_l = book[7].strip('"'),
+                        )
+                except IndexError:
+                    messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")
 
         return super().form_valid(form)
 
@@ -82,6 +94,11 @@ class ShowBookView(LoginRequiredMixin, DetailView):
         except Http404:
             return redirect('book_list')
 
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        context['reviews'] = BooksRead.objects.all()
+        return context
+
 class CreateBookView(LoginRequiredMixin, FormView):
 
     model = Book
@@ -104,3 +121,22 @@ class CreateBookView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse("book_list")
+@login_required
+def get_books_by_author(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book_name = book.name
+    book_author = book.author
+
+    filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
+    context = {'books_by_author': filtered_by_author}
+    return render(request, 'books_by_author.html', context)
+
+@login_required
+def get_books_by_publisher(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book_name = book.name
+    book_publisher = book.publisher
+
+    filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
+    context = {'books_by_publisher': filtered_by_publisher}
+    return render(request, 'books_by_publisher.html', context)

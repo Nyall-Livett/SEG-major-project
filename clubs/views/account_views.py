@@ -7,7 +7,9 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import User, Club
+from clubs.models import User, Club, CustomAvatar
+from clubs.enums import AvatarIcon, AvatarColor
+import random
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -52,6 +54,25 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['avatar_icons'] = AvatarIcon.values
+        context['avatar_colors'] = AvatarColor.values
+        return context
+
+    def form_valid(self, form):
+        object = form.save()
+        avatar = CustomAvatar.objects.get(user=object)
+        # Create avatar
+        color = self.request.POST['color']
+        icon = self.request.POST['icon']
+
+        if color != avatar.color or icon != avatar.icon:
+            avatar.color=color
+            avatar.icon=icon
+            avatar.save()
+
+        return super().form_valid(form)
 
 class SignUpView(LoginProhibitedMixin, FormView):
     """View that signs up user."""
@@ -61,9 +82,23 @@ class SignUpView(LoginProhibitedMixin, FormView):
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
     def form_valid(self, form):
-        self.object = form.save()
-        login(self.request, self.object)
+        object = form.save()
+        # Create avatar
+        color = self.request.POST['color']
+        if len(color) < 1:
+            color = AvatarColor.values[random.randint(0, len(AvatarColor.values))]
+        icon = self.request.POST['icon']
+        if len(icon) < 1:
+            icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values))]
+        CustomAvatar.objects.create(color=color, icon=icon, user=object)
+        login(self.request, object)
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['avatar_icons'] = AvatarIcon.values
+        context['avatar_colors'] = AvatarColor.values
+        return context
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
