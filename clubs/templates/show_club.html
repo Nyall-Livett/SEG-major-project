@@ -64,7 +64,10 @@
                             <p>{{club.description}} </p>
 
                         </div>
+                        
+                        {% if club in user.clubs.all %}
                         <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -210,7 +213,7 @@
           </div>
           </div>
         </div>
-        
+
 {% endblock %}
 {% block javascript %}
 
