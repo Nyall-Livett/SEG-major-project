@@ -34,7 +34,15 @@ class ChangeClubThemeTest(TestCase, LogInTester):
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
 
-    def test__leader_can_access_change_club_theme(self):
+    def test_leader_can_access_change_club_theme(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
+    def test_update_change_theme_view(self):
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.post(reverse('change_theme', kwargs={'club_id': self.club.id}), 
+        {'theme': 'new_theme'})
+        self.assertEqual(response.status_code, 302)
+        self.club.refresh_from_db()
+        self.assertEqual(self.club.theme, 'new_theme')
