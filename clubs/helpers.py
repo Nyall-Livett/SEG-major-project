@@ -42,3 +42,22 @@ def delete_ratings(user):
     ratings = ratings.drop(ratings.query(f'User_ID=={user}').index)
     ratings=ratings.rename({'User_ID': 'User-ID'},axis=1)
     ratings.to_csv(rating_path, index=False,sep = ';')
+
+def contain_ratings(user):
+    rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    ratings = pd.read_csv(rating_path,delimiter=";",header=0)
+    ratings=ratings.rename({'User-ID': 'User_ID'},axis=1)
+    ratings = ratings.query(f'User_ID=={user}')
+    ratings = len(ratings)
+    # print(ratings)
+    # bool = ratings>0
+    return (ratings>0)
+    # print(contain_ratings(888))
+    # rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    # ratings = pd.read_csv(rating_path,delimiter=";",header=0)
+    # ratings=ratings.rename({'User-ID': 'User_ID'},axis=1)
+    # ratings = ratings.query(f'User_ID=={000}')
+    # ratings = len(ratings)
+    # # print(ratings)
+    # bool = ratings>0
+    # print(bool)
