@@ -19,9 +19,9 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        print('Seeding books... (It takes a few minutes.)')
-        self.seed_books()
-        print('Book seeding complete')
+        # print('Seeding books... (It takes a few minutes.)')
+        # self.seed_books()
+        # print('Book seeding complete')
         self.seed_users()
         print()
         self.seed_clubs()
