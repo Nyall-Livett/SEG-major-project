@@ -17,8 +17,8 @@ class ProcessData:
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/BX-Book-Ratings_formatted.csv'
-    booksPath = current_directory +  '/BX_Books_formatted.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_formatted_smaller.csv'
+    booksPath = current_directory +  '/BX_Books_formatted_smaller.csv'
     preprocessedBooksPath = current_directory +  '/Preprocessed_Books_formatted.csv'
 
 
@@ -99,16 +99,16 @@ class ProcessData:
 
     def formatRatings(self):
 
-        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted.csv")):
+        if not(os.path.exists(self.current_directory + "/BX-Book-Ratings_formatted_smaller.csv")):
 
             ratings = pd.read_csv(self.current_directory + '/BX-Book-Ratings.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
-            books = pd.read_csv(self.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+            books = pd.read_csv(self.current_directory + '/BX_Books_formatted_smaller.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
             isbns = books['ISBN'].unique()
 
             ratings= ratings[(ratings['ISBN'].isin(isbns))]
             ratings = ratings.head(1000)
 
-            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted.csv', sep=';', line_terminator='\n', index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'], encoding="iso-8859-1")
+            ratings.to_csv(path_or_buf=self.current_directory + '/BX-Book-Ratings_formatted_smaller.csv', sep=';', line_terminator='\n', index = False, columns= ['User-ID', 'ISBN', 'Book-Rating'], encoding="iso-8859-1")
 
         print("finished loading ratings")
 
@@ -272,7 +272,7 @@ class ProcessData:
             return 0
 
 
-# test = ProcessData()
+test = ProcessData()
 #
 # BXdf = pd.read_csv(test.current_directory + '/BX_Books_formatted.csv', sep=';', encoding="iso-8859-10", on_bad_lines='skip', quotechar = '"')
 #
@@ -281,7 +281,7 @@ class ProcessData:
 # BXdf.to_csv(path_or_buf=test.current_directory + '/BX_Books_formatted_smaller.csv', sep=';',line_terminator='\n', quotechar='"', quoting=csv.QUOTE_ALL, index = False, columns= ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L', 'Category', 'Restricted-Category', 'Summary', 'Language'])
 
 # test.formatBooks()
-# test.formatRatings()
+test.formatRatings()
 # #
 # data = test.loadBooks()
 
