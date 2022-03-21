@@ -10,7 +10,7 @@ from .mixins import LoginProhibitedMixin
 from clubs.models import User, Club, CustomAvatar
 from clubs.enums import AvatarIcon, AvatarColor
 import random
-from ..helpers import generate_favourite_ratings
+from ..helpers import generate_favourite_ratings,delete_ratings
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -119,7 +119,7 @@ class DeleteAccount(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         user = User.objects.get(id= self.kwargs.get('user_id'))
         context['club_list'] = Club.objects.filter(leader=user)
-
+        delete_ratings(user.id)
         return context
 
     def get_success_url(self):
