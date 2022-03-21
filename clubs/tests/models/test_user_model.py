@@ -156,12 +156,12 @@ class UserModelTestCase(TestCase):
         self.user.favourite_genre = ''
         self._assert_user_is_valid()
 
-    def test_favourite_genre_may_contain_50_characters(self):
-        self.user.favourite_genre = 'x' * 50
+    def test_favourite_genre_may_contain_100_characters(self):
+        self.user.favourite_genre = 'x' * 100
         self._assert_user_is_valid()
 
-    def test_favourite_genre_must_not_contain_more_than_50_characters(self):
-        self.user.favourite_genre = 'x' * 51
+    def test_favourite_genre_must_not_contain_more_than_100_characters(self):
+        self.user.favourite_genre = 'x' * 101
         self._assert_user_is_invalid()
 
     def test_favourite_author_may_be_blank(self):
