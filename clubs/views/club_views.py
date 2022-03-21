@@ -25,6 +25,7 @@ from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
 from ..helpers import generate_ratings,contain_ratings
+from ..helpers import generate_a_random_book
 from ..book_database.N_based_MSD_Item import generate_recommendations
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 
@@ -197,7 +198,7 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
     def get_recommendations(self):
         user_id = self.request.user.id
         if((contain_ratings(user_id))==False):
-            book = Book.objects.get(id = settings.RANDOM_BOOK)
+            book = generate_a_random_book()
             generate_ratings(book,user_id,'neutral')
         recommendations = generate_recommendations(user_id)
         return recommendations

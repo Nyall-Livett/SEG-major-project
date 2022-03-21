@@ -10,7 +10,7 @@ from .mixins import LoginProhibitedMixin
 from clubs.models import User, Club, CustomAvatar
 from clubs.enums import AvatarIcon, AvatarColor
 import random
-from ..helpers import generate_favourite_ratings,delete_ratings
+from ..helpers import generate_favourite_ratings,delete_ratings,generate_a_random_book
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -95,6 +95,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
             icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values))]
         CustomAvatar.objects.create(color=color, icon=icon, user=object)
         login(self.request, object)
+        if (object.favourite_book == None):
+            object.favourite_book = generate_a_random_book()
         generate_favourite_ratings(object.favourite_book,object.id)
         return super().form_valid(form)
 

@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 import pandas as pd
 import csv
 import os
+import random
+from .models import Book
 
 def login_prohibited(view_function):
     def modified_view_function(request):
@@ -57,3 +59,7 @@ def drop_repeated_data():
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
     ratings = ratings.drop_duplicates()
     ratings.to_csv(rating_path, index=False,sep = ';')
+
+def generate_a_random_book():
+    random_book = random.choice(Book.objects.all())
+    return random_book

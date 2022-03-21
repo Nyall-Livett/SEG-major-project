@@ -5,7 +5,6 @@ import random
 from clubs.models import User, Post, Club, Book
 import os, csv
 from ...helpers import generate_favourite_ratings
-from django.conf import settings
 
 class Command(BaseCommand):
     """The database seeder."""
@@ -139,7 +138,7 @@ class Command(BaseCommand):
         return name
 
     def _favourite_book(self):
-        favourite_book = Book.objects.get(id = settings.RANDOM_BOOK)
+        favourite_book = random.choice(Book.objects.all())
         return favourite_book
 
     def seed_books(self):
