@@ -7,6 +7,7 @@
 # else:
 #     ssl._create_default_https_context = _create_unverified_https_context
 import re
+import os
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
@@ -20,8 +21,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 books = pd.read_csv("/Users/bdalam/Desktop/SEG-major-project/clubs/book_review_dataset/Preprocessed_data.csv")
 # print(books)
 
-counts = books['Category'].value_counts()
-counts.to_csv('name.csv')
+
 
 df = books.copy()
 df.dropna(inplace=True)
