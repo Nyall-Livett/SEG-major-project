@@ -37,7 +37,7 @@ def generate_ratings(book,user,review):
     drop_repeated_data()
 
 def delete_ratings(user):
-    rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
     ratings=ratings.rename({'User-ID': 'User_ID'},axis=1)
     ratings = ratings.drop(ratings.query(f'User_ID=={user}').index)
@@ -45,7 +45,7 @@ def delete_ratings(user):
     ratings.to_csv(rating_path, index=False,sep = ';')
 
 def contain_ratings(user):
-    rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
     ratings= ratings.rename({'User-ID': 'User_ID'},axis=1)
     ratings = ratings.query(f'User_ID=={user}')
@@ -53,7 +53,7 @@ def contain_ratings(user):
     return (ratings>0)
 
 def drop_repeated_data():
-    rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
     ratings = ratings.drop_duplicates()
     ratings.to_csv(rating_path, index=False,sep = ';')
