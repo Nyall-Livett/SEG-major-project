@@ -96,14 +96,42 @@
                                       </table>
                                   </div>
                                   {% endif %}
-
-
-
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
+
+<h1> my moments </h1>
+      <!-- View moments -->
+      <div id="moment-wrapper">
+        {% for moment in moments %}
+        {% if moment.user == user %}
+
+          <!-- CUSTOM -->
+          {% if moment.type == 0 %}
+            {% include 'partials/custom_moment_partial.html' with moment=moment %}
+
+          <!-- BECAME_FRIENDS -->
+          {% elif moment.type == 1 %}
+
+          <!-- CLUB_CREATED -->
+          {% elif moment.type == 2 %}
+            {% include 'partials/create_club_moment_partial.html' with moment=moment %}
+
+          <!-- BOOK_RECOMMENDATION -->
+          {% elif moment.type == 3 %}
+
+          <!-- READING_NEW_BOOK -->
+          {% elif moment.type == 4 %}
+          {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    
+ 
+    
               {% if request.user.id == user.id %}
               <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_account' user.id %}">Delete Account</a>
               {% endif %}
@@ -111,6 +139,5 @@
       </div>
   </div>
 </div>
-{{ moments }}
-
+<p></p>
 {% endblock %}
