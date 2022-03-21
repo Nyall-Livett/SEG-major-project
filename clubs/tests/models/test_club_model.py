@@ -60,14 +60,6 @@ class ClubModelTestCase(TestCase):
         self.default_club.theme = ''
         self._assert_club_is_invalid()
 
-    def test_theme_may_contain_100_characters(self):
-        self.default_club.theme = 'x' * 100
-        self._assert_club_is_valid()
-
-    def test_theme_must_not_contain_more_than_100_characters(self):
-        self.default_club.theme = 'x' * 101
-        self._assert_club_is_invalid()
-
     def test_maximum_members_must_not_be_less_than_2(self):
         self.default_club.maximum_members = 1
         self._assert_club_is_invalid()
