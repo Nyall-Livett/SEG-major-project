@@ -46,7 +46,7 @@ class User(AbstractUser):
     bio = models.CharField(max_length=520, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
     follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
-    favourite_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='fav_book')
+    favourite_book = models.ForeignKey(Book, blank=False, null=True, on_delete=models.SET_NULL, related_name='fav_book')
     favourite_character = models.CharField(max_length=50, blank=True)
     favourite_genre = models.CharField(max_length=50, blank=True)
     favourite_author = models.CharField(max_length=50, blank=True)
