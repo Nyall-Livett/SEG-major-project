@@ -8,8 +8,8 @@ from ..models import Book
 def generate_recommendations(user_id):
 
     user = f'{user_id}'
-    k = 10
-
+    # k = 10
+    k = 5
 
     book_ratings = ProcessData()
     book_data = book_ratings.loadBooks()
@@ -62,7 +62,7 @@ def generate_recommendations(user_id):
             book = Book.objects.get(isbn = isbn)
             recommendations.append(book)
             pos += 1
-            if (pos > 10):
+            if (pos > k-1):
                 break
 
     return recommendations

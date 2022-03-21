@@ -24,6 +24,8 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditM
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
+from ..helpers import generate_ratings,contain_ratings
+from ..book_database.N_based_MSD_Item import generate_recommendations
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 
 
@@ -191,6 +193,21 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
     form_class = StartMeetingForm
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
+
+    def get_recommendations(self):
+        user_id = self.request.user.id
+        if((contain_ratings(user_id))==False):
+            book = Book.objects.get(id = settings.RANDOM_BOOK)
+            generate_ratings(book,user_id,'neutral')
+        recommendations = generate_recommendations(user_id)
+        return recommendations
+
+    def get_context_data(self, **kwargs):
+        recommended_books = self.get_recommendations()
+        context = super().get_context_data(**kwargs)
+        context['recommendations'] = recommended_books
+        return context
+
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
