@@ -7,6 +7,7 @@ import random, operator
 from operator import attrgetter
 from ..helpers import generate_ratings,contain_ratings
 from ..book_database.N_based_MSD_Item import generate_recommendations
+from django.conf import settings
 
 
 class DashboardView(LoginRequiredMixin, ListView):
@@ -21,7 +22,7 @@ class DashboardView(LoginRequiredMixin, ListView):
     def get_recommendations(self):
         user_id = self.request.user.id
         if((contain_ratings(user_id))==False):
-            book = random.choice(Book.objects.all())
+            book = Book.objects.get(id = settings.RANDOM_BOOK)
             generate_ratings(book,user_id,'neutral')
         recommendations = generate_recommendations(user_id)
         return recommendations

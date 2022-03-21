@@ -34,6 +34,7 @@ def generate_ratings(book,user,review):
     with open(rating_path,'a+') as rating_file:
         csv_writer = csv.writer(rating_file,delimiter=";")
         csv_writer.writerow([f"{user_id}",f'{isbn}',f'{rating}'])
+    drop_repeated_data()
 
 def delete_ratings(user):
     rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
@@ -46,7 +47,13 @@ def delete_ratings(user):
 def contain_ratings(user):
     rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
-    ratings=ratings.rename({'User-ID': 'User_ID'},axis=1)
+    ratings= ratings.rename({'User-ID': 'User_ID'},axis=1)
     ratings = ratings.query(f'User_ID=={user}')
     ratings = len(ratings)
     return (ratings>0)
+
+def drop_repeated_data():
+    rating_path = '/Users/wxy/Documents/SEG/SEG-major-project/clubs/book_database/BX-Book-Ratings_formatted.csv'
+    ratings = pd.read_csv(rating_path,delimiter=";",header=0)
+    ratings = ratings.drop_duplicates()
+    ratings.to_csv(rating_path, index=False,sep = ';')
