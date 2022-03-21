@@ -84,10 +84,7 @@ WSGI_APPLICATION = 'system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-         'TEST': {
-            'NAME': 'test',  # 测试过程中会生成名字为test的数据库,测试结束后Django会自动删除该数据库
-        }
+        'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
 
