@@ -12,7 +12,7 @@ from clubs.book_review_dataset.content_based_recommend import content_based_reco
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from clubs.forms import UploadBooksForm, BookForm
+from clubs.forms import UploadBooksForm, BookForm, BookReviewForm
 from django.views.generic.detail import DetailView
 
 from django.contrib.auth.decorators import login_required
@@ -24,6 +24,25 @@ class BookListView(LoginRequiredMixin, ListView):
     template_name = "book_list.html"
     context_object_name = "books"
     paginate_by = settings.BOOKS_PER_PAGE
+
+class BookReviewView(LoginRequiredMixin, FormView):
+    """docstring for BookReviewView."""
+
+    template_name = "book_review.html"
+    form_class = BookReviewForm
+
+    def form_valid(self, form):
+        review = form.instance
+        review.reviewer = self.request.user
+        try:
+            review.save()
+            return super().form_valid(form)
+        except IntegrityError as e:
+            return render(self.request, "book_review.html")
+
+    def get_success_url(self):
+        """Return redirect URL after successful update."""
+        return reverse('book_review')
 
 class UploadBooksView(LoginRequiredMixin, FormView):
     form_class = UploadBooksForm
@@ -124,13 +143,13 @@ class CreateBookView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         return reverse("book_list")
-    
+
 # @login_required
 # def get_recommended_books(request, book_id):
 #     book_title = Book.objects.get(id=book_id).name
-    
+
 #     recommended_books = content_based_recommender(book_title)
-    
+
 #     return render(request, 'show_book.html', {'rec_books': recommended_books})
 
 
@@ -138,14 +157,14 @@ class CreateBookView(LoginRequiredMixin, FormView):
 #     model = Book
 #     context_object_name = 'book_list'
 #     paginate_by = settings.BOOKS_PER_PAGE
-    
+
 #     # def setup(self, request, book_id, *args, **kwargs):
 #     #     super().setup(self, request, book_id, *args, **kwargs)
 #     #     self.book_author = Book.objects.get(id=book_id).author
-    
+
 #     def get_queryset(self):
 #         return Book.objects.filter(author='Stephen Fry')[:5]
-    
+
 #     def get_context_data(self, **kwargs):
 #         context = super(GetRecommendedBooks, self).get_context_data(**kwargs)
 #         context['book_list1'] = Book.objects.filter(author='Stephen Fry')[:5]
@@ -156,7 +175,7 @@ def get_books_by_author(request, book_id):
     book = Book.objects.get(id=book_id)
     book_name = book.name
     book_author = book.author
-    
+
     filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
     context = {'books_by_author': filtered_by_author}
     return render(request, 'books_by_author.html', context)
@@ -166,7 +185,7 @@ def get_books_by_publisher(request, book_id):
     book = Book.objects.get(id=book_id)
     book_name = book.name
     book_publisher = book.publisher
-    
+
     filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
     context = {'books_by_publisher': filtered_by_publisher}
     return render(request, 'books_by_publisher.html', context)
