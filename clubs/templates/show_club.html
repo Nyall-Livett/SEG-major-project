@@ -39,10 +39,11 @@
                                 {% for i in request.user.leader_of.all  %}
                                 {% if i.id == club.id %}
 
-                                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal">Transfer Leadership</a>
-                                  <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
                                   <a href = {% url 'set_meeting' club_id=club.pk %}>Arrange a meeting</a>
+                                  <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
+                                  <a href="#" data-bs-toggle="modal" data-bs-target="#modal">Transfer Leadership</a>
                                   <a href = "{% url 'change_theme' club_id=club.pk %}">Change club theme</a>
+                                  <a href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
 
                                 {% endif %}
                                 {% endfor %}
@@ -64,7 +65,7 @@
                             <p>{{club.description}} </p>
 
                         </div>
-                        
+
                         {% if club in user.clubs.all %}
                         <a href={% url 'club_forum' club.id %} class="text-success stretched-link" >Enter Club Forum</a>
                         {% endif %}
@@ -133,9 +134,6 @@
                 {% endfor %}
             </div>
           </div>
-          {% if club.leader == user %}
-          <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
-          {% endif %}
           <br>
         </div>
 
