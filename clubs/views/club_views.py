@@ -198,7 +198,8 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
     def get_recommendations(self):
         user_id = self.request.user.id
         if((contain_ratings(user_id))==False):
-            book = generate_a_random_book()
+            # book = generate_a_random_book()
+            book = Book.objects.get(id=1)
             generate_ratings(book,user_id,'neutral')
         recommendations = generate_recommendations(user_id)
         return recommendations

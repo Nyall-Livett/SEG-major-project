@@ -9,6 +9,8 @@ class CreateClubTestCase(TestCase, LogInTester):
 
     fixtures = [
         'clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/default_book.json',
+        'clubs/tests/fixtures/recommendations_books',
     ]
 
     def setUp(self):

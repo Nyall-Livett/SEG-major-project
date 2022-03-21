@@ -9,7 +9,10 @@ from clubs.tests.helpers import LogInTester, MenuTesterMixin, reverse_with_next
 class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     """Tests of the log in view."""
 
-    fixtures = ['clubs/tests/fixtures/default_user.json']
+    fixtures = ['clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/default_book.json',
+        'clubs/tests/fixtures/recommendations_books'
+        ]
 
     def setUp(self):
         self.url = reverse('log_in')

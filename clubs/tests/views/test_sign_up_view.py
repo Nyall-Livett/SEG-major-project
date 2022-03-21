@@ -9,7 +9,10 @@ from clubs.tests.helpers import LogInTester
 class SignUpViewTestCase(TestCase, LogInTester):
     """Tests of the sign up view."""
 
-    fixtures = ['clubs/tests/fixtures/default_user.json']
+    fixtures = ['clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/default_book.json',
+        'clubs/tests/fixtures/recommendations_books'
+        ]
 
     def setUp(self):
         self.url = reverse('sign_up')
@@ -22,7 +25,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
         }
-        
+
         self.user = User.objects.get(username='johndoe')
 
     def test_sign_up_url(self):
