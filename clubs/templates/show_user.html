@@ -12,26 +12,24 @@
                               <div class="card-block text-center text-white">
                                   <div class="m-b-25"> <img src="{{ user.gravatar }}"
                                           alt="Gravatar of {{ user.username }}" class="rounded-circle"> </div>
+                                          <h3 class="f-w-600">{{user.first_name}} {{user.last_name}}</h3>
 
                                   {% if user.id == request.user.id %}
                                   <div class="row">
                                       <div class="col-sm-12 col-md-8 offset-md-2">
-                                          <a href={% url 'profile'  %}>
-                                              <button type="button" class="btn btn-primary">Edit profile</button>
-                                          </a>
-                                          <a class="btn btn-danger" style="float: right;" href = "{% url 'delete_account' user.id %}">Delete Account</a>
-                                          <br><br>
                                           {% include 'partials/follow_unfollow.html' with following=following request_sent=request_sent %}
+                                          <a href={% url 'profile'  %}><button type="button" class="btn btn-primary">Edit profile</button></a>
+                                          <br><br>
+                                          <a class="btn btn-danger" href = "{% url 'delete_account' user.id %}">Delete Account</a>
                                       </div>
                                   </div>
 
                                   <br><br>
                                   <a href={% url 'book_review'  %}>
-                                      <button type="button" class="btn btn-primary">Add Book Read</button>
+                                      <button type="button" class="btn btn-primary"><b>Add Book Read</b></button>
                                   </a>
 
                                   {% else %}
-                                    <h3 class="f-w-600">{{user.first_name}} {{user.last_name}}</h3>
                                     {% include 'partials/follow_unfollow.html' with following=following request_sent=request_sent %}
                                   {% endif %}
                               </div>
@@ -39,6 +37,11 @@
                           <div class="col-sm-8">
                               <div class="card-block">
                                   <h4 class="m-b-20 p-b-5 b-b-default f-w-600">Profile</h4>
+                                  <div>
+                                      <h5 class="m-b-10 f-w-600">Username:</h5>
+                                      <p class="text-muted">{{user.username}}</p>
+                                  </div>
+
                                   <div>
                                       <h5 class="m-b-10 f-w-600">Email:</h5>
                                       <p class="text-muted">{{user.email}}</p>
