@@ -18,7 +18,7 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.form_input = {
             'name': f'{self.form_name}',
             'description': 'Book club based in oxfordshire',
-            'theme': 'Horror',
+            'theme': 'Humor',
             'maximum_members': 2
         }
 
