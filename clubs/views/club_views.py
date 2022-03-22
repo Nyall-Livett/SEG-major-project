@@ -44,7 +44,7 @@ class CreateClubView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
-        return reverse("dashboard")
+        return reverse("club_list")
 
 class TransferClubLeadership(LoginRequiredMixin, View):
     """docstring for TransferClubLeadership."""
