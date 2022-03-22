@@ -14,7 +14,6 @@ import random
 import nltk
 from nltk.corpus import stopwords
 
-
 class ProcessData:
 
     isbn_to_title = {}
