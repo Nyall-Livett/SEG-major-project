@@ -5,6 +5,7 @@ from django.urls import reverse
 from clubs.forms import SignUpForm
 from clubs.models import User
 from clubs.tests.helpers import LogInTester
+from ...helpers import delete_ratings
 
 class SignUpViewTestCase(TestCase, LogInTester):
     """Tests of the sign up view."""
@@ -45,6 +46,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
+        delete_ratings(self.user.id)
 
     def test_unsuccesful_sign_up(self):
         self.form_input['username'] = ''
@@ -86,3 +88,4 @@ class SignUpViewTestCase(TestCase, LogInTester):
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
+        delete_ratings(self.user.id)
