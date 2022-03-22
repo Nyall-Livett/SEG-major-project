@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User, Club
 from clubs.tests.helpers import LogInTester, reverse_with_next
+from ...helpers import delete_ratings
 
 
 class CreateClubTestCase(TestCase, LogInTester):
@@ -50,6 +51,7 @@ class CreateClubTestCase(TestCase, LogInTester):
         response = self.client.post(self.url, self.form_input, follow=True)
         club_count_after = Club.objects.count()
         self.assertEqual(club_count_before, club_count_after-1)
+        delete_ratings(self.default_user.id)
 
     # Test the correct template is rendered
     def test_get_clubs_gives_correct_template_used(self):
@@ -69,6 +71,7 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.assertEqual(club_count_before, club_count_after-1)
         club = Club.objects.get(name=self.form_name)
         self.assertEqual(club.leader, self.default_user)
+        delete_ratings(self.default_user.id)
 
     # Test new club has current user as member
     def test_current_user_is_in_club_members_after_creating(self):
@@ -80,6 +83,7 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.assertEqual(club_count_before, club_count_after-1)
         club = Club.objects.get(name=self.form_name)
         self.assertTrue(club.members.filter(username=self.default_user.username).exists())
+        delete_ratings(self.default_user.id)
 
     # Test the form is not bound
     def test_form_is_not_bound_upon_arrival(self):
@@ -107,3 +111,4 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(str(messages_list[0]), f"You have successfully created {self.form_input['name']}.")
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
+        delete_ratings(self.default_user.id)
