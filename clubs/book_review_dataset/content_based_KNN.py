@@ -4,6 +4,8 @@ from process_data import ProcessData
 import math
 import numpy as np
 import heapq
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 class ContentKNNAlgorithm(AlgoBase):
 
@@ -20,6 +22,8 @@ class ContentKNNAlgorithm(AlgoBase):
         bookdata = ProcessData()
         genres = bookdata.getGenres()
         years = bookdata.getYears()
+        combined = bookdata.getCombined()
+        summary = bookdata.getSummary()
 
         print("Computing content-based similarity matrix...")
 
@@ -32,15 +36,42 @@ class ContentKNNAlgorithm(AlgoBase):
             for otherRating in range(thisRating+1, self.trainset.n_items):
                 thisisbn = (self.trainset.to_raw_iid(thisRating))
                 otherisbn = (self.trainset.to_raw_iid(otherRating))
-                genreSimilarity = self.computeGenreSimilarity(thisisbn, otherisbn, genres)
-                yearSimilarity = self.computeYearSimilarity(thisisbn, otherisbn, years)
-                #mesSimilarity = self.computeMiseEnSceneSimilarity(thisisbn, otherisbn, mes)
-                self.similarities[thisRating, otherRating] = genreSimilarity * yearSimilarity
+                # genreSimilarity = self.computeGenreSimilarity(thisisbn, otherisbn, genres)
+                # yearSimilarity = self.computeYearSimilarity(thisisbn, otherisbn, years)
+                summarySimilarity = self.computeSummarySimilarity(thisisbn, otherisbn, summary)
+                combinedSimilarty = self.computeCombinedSimilarity(thisisbn, otherisbn, combined)
+                self.similarities[thisRating, otherRating] = summarySimilarity * combinedSimilarty
+                # self.similarities[thisRating, otherRating] = summarySimilarity
+                # self.similarities[thisRating, otherRating] = combinedSimilarty
                 self.similarities[otherRating, thisRating] = self.similarities[thisRating, otherRating]
 
         print("...done.")
 
         return self
+
+
+    def computeCombinedSimilarity(self, book1, book2, combined):
+        combined1 = combined[book1]
+        combined2 = combined[book2]
+        books = [combined1, combined2]
+
+        cv = CountVectorizer()
+        count_matrix = cv.fit_transform(books)
+        cosine = cosine_similarity(count_matrix)
+
+        return cosine[0][1]
+
+    def computeSummarySimilarity(self, book1, book2, summary):
+        summary1 = summary[book1]
+        summary2 = summary[book2]
+        books = [summary1, summary2]
+
+        cv = CountVectorizer()
+        count_matrix = cv.fit_transform(books)
+        cosine = cosine_similarity(count_matrix)
+
+        return cosine[0][1]
+
 
     def computeGenreSimilarity(self, book1, book2, genres):
         genres1 = genres[book1]
@@ -54,7 +85,6 @@ class ContentKNNAlgorithm(AlgoBase):
             sumxx += x * x
             sumyy += y * y
             sumxy += x * y
-
         return sumxy/math.sqrt(sumxx*sumyy)
 
     def computeYearSimilarity(self, book1, book2, years):
