@@ -8,7 +8,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.list import MultipleObjectMixin
 from clubs.models import Book, BooksRead
-from clubs.book_review_dataset.content_based_recommend import content_based_recommender
+from clubs.book_review_dataset.content_based_recommend_2 import content_based_recommender_2
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
@@ -194,7 +194,7 @@ def get_books_by_publisher(request, book_id):
 def get_recommended_books(request, book_id):
     book = Book.objects.get(id=book_id)
     book_name = book.name
-    get_recommended_books = content_based_recommender(book_name)       #"Harry Potter and the Order of the Phoenix (Book 5)"
+    get_recommended_books = content_based_recommender_2(book_name)       #"Harry Potter and the Order of the Phoenix (Book 5)"
     recommended_books = []
     for i in get_recommended_books:
         book = Book.objects.filter(name=i).first()
