@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import User, Club, CustomAvatar
+from clubs.models import User, Club, CustomAvatar, Book
 from clubs.enums import AvatarIcon, AvatarColor
 import random
 from ..helpers import generate_favourite_ratings,delete_ratings,generate_a_random_book
@@ -97,8 +97,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
         login(self.request, object)
         if (object.favourite_book == None):
             # object.favourite_book = generate_a_random_book()
-            object.favourite_book = Book.objects.get(id=1)
-        generate_favourite_ratings(object.favourite_book,object.id)
+            book = Book.objects.get(id=1)
+        generate_favourite_ratings(book,object.id)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
