@@ -40,9 +40,9 @@ class ContentKNNAlgorithm(AlgoBase):
                 # yearSimilarity = self.computeYearSimilarity(thisisbn, otherisbn, years)
                 summarySimilarity = self.computeSummarySimilarity(thisisbn, otherisbn, summary)
                 combinedSimilarty = self.computeCombinedSimilarity(thisisbn, otherisbn, combined)
-                # self.similarities[thisRating, otherRating] = summarySimilarity * combinedSimilarty
+                self.similarities[thisRating, otherRating] = summarySimilarity * combinedSimilarty
                 # self.similarities[thisRating, otherRating] = summarySimilarity
-                self.similarities[thisRating, otherRating] = combinedSimilarty
+                # self.similarities[thisRating, otherRating] = combinedSimilarty
                 self.similarities[otherRating, thisRating] = self.similarities[thisRating, otherRating]
 
         print("...done.")
@@ -51,6 +51,8 @@ class ContentKNNAlgorithm(AlgoBase):
 
 
     def computeCombinedSimilarity(self, book1, book2, combined):
+        """Computes the similarity between two books, taking into account the book title, the book author, the publisher and the category """
+
         combined1 = combined[book1]
         combined2 = combined[book2]
         books = [combined1, combined2]
@@ -62,6 +64,8 @@ class ContentKNNAlgorithm(AlgoBase):
         return cosine[0][1]
 
     def computeSummarySimilarity(self, book1, book2, summary):
+        """Computes the similarity between two books, taking into account the summary """
+
         summary1 = summary[book1]
         summary2 = summary[book2]
         books = [summary1, summary2]
