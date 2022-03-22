@@ -5,6 +5,7 @@ from django.urls import reverse
 from clubs.forms import LogInForm
 from clubs.models import User
 from clubs.tests.helpers import LogInTester, MenuTesterMixin, reverse_with_next
+from ...helpers import delete_ratings
 
 class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     """Tests of the log in view."""
@@ -104,6 +105,7 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
         self.assert_menu(response)
+        delete_ratings(self.user.id)
 
     def test_succesful_log_in_with_redirect(self):
         redirect_url = reverse('user_list')
@@ -122,6 +124,7 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
+        delete_ratings(self.user.id)
 
     def test_post_log_in_with_incorrect_credentials_and_redirect(self):
         redirect_url = reverse('user_list')
