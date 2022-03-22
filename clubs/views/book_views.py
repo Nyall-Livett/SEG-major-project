@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm, BookReviewForm
 from django.views.generic.detail import DetailView
-
+from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 
 class BookListView(LoginRequiredMixin, ListView):

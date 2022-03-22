@@ -9,3 +9,4 @@ from .post_views import *
 from .book_views import *
 from .notification_views import *
 from .moment_views import *
+from .meeting_views import *
