@@ -13,8 +13,7 @@ import pandas as pd
 import random
 import nltk
 from nltk.corpus import stopwords
-nltk.download('stopwords')
-nltk.download('punkt')
+
 
 class ProcessData:
 

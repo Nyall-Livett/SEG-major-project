@@ -24,7 +24,7 @@ random.seed(0)
 evaluator = Evaluator(evaluationData, rankings)
 
 contentKNN = ContentKNNAlgorithm()
-print(contentKNN)
+
 evaluator.AddAlgorithm(contentKNN, "ContentKNN")
 
 # Just make random recommendations

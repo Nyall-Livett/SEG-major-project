@@ -40,9 +40,9 @@ class ContentKNNAlgorithm(AlgoBase):
                 # yearSimilarity = self.computeYearSimilarity(thisisbn, otherisbn, years)
                 summarySimilarity = self.computeSummarySimilarity(thisisbn, otherisbn, summary)
                 combinedSimilarty = self.computeCombinedSimilarity(thisisbn, otherisbn, combined)
-                self.similarities[thisRating, otherRating] = summarySimilarity * combinedSimilarty
+                # self.similarities[thisRating, otherRating] = summarySimilarity * combinedSimilarty
                 # self.similarities[thisRating, otherRating] = summarySimilarity
-                # self.similarities[thisRating, otherRating] = combinedSimilarty
+                self.similarities[thisRating, otherRating] = combinedSimilarty
                 self.similarities[otherRating, thisRating] = self.similarities[thisRating, otherRating]
 
         print("...done.")
