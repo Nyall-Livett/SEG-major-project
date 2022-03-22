@@ -52,8 +52,8 @@ def contain_ratings(user):
     ratings = pd.read_csv(rating_path,delimiter=";",header=0)
     ratings= ratings.rename({'User-ID': 'User_ID'},axis=1)
     ratings = ratings.query(f'User_ID=={user}')
-    ratings = len(ratings)
-    return (ratings>0)
+    num = len(ratings)
+    return (num>0)
 
 def drop_repeated_data():
     rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
@@ -64,3 +64,11 @@ def drop_repeated_data():
 def generate_a_random_book():
     random_book = random.choice(Book.objects.all())
     return random_book
+
+def get_ratings_count(user):
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
+    ratings = pd.read_csv(rating_path,delimiter=";",header=0)
+    ratings= ratings.rename({'User-ID': 'User_ID'},axis=1)
+    ratings = ratings.query(f'User_ID=={user}')
+    counts = len(ratings)
+    return counts
