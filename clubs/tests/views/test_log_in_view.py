@@ -5,7 +5,7 @@ from django.urls import reverse
 from clubs.forms import LogInForm
 from clubs.models import User
 from clubs.tests.helpers import LogInTester, MenuTesterMixin, reverse_with_next
-from ...helpers import delete_ratings
+from ...helpers import delete_ratings,get_ratings_count
 
 class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     """Tests of the log in view."""
@@ -51,11 +51,16 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
 
     def test_get_log_in_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
+        rating_count_before = get_ratings_count(self.user.id)
         response = self.client.get(self.url, follow=True)
+        rating_count_after = get_ratings_count(self.user.id)
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
+        self.assertEqual(rating_count_before,rating_count_after-1)
         delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
 
     def test_unsuccesful_log_in(self):
         form_input = { 'username': 'johndoe', 'password': 'WrongPassword123' }
@@ -98,15 +103,20 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
 
     def test_succesful_log_in(self):
         form_input = { 'username': 'johndoe', 'password': 'Password123' }
+        rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.url, form_input, follow=True)
+        rating_count_after = get_ratings_count(self.user.id)
         self.assertTrue(self._is_logged_in())
         response_url = reverse('dashboard')
+        self.assertEqual(rating_count_before,rating_count_after-1)
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 0)
         self.assert_menu(response)
         delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
 
     def test_succesful_log_in_with_redirect(self):
         redirect_url = reverse('user_list')
@@ -121,11 +131,16 @@ class LogInViewTestCase(TestCase, LogInTester, MenuTesterMixin):
     def test_post_log_in_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
         form_input = { 'username': 'wronguser', 'password': 'WrongPassword123' }
+        rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.url, form_input, follow=True)
+        rating_count_after = get_ratings_count(self.user.id)
         redirect_url = reverse('dashboard')
+        self.assertEqual(rating_count_before,rating_count_after-1)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
         delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
 
     def test_post_log_in_with_incorrect_credentials_and_redirect(self):
         redirect_url = reverse('user_list')

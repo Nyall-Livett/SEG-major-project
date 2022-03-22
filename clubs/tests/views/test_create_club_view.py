@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User, Club
 from clubs.tests.helpers import LogInTester, reverse_with_next
-from ...helpers import delete_ratings
+from ...helpers import delete_ratings,get_ratings_count
 
 
 class CreateClubTestCase(TestCase, LogInTester):
@@ -48,10 +48,15 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
         club_count_before = Club.objects.count()
+        rating_count_before = get_ratings_count(self.default_user.id)
         response = self.client.post(self.url, self.form_input, follow=True)
         club_count_after = Club.objects.count()
+        rating_count_after = get_ratings_count(self.default_user.id)
         self.assertEqual(club_count_before, club_count_after-1)
+        self.assertEqual(rating_count_before,rating_count_after-1)
         delete_ratings(self.default_user.id)
+        rating_after_delete = get_ratings_count(self.default_user.id)
+        self.assertEqual(0,rating_after_delete)
 
     # Test the correct template is rendered
     def test_get_clubs_gives_correct_template_used(self):
@@ -66,24 +71,34 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
         club_count_before = Club.objects.count()
+        rating_count_before = get_ratings_count(self.default_user.id)
         response = self.client.post(self.url, self.form_input, follow=True)
         club_count_after = Club.objects.count()
+        rating_count_after = get_ratings_count(self.default_user.id)
         self.assertEqual(club_count_before, club_count_after-1)
+        self.assertEqual(rating_count_before,rating_count_after-1)
         club = Club.objects.get(name=self.form_name)
         self.assertEqual(club.leader, self.default_user)
         delete_ratings(self.default_user.id)
+        rating_after_delete = get_ratings_count(self.default_user.id)
+        self.assertEqual(0,rating_after_delete)
 
     # Test new club has current user as member
     def test_current_user_is_in_club_members_after_creating(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
         club_count_before = Club.objects.count()
+        rating_count_before = get_ratings_count(self.default_user.id)
         response = self.client.post(self.url, self.form_input, follow=True)
         club_count_after = Club.objects.count()
+        rating_count_after = get_ratings_count(self.default_user.id)
         self.assertEqual(club_count_before, club_count_after-1)
+        self.assertEqual(rating_count_before,rating_count_after-1)
         club = Club.objects.get(name=self.form_name)
         self.assertTrue(club.members.filter(username=self.default_user.username).exists())
         delete_ratings(self.default_user.id)
+        rating_after_delete = get_ratings_count(self.default_user.id)
+        self.assertEqual(0,rating_after_delete)
 
     # Test the form is not bound
     def test_form_is_not_bound_upon_arrival(self):
@@ -106,9 +121,14 @@ class CreateClubTestCase(TestCase, LogInTester):
     def test_correct_message_is_shown_after_creation(self):
         self.client.login(username=self.default_user, password='Password123')
         self.assertTrue(self._is_logged_in())
+        rating_count_before = get_ratings_count(self.default_user.id)
         response = self.client.post(self.url, self.form_input, follow=True)
+        rating_count_after = get_ratings_count(self.default_user.id)
+        self.assertEqual(rating_count_before,rating_count_after-1)
         messages_list = list(response.context['messages'])
         self.assertEqual(len(messages_list), 1)
         self.assertEqual(str(messages_list[0]), f"You have successfully created {self.form_input['name']}.")
         self.assertEqual(messages_list[0].level, messages.SUCCESS)
         delete_ratings(self.default_user.id)
+        rating_after_delete = get_ratings_count(self.default_user.id)
+        self.assertEqual(0,rating_after_delete)
