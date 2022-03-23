@@ -17,7 +17,6 @@ class BookReviewTest(TestCase,  LogInTester):
         self.book = Book.objects.get(isbn= "0195153448")
         self.input = {'book': self.book, 'rating': 'like'}
 
-
     def test_get_access_for_unauthenticated(self):
         self.assertFalse(self._is_logged_in())
         response = self.client.get(self.url, follow=True)
@@ -63,3 +62,4 @@ class BookReviewTest(TestCase,  LogInTester):
         self.input['rating'] = 'neutral'
         form = BookReviewForm(data=self.input)
         self.assertTrue(form.is_valid())
+

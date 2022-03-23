@@ -35,15 +35,15 @@ class MeetingFormTestCase(TestCase):
 
 
     # Test Form has the correct fields in the form
-    """def test_form_contains_required_fields(self):
-        form = MeetingForm(self.form_input)
-        self.assertIn('club', form.fields)"""
-        #self.assertIn('members', form.fields)
-        #self.assertIn('book', form.fields)
+    def test_form_contains_required_fields(self):
+        form = MeetingForm()
+        self.assertIn('date', form.fields)
+        self.assertIn('location', form.fields)
+        self.assertIn('notes', form.fields)
+        self.assertIn('book', form.fields)
 
     # Test the form accepts valid input
     def test_form_accepts_valid_input(self):
-        #print()
         form = MeetingForm(data=self.form_input)
         print(form.errors)
         self.assertTrue(form.is_valid())
