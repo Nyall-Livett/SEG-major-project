@@ -15,7 +15,7 @@ class BookReviewTest(TestCase,  LogInTester):
         self.url = reverse('book_review')
         self.user = User.objects.get(username='johndoe')
         self.book = Book.objects.get(isbn= "0195153448")
-        self.input = {'book': 'hollographic', 'rating': 'like'}
+        self.input = {'book': self.book, 'rating': 'like'}
 
 
     def test_get_access_for_unauthenticated(self):
@@ -38,12 +38,17 @@ class BookReviewTest(TestCase,  LogInTester):
         form = BookReviewForm()
         self.assertIn('book', form.fields)
         self.assertIn('rating', form.fields)
-        
-    # def test_valid_review_form(self):
-    #     form = BookReviewForm(data=self.input)
-    #     self.assertTrue(form.is_valid())
 
-    def test_body_must_not_be_blank(self):
+    def test_valid_review_form(self):
+        form = BookReviewForm(data=self.input)
+        self.assertTrue(form.is_valid())
+
+    def test_book_must_not_be_blank(self):
         self.input['book'] = ''
+        form = BookReviewForm(data=self.input)
+        self.assertFalse(form.is_valid())
+
+    def test_rating_must_not_be_blank(self):
+        self.input['rating'] = ''
         form = BookReviewForm(data=self.input)
         self.assertFalse(form.is_valid())
