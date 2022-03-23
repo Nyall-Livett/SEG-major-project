@@ -62,7 +62,6 @@ class SetBookTestCase(TestCase ,LogInTester):
         self.assertIn('publication_year', form.fields)
         self.assertIn('image_url_s', form.fields)
         self.assertIn('image_url_m', form.fields)
-        self.assertIn('image_url_l', form.fields)
 
     def test_valid_set_book_form(self):
         form = BookForm(data=self.form_input)
