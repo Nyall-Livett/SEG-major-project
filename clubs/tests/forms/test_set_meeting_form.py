@@ -1,9 +1,12 @@
-"""Unit tests of the Meeting form."""
+from django import forms
+from django.contrib import messages
 from django.test import TestCase
-from clubs.forms import MeetingForm
-from clubs.models import Meeting, User, Book, Club
+from django.urls import reverse
+from clubs.forms import BookReviewForm, MeetingForm
+from clubs.models import Book, User, Club
+from clubs.tests.helpers import LogInTester, reverse_with_next
 
-class MeetingFormTestCase(TestCase):
+class MeetingFormTestCase(TestCase ,LogInTester):
     """Unit tests of the set up meeting form."""
 
     fixtures = [
@@ -15,11 +18,11 @@ class MeetingFormTestCase(TestCase):
 
 
     def setUp(self):
-        #self.url = reverse('set_meeting')
         self.default_user = User.objects.get(username='johndoe')
-        #self.default_club = Club.objects.get(name='Oxford Book Club')
-        #self.default_book = Book.objects.get(isbn= "0195153448")
-
+        self.default_club = Club.objects.get(name='Oxford Book Club')
+        self.default_book = Book.objects.get(isbn= "0195153448")
+        self.url = reverse('set_meeting' , kwargs={'club_id': self.default_user.id})
+       
 
         self.form_input = {
             #"date": "2022-02-27 11:00:00",
@@ -34,6 +37,13 @@ class MeetingFormTestCase(TestCase):
         }
 
 
+    def test_get_access_for_unauthenticated(self):
+        self.assertFalse(self._is_logged_in())
+        response = self.client.get(self.url, follow=True)
+        response_url = reverse_with_next('log_in', self.url)
+        self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
+
+
     # Test Form has the correct fields in the form
     def test_form_contains_required_fields(self):
         form = MeetingForm()
@@ -41,11 +51,12 @@ class MeetingFormTestCase(TestCase):
         self.assertIn('location', form.fields)
         self.assertIn('notes', form.fields)
         self.assertIn('book', form.fields)
+        notes_widget = form.fields['notes'].widget
+        self.assertTrue(isinstance(notes_widget, forms.Textarea))
 
     # Test the form accepts valid input
     def test_form_accepts_valid_input(self):
         form = MeetingForm(data=self.form_input)
-        print(form.errors)
         self.assertTrue(form.is_valid())
 
     # Test the form rejects blank club
