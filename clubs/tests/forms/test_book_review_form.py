@@ -52,3 +52,14 @@ class BookReviewTest(TestCase,  LogInTester):
         self.input['rating'] = ''
         form = BookReviewForm(data=self.input)
         self.assertFalse(form.is_valid())
+
+    def test_rating_must_be_like_dislike_neutral(self):
+        self.input['rating'] = 'like'
+        form = BookReviewForm(data=self.input)
+        self.assertTrue(form.is_valid())
+        self.input['rating'] = 'dislike'
+        form = BookReviewForm(data=self.input)
+        self.assertTrue(form.is_valid())
+        self.input['rating'] = 'neutral'
+        form = BookReviewForm(data=self.input)
+        self.assertTrue(form.is_valid())
