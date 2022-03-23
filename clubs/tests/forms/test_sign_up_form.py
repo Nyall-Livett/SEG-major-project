@@ -16,7 +16,8 @@ class SignUpFormTestCase(TestCase):
             'email': 'janedoe@example.org',
             'bio': 'My bio',
             'new_password': 'Password123',
-            'password_confirmation': 'Password123'
+            'password_confirmation': 'Password123',
+            'favourite_genre': 'Humor'
         }
 
     def test_valid_sign_up_form(self):

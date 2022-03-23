@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import User, Club, CustomAvatar, Book
+from clubs.models import Moment, User, Club, CustomAvatar, Book
 from clubs.enums import AvatarIcon, AvatarColor
 import random
 from ..helpers import generate_favourite_ratings,delete_ratings,generate_a_random_book
@@ -50,6 +50,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         return user
 
+
     def get_success_url(self):
         """Return redirect URL after successful update."""
         user = self.get_object()
@@ -61,6 +62,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['avatar_icons'] = AvatarIcon.values
         context['avatar_colors'] = AvatarColor.values
+
         return context
 
     def form_valid(self, form):
