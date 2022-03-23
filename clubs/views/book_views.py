@@ -16,6 +16,7 @@ from clubs.forms import UploadBooksForm, BookForm, BookReviewForm
 from django.views.generic.detail import DetailView
 from ..helpers import generate_ratings
 from django.contrib.auth.decorators import login_required
+from django.db.utils import IntegrityError
 
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
