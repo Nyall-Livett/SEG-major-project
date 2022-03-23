@@ -87,6 +87,8 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
     def test_access_dashboard_without_ratings(self):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
+        delete_ratings(self.user.id)
+        self.assertFalse(contain_ratings(self.user.id))
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.get(self.dashboard_url)
         rating_count_after = get_ratings_count(self.user.id)
@@ -110,6 +112,8 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
     def test_access_start_meeting_without_ratings(self):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
+        delete_ratings(self.user.id)
+        self.assertFalse(contain_ratings(self.user.id))
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.get(self.start_meeting_url)
         rating_count_after = get_ratings_count(self.user.id)
