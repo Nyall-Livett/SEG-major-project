@@ -57,7 +57,7 @@ class Command(BaseCommand):
         username = f'@{first_name}{last_name}'
         email = self._email(first_name,last_name)
         bio = self.faker.text(max_nb_chars=520)
-        favourite_book = self._favourite_book()
+        # favourite_book = self._favourite_book()
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
@@ -65,9 +65,8 @@ class Command(BaseCommand):
             bio = bio,
             username = username,
             password=Command.PASSWORD,
-            favourite_book = favourite_book,
         )
-        generate_favourite_ratings(favourite_book,user.id)
+        # generate_favourite_ratings(favourite_book,user.id)
 
     def _create_club(self):
         name = self.faker.first_name()
