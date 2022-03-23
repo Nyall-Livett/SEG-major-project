@@ -17,10 +17,17 @@ class SetBookTestCase(TestCase ,LogInTester):
         ]
 
     def setUp(self):
-        self.default_user = User.objects.get(username='johndoe')
-        self.default_club = Club.objects.get(name='Oxford Book Club')
-        self.default_book = Book.objects.get(isbn= "0195153448")
+        self.user = User.objects.get(username='johndoe')
+        self.club = Club.objects.get(name='Oxford Book Club')
+        self.book = Book.objects.get(isbn= "0195153448")
         self.url = reverse('book')
        
     def test_set_book_uses_correct_template(self):
-        pass
+        self.client.login(username=self.user.username, password='Password123')
+        response = self.client.get(self.url, follow=True)
+        self.assertTemplateUsed(response, 'set_book.html')
+
+    def test_set_book_redirects_when_user_not_logged_in(self):
+        redirect_url = reverse_with_next('log_in', self.url)
+        response = self.client.get(self.url)
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
