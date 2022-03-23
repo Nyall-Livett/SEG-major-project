@@ -25,12 +25,14 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.book_read = Book.objects.get(isbn = "0002005018")
         self.dashboard_url = reverse('dashboard')
         self.book_review_url = reverse('book_review')
+        self.sign_up_url = reverse('sign_up')
         self.delete_account_url = reverse('delete_account',kwargs={'user_id': self.other_user.id})
         self.start_meeting_url = reverse('start_meeting', kwargs={'pk': self.meeting.pk})
         # self.profile_url = reverse('profile')
 
     def test_urls(self):
         self.assertEqual(self.dashboard_url,f'/dashboard/')
+        self.assertEqual(self.sign_up_url,f'/sign_up/')
         self.assertEqual(self.book_review_url,f'/book_review')
         # self.assertEqual(self.profile_url,f'/profile/')
         self.assertEqual(self.delete_account_url,f'/delete_account/{self.other_user.id}')
@@ -151,6 +153,68 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         response = self.client.post(self.delete_account_url, follow=True)
         rating_count_after = get_ratings_count(self.other_user.id)
         self.assertEqual(0,rating_count_after)
+        delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
+
+    def test_dashboard_show_recommendations(self):
+        self.client.login(username=self.user, password='Password123')
+        self.assertTrue(self._is_logged_in())
+        generate_ratings(self.book,self.user.id,'like')
+        response = self.client.get(self.dashboard_url)
+        book_1 = Book.objects.get(pk=3)
+        book_2 = Book.objects.get(pk=4)
+        book_3 = Book.objects.get(pk=5)
+        book_4 = Book.objects.get(pk=6)
+        book_5 = Book.objects.get(pk=7)
+        self.assertContains(response, f'{book_1.name}')
+        self.assertContains(response, f'{book_2.name}')
+        self.assertContains(response, f'{book_3.name}')
+        self.assertContains(response, f'{book_4.name}')
+        self.assertContains(response, f'{book_5.name}')
+        delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
+
+    def test_start_meeting_show_recommendations(self):
+        self.client.login(username=self.user, password='Password123')
+        self.assertTrue(self._is_logged_in())
+        generate_ratings(self.book,self.user.id,'like')
+        response = self.client.get(self.start_meeting_url)
+        book_1 = Book.objects.get(pk=3)
+        book_2 = Book.objects.get(pk=4)
+        book_3 = Book.objects.get(pk=5)
+        book_4 = Book.objects.get(pk=6)
+        book_5 = Book.objects.get(pk=7)
+        self.assertContains(response, f'{book_1.name}')
+        self.assertContains(response, f'{book_2.name}')
+        self.assertContains(response, f'{book_3.name}')
+        self.assertContains(response, f'{book_4.name}')
+        self.assertContains(response, f'{book_5.name}')
+        delete_ratings(self.user.id)
+        rating_after_delete = get_ratings_count(self.user.id)
+        self.assertEqual(0,rating_after_delete)
+
+    # def test_sign_up_will_generate_ratings(self):
+    #     # self.client.login(username='johndoe', password='Password123')
+    #     # self.assertTrue(self._is_logged_in())
+    #     self.assertFalse(contain_ratings(self.user.id))
+    #     form_input = {
+    #         'first_name': 'Jane',
+    #         'last_name': 'Doe',
+    #         'username': 'janedoe',
+    #         'email': 'janedoe@example.org',
+    #         'bio': 'My bio',
+    #         'new_password': 'Password123',
+    #         'password_confirmation': 'Password123'
+    #     }
+    #     rating_count_before = get_ratings_count(self.user.id)
+    #     response = self.client.post(self.sign_up_url,form_input, follow=False)
+    #     rating_count_after = get_ratings_count(self.user.id)
+    #     self.assertEqual(rating_count_before,rating_count_after-1)
+    #     delete_ratings(self.user.id)
+    #     rating_after_delete = get_ratings_count(self.user.id)
+    #     self.assertEqual(0,rating_after_delete)
 
     # def test_update_favourite_book_will_generate_ratings(self):
     #     self.client.login(username='johndoe', password='Password123')
