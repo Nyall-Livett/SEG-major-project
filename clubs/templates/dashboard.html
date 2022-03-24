@@ -22,6 +22,7 @@
             {% for club in random_clubs %}
               <div class="single-item-wrap">
                 <div class="book-image">
+
                 </div>
                 <div class="book-details">
                   <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
@@ -131,8 +132,15 @@
 
             {% for club in random_clubs %}
 
-              <div class=" single-item-wrap">
-                <div class="book-image "></div>
+              <div class="single-item-wrap">
+                <div class="thumbnail-holder">
+                  {% if club.thumbnail.url is not None %}
+                    <img src={{club.thumbnail.url}}>
+                  {% else %}
+                    <img src="https://cdn.vectorstock.com/images/1000x1000/66/09/29666609.jpg"
+                        alt="Logo" width="50">
+                  {% endif %}
+                </div>
                 <div class="book-details">
                   <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name|capfirst}}</small></a>
                   <small style="font-size:12px; color:#878787">Members: {{club.member_count}}</small>

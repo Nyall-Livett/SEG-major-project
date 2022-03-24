@@ -30,12 +30,17 @@
       </div>
       <div class="card-bottom">
         <div class="moment-content">
-          <div class="new-club-holder" style="text-align:center">
-            club image
+          <div class="thumbnail-holder">
+            {% if moment.associated_club.thumbnail.url is not None %}
+              <img src={{moment.associated_club.thumbnail.url}}>
+              {% else %}
+                <img src="https://cdn.vectorstock.com/images/1000x1000/66/09/29666609.jpg"
+                    alt="Logo" width="50">
+            {% endif %}
           </div>
           <div style="padding-left:8px">
             {{moment.body}} <br>
-            <small>Check it out <a href="{% url 'show_club' moment.user.id %}">here!</a></small>
+            <small>Check it out <a href="{% url 'show_club' moment.associated_club.id %}">here!</a></small>
           </div>
         </div>
         <div class="moment-buttons">
