@@ -20,6 +20,7 @@
       
       <p></p>
       <table class="table">
+        {% if club.applicants.all %}
         {% for i in club.applicants.all %}
           <tr>
 
@@ -38,17 +39,13 @@
         </td>
           </tr>
         {% endfor %}
+        {% else %}
+        <a> No applicants! </a>
+        {% endif %}
       </table>
     </div>
   </div>
 </div> 
-
-
-
-
-
-
-
 {% endblock %}
 
 

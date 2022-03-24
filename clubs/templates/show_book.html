@@ -20,6 +20,19 @@
                                       <h5 class="m-b-10 f-w-600">ISBN:</h5>
                                       <p class="text-muted">{{ book.isbn }}</p>
                                   </div>
+                                  {% if  book.description  != "" %}
+                                    <div>
+                                        <h5 class="m-b-10 f-w-600">Description:</h5>
+                                        <p class="text-muted">{{ book.description }}</p>
+                                    </div>
+                                  {%endif%}
+                                  {% if  book.grouped_category  != "" %}
+                                    <div>
+                                        <h5 class="m-b-10 f-w-600">Theme:</h5>
+                                        <p class="text-muted">{{ book.grouped_category }}</p
+                                    </div>
+                                  {%endif%}
+
 
                                   <div>
                                       <h5 class="m-b-10 f-w-600">Publisher:</h5>
@@ -67,6 +80,30 @@
                   </div>
               </div>
           </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Other Books by the author</h1>
+            <a class="btn btn-primary" href="{% url 'get_books_by_author' book.id %}">Show</a>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Other Books by the Publisher</h1>
+            <a class="btn btn-primary" href="{% url 'get_books_by_publisher' book.id %}">Show</a>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1>Recommended Books</h1>
+            <a class="btn btn-primary" href="{% url 'get_recommended_books' book.id %}">Show</a>
+          </div>
+        </div>
       </div>
   </div>
 </div>

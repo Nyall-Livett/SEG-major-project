@@ -2,7 +2,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
-from clubs.models import User, Post, Club
+from clubs.models import User, Post, Club, Book
+import os, csv
+from ...helpers import generate_favourite_ratings
 
 class Command(BaseCommand):
     """The database seeder."""
@@ -17,6 +19,9 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
+        print('Seeding books... (It takes a few minutes.)')
+        self.seed_books()
+        print('Book seeding complete')
         self.seed_users()
         print()
         self.seed_clubs()
@@ -30,6 +35,8 @@ class Command(BaseCommand):
             print()
         print()
         print('Users, Clubs and Posts seeding complete.')
+        # self.seed_books()
+        # print('Book seeding complete')
 
     def seed_users(self):
         user_count = User.objects.all().count()
@@ -50,6 +57,7 @@ class Command(BaseCommand):
         username = f'@{first_name}{last_name}'
         email = self._email(first_name,last_name)
         bio = self.faker.text(max_nb_chars=520)
+        # favourite_book = self._favourite_book()
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
@@ -58,6 +66,7 @@ class Command(BaseCommand):
             username = username,
             password=Command.PASSWORD,
         )
+        # generate_favourite_ratings(favourite_book,user.id)
 
     def _create_club(self):
         name = self.faker.first_name()
@@ -126,3 +135,42 @@ class Command(BaseCommand):
     def _club_name(self, name):
         name = f'{name} Book Club'
         return name
+
+    def _favourite_book(self):
+        favourite_book = random.choice(Book.objects.all())
+        return favourite_book
+
+    def seed_books(self):
+        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted.csv'
+        with open(csv_file, encoding ='ISO-8859-1') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
+            for book in csv_reader:
+                if(book[0] != 'ISBN'):
+                    try:
+                        try:
+                            _, created = Book.objects.update_or_create(
+                                isbn = book[0].strip('"'),
+                                name = book[1].strip('"'),
+                                author = book[2].strip('"'),
+                                publication_year = book[3].strip('"'),
+                                publisher = book[4].strip('"'),
+                                image_url_s = book[5].strip('"'),
+                                image_url_m = book[6].strip('"'),
+                                image_url_l = book[7].strip('"'),
+                                category = book[8].strip('"').strip("'[]"),
+                                grouped_category = book[9].strip('"').strip("'[]"),
+                                description = book[10].strip('"')
+                            )
+                        except IndexError:
+                            _, created = Book.objects.update_or_create(
+                                isbn = book[0].strip('"'),
+                                name = book[1].strip('"'),
+                                author = book[2].strip('"'),
+                                publication_year = book[3].strip('"'),
+                                publisher = book[4].strip('"'),
+                                image_url_s = book[5].strip('"'),
+                                image_url_m = book[6].strip('"'),
+                                image_url_l = book[7].strip('"'),
+                            )
+                    except IndexError:
+                        messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")

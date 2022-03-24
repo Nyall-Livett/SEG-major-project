@@ -1,5 +1,6 @@
 <table class="table">
     {% for user in users %}
+    {% if not user.is_superuser %}
         <tr>
         <td>
             <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
@@ -7,5 +8,6 @@
         <td>{{ user.full_name }}</td>
         <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
         </tr>
+    {% endif %}
     {% endfor %}
       </table>

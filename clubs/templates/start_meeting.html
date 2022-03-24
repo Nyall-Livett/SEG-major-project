@@ -14,5 +14,21 @@
       <br>
     </div>
   </div>
+  <div class="" >
+    <div class="row">
+      <div>
+        <p style="color:#878787">Recommended reads</p>
+      </div>
+    </div>
+  <div class="row card s-40 p-16">
+    <div class="collection-wrap">
+      {% for recommendation in recommendations %}
+      <div class="f">  <img src="{{ recommendation.image_url_s }}" alt="Image not found" >
+          <div class="book-details">
+            <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
+          </div></div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 {% endblock %}

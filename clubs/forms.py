@@ -200,8 +200,6 @@ class StartMeetingForm(forms.ModelForm):
         "Form options"
         model = Meeting
         fields = ['date', 'location', 'URL', 'book', 'chosen_member', 'next_book', 'notes']
-        #fields = ['next_book', 'notes']
-        #widgets = { 'notes': forms.Textarea() }
         widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'next_book': autocomplete.ModelSelect2(url='book-autocomplete') , 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
     date = forms.CharField(disabled=True, required=False)
     location = forms.CharField(disabled=True, required=False)
@@ -217,7 +215,7 @@ class EditMeetingForm(forms.ModelForm):
 
 class BookReviewForm(forms.ModelForm):
     class Meta:
-
+        "Form options"
         model = BooksRead
         fields = ['book', 'rating']
         widgets = { 'book': autocomplete.ModelSelect2(url='book-autocomplete') }

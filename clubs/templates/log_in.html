@@ -2,15 +2,19 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-6 offset-md-3">
-      <h1>Log in</h1>
-      <form action="{% url 'log_in' %}" method="post">
+    <div class="card" style="padding: 2ch; width: 20cm; margin-left: 7.5cm; height: 10cm; margin-top: 2cm; padding-left: 1.5cm;">
+    <div class="col-sm-12 col-md-5 offset-md-3">
+      <h1 style="margin-left: 2cm; ">Log in</h1>
+      <a style="margin-left: 2ch;">Don't have an account?<a href="{% url 'sign_up' %}"> Sign up</a></a>
+      <form action="{% url 'log_in' %}" method="post" style="margin-top:2ch">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}">
         {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Log in" class="btn btn-primary">
+        <input type="submit" style="margin-left: 3cm; margin-top: 3ch;" value="Log in" class="btn btn-primary">
       </form>
+    </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

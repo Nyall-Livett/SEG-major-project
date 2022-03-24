@@ -19,13 +19,17 @@
 
         <div class="row card s-40 p-16">
           <div class="collection-wrap">
-            {% for club in random_clubs %}
+            {% for recommendation in recommendations %}
               <div class="single-item-wrap">
+
                 <div class="book-image">
 
                 </div>
+
+                <img src="{{ recommendation.image_url_s }}" alt="Image not found" >
+
                 <div class="book-details">
-                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                  <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
                 </div>
               </div>
             {% endfor %}
@@ -42,16 +46,19 @@
 
         <div class="row card s-40 p-16">
 
-          <!-- This is were the meetings go  -->
           <div class="collection-wrap">
-            {% for club in random_clubs %}
+            {% for c in user.clubs.all %}
+            {% for a in c.meetings.all %}
               <div class="single-item-wrap">
-                <div class="book-image">
-                </div>
+
                 <div class="book-details">
-                  <a href="{% url 'show_club' club.id %}"><small style="font-size:12px">{{club.name}}</small></a>
+                  <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
+
+                  </form>
+
                 </div>
               </div>
+              {% endfor %}
             {% endfor %}
           </div>
           <!-- end meetings -->
@@ -59,7 +66,6 @@
         </div>
       </div>
     </div>
-
 
 
     <!-- Middle -->
@@ -154,8 +160,6 @@
     </div>
   </div>
 </div>
-
-
 
 {% endblock %}
 {% block javascript %}

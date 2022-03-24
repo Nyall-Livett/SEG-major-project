@@ -5,6 +5,8 @@
     <div class="col-12">
       <h4>Upload a csv file in the correct format</h4>
 
+      <p>ISBN; Book-Title; Book-Author; Year-Of-Publication; Publisher; Image-URL-S; Image-URL-M; Image-URL-L, Category, Restricted-Category, Summary</p>
+      <p>csv files in the format following format are also accepted:</p>
       <p>ISBN; Book-Title; Book-Author; Year-Of-Publication; Publisher; Image-URL-S; Image-URL-M; Image-URL-L</p>
 
       <form action="{% url 'upload_books' %}" method="post" enctype="multipart/form-data">

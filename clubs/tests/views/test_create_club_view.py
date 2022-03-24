@@ -9,6 +9,8 @@ class CreateClubTestCase(TestCase, LogInTester):
 
     fixtures = [
         'clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/default_book.json',
+        'clubs/tests/fixtures/recommendations_books',
     ]
 
     def setUp(self):
@@ -18,7 +20,7 @@ class CreateClubTestCase(TestCase, LogInTester):
         self.form_input = {
             'name': f'{self.form_name}',
             'description': 'Book club based in oxfordshire',
-            'theme': 'Horror',
+            'theme': 'Humor',
             'maximum_members': 2
         }
 
