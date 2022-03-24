@@ -10,6 +10,14 @@ from django.utils import timezone
 from datetime import date, datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files import File
+from pathlib import Path
+from django.core.files.base import ContentFile
+
 
 
 import pytz
@@ -171,7 +179,23 @@ class Club(models.Model):
     applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
     theme = models.CharField(max_length=512, blank=False)
     maximum_members = models.IntegerField(blank=False, default=2, validators=[MinValueValidator(2), MaxValueValidator(64)])
-    image = models.ImageField(upload_to='media/', null=True)
+    image = models.ImageField(upload_to='media/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
+
+    formats = {
+        'JPEG': 'jpeg',
+        'JPG': 'jpeg',
+        'PNG': 'png'
+    }
+
+    #  Override the delete method to delete the image from S3
+    def delete(self):
+        if self.image != None:
+            self.image.delete(save=False)
+        if self.thumbnail != None:
+            self.thumbnail.delete(save=False)
+        super().delete()
+
 
     class Meta:
         """Model options."""
@@ -211,6 +235,47 @@ class Club(models.Model):
         return False
 
 
+    def crop_image(self, image, height, width, x, y):
+        # Open the image in pillow
+        originalImage = Image.open(self.image)
+
+        # Get crop dimensions
+        pLeft, pRight = x.split(',')
+        pTop, pBottom = y.split(',')
+        heightSF = originalImage.height / int(float(height))
+        widthSF = originalImage.width / int(float(width))
+        size = 250, 250
+
+        left = max(1, min((int(pLeft) * widthSF), originalImage.width- 1))
+        right = max(1, min((int(pRight) * widthSF), originalImage.width- 1))
+        top = max(1, min((int(pTop) * heightSF), originalImage.height- 1))
+        bottom = max(1, min((int(pBottom) * heightSF), originalImage.height- 1))
+
+
+        img_filename = f'{self.name}_pp'
+        imCrop = originalImage.crop((left, top, right, bottom))
+        buffer = BytesIO()
+        imCrop.thumbnail(size, Image.ANTIALIAS)
+        imCrop.save(buffer, format=self.formats[image.format])
+
+
+        data = buffer.getvalue()
+        self.image.save(img_filename, ContentFile(data))
+
+        self.create_thumbnail(imCrop, self.formats[image.format] )
+
+    def create_thumbnail(self, imCrop, format):
+        thumbnail_size = 50, 50
+        buffer = BytesIO()
+        imCrop.thumbnail(thumbnail_size, Image.ANTIALIAS)
+        imCrop.save(buffer, format=format)
+
+        data = buffer.getvalue()
+        img_filename = f'{self.name}_tn'
+        self.thumbnail.save(img_filename, ContentFile(data))
+
+
+
 class Notification(models.Model):
     """Notification model."""
     title = models.CharField(max_length=128, blank=False)
@@ -231,8 +296,8 @@ class Moment(models.Model):
     likes = models.IntegerField(blank=False, default = 0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(default=timezone.now, blank=False)
-    associated_user = models.IntegerField(blank=True, null=True)
-    associated_club = models.IntegerField(blank=True, null=True)
+    associated_user = models.ForeignKey(User, blank=True, null=True, related_name="associated_user", on_delete=models.CASCADE)
+    associated_club = models.ForeignKey(Club, blank=True, null=True, related_name="associated_club", on_delete=models.CASCADE)
 
 
 class Post(models.Model):
