@@ -8,11 +8,12 @@
               <div>
                   <div class="card user-card-full">
                       <div class="row m-l-0 m-r-0">
-                          <div class="m-b-25">
-                            <img src="{{ book.image_url_l }}" alt="Image not found">
-                          </div>
+
 
                           <div class="col-sm-8">
+                            <div class="m-b-25">
+                              <img src="{{ book.image_url_l }}" alt="Image not found">
+                            </div>
                               <div class="card-block">
                                   <h3 class="m-b-20 p-b-5 b-b-default f-w-600">{{ book.name }}</h3>
                                   <h4 class="f-w-600">By {{ book.author }}</h4>
@@ -75,7 +76,24 @@
                                   </div>
 
                               </div>
+
                           </div>
+
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="card-block">
+                          <h5 class="m-b-10 f-w-600">Recommended Books:</h5>
+                          <table class="table">
+                            {% for book in recommended_books %}
+                              <tr>
+                                <td>{{ book.author }}</a></td>
+                                <td>{{ book.publisher }}</a></td>
+                              </tr>
+                            {% endfor %}
+                          </table>
+
+                        </div>
+
                       </div>
                   </div>
               </div>

@@ -18,7 +18,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-books = pd.read_csv("/Users/bdalam/Desktop/SEG-major-project/clubs/book_review_dataset/final3.csv")
+books = pd.read_csv(os.getcwd() +"/clubs/book_review_dataset/final3.csv")
 # print(books)
 
 
@@ -39,7 +39,7 @@ df = books.copy()
 
 """Uses book title, author, publisher and Category to give recommendations"""
 def content_based_recommender(book_title):
-    
+
     book_title = str(book_title)
     rating_counts = pd.DataFrame(df['book_title'].value_counts())
     rare_books = rating_counts[rating_counts['book_title'] <= 100].index
@@ -47,9 +47,9 @@ def content_based_recommender(book_title):
     common_books = common_books.drop_duplicates(subset=['book_title'])
     common_books.reset_index(inplace= True)
     if book_title in df['book_title'].values:
-        
+
         if book_title in rare_books:
-            
+
             random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
             return random
             # print('There are no recommendations for this book')
@@ -70,11 +70,11 @@ def content_based_recommender(book_title):
             sim_books = list(enumerate(cosine_sim[index]))
             sorted_sim_books = sorted(sim_books,key=lambda x:x[1],
                                       reverse=True)[1:6]
-            
+
             books = []
             for i in range(len(sorted_sim_books)):
                 books.append(common_books[common_books['index'] == sorted_sim_books[i][0]]['book_title'].item())
-            
+
             return books
 
     else:
@@ -91,10 +91,10 @@ def content_based_recommender_2(book_title):
     common_books = common_books.drop_duplicates(subset=['book_title'])
     common_books.reset_index(inplace= True)
     if book_title in df['book_title'].values:
-    
-        
+
+
         if book_title in rare_books:
-            
+
             random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
             return random
             # print('There are no recommendations for this book')
@@ -106,7 +106,7 @@ def content_based_recommender_2(book_title):
             # print('{}'.format(random[4]),'\n')
         else:
             common_books['index'] = [i for i in range(common_books.shape[0])]
-            
+
             summary_filtered = []
             for i in common_books['Summary']:
                 i = re.sub("[^a-zA-Z]"," ",i).lower()
@@ -114,8 +114,8 @@ def content_based_recommender_2(book_title):
                 i = [word for word in i if not word in set(stopwords.words("english"))]
                 i = " ".join(i)
                 summary_filtered.append(i)
-            
-            common_books['Summary'] = summary_filtered   
+
+            common_books['Summary'] = summary_filtered
             cv = CountVectorizer()
             count_matrix = cv.fit_transform(common_books['Summary'])
             cosine_sim = cosine_similarity(count_matrix)
@@ -132,7 +132,7 @@ def content_based_recommender_2(book_title):
         random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
         return random
 
-            
+
 
 # print("recommendation based on book title, author, publisher and category")
 # print(content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)"))
@@ -169,6 +169,3 @@ def content_based_recommender_2(book_title):
 # print(content_based_recommender_2("Snow Falling on Cedars"))
 # print(content_based_recommender_2("Tuesdays with Morrie: An Old Man, a Young Man, and Life's Greatest Lesson"))
 # print(content_based_recommender_2("Girl with a Pearl Earring"))
-
-
-
