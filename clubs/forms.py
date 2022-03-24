@@ -171,11 +171,21 @@ class ClubForm(forms.ModelForm):
         """Form options."""
 
         model = Club
-        fields = ['name', 'description', 'theme', 'maximum_members']
+        fields = ['name', 'description', 'theme', 'maximum_members', 'image']
         widgets = {
             'description': forms.Textarea(),
-            'maximum_members': forms.NumberInput(attrs={'min': 0, 'max': 64})
+            'maximum_members': forms.NumberInput(attrs={'min': 2, 'max': 64})
         }
+
+
+    def __init__(self, *args, **kwargs):
+        super(ClubForm, self).__init__(*args, **kwargs)
+        keys = list(self.fields)
+        for key in keys:
+            self.fields[key].widget.attrs['class'] = 'form-control'
+        # self.fields['image'].required = False
+
+
 
 class MeetingForm(forms.ModelForm):
     class Meta:
