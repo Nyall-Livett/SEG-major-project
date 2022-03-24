@@ -24,7 +24,7 @@ class ClubAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for clubs."""
 
     list_display = [
-        'id', 'name', 'description', 'leader',
+        'id', 'name', 'description', 'leader', 'image'
     ]
 
 @admin.register(Meeting)
