@@ -119,14 +119,17 @@ class ShowBookView(LoginRequiredMixin, DetailView):
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
         context['reviews'] = BooksRead.objects.all()
-        book = Book.objects.get(id=self.kwargs.get('book_id'))
-        book_name = book.name
-        get_recommended_books = content_based_recommender_2(book_name)
-        recommended_books = []
-        for i in get_recommended_books:
-            book = Book.objects.filter(name=i).first()
-            recommended_books.append(book)
-        context['recommended_books'] =  recommended_books
+        try:
+            book = Book.objects.get(id=self.kwargs.get('book_id'))
+            book_name = book.name
+            get_recommended_books = content_based_recommender_2(book_name)
+            recommended_books = []
+            for i in get_recommended_books:
+                book = Book.objects.filter(name=i).first()
+                recommended_books.append(book)
+            context['recommended_books'] =  recommended_books
+        except:
+            context['recommended_books'] = None
 
         return context
 
@@ -195,7 +198,7 @@ def get_recommended_books(request, book_id):
     #     print("Lalala")
     context = {'recommended_books': recommended_books}
     return render(request, 'recommended_books.html', context)
-    
+
 @login_required
 def get_books_by_author(request, book_id):
     book = Book.objects.get(id=book_id)

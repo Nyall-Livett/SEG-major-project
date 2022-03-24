@@ -16,7 +16,7 @@
                             </div>
                               <div class="card-block">
                                   <h3 class="m-b-20 p-b-5 b-b-default f-w-600">{{ book.name }}</h3>
-                                  <h4 class="f-w-600">By {{ book.author }}</h4>
+                                  <h4 class="f-w-600"><a href="{% url 'get_books_by_author' book.id %}">By {{ book.author }}</a></h4>
                                   <div>
                                       <h5 class="m-b-10 f-w-600">ISBN:</h5>
                                       <p class="text-muted">{{ book.isbn }}</p>
@@ -38,9 +38,9 @@
                                   <div>
                                       <h5 class="m-b-10 f-w-600">Publisher:</h5>
                                       {% if book.publication_year == 0 %}
-                                      <p class="text-muted">{{book.publisher}}</p>
+                                      <p class="text-muted"><a href="{% url 'get_books_by_publisher' book.id %}">{{book.publisher}}</a></p>
                                       {% else %}
-                                      <p class="text-muted">{{book.publisher}} - {{book.publication_year}}</p>
+                                      <p class="text-muted"><a href="{% url 'get_books_by_publisher' book.id %}">{{book.publisher}} - {{book.publication_year}}</a></p>
                                       {% endif %}
                                   </div>
 
@@ -83,14 +83,18 @@
                       <div class="col-sm-3">
                         <div class="card-block">
                           <h5 class="m-b-10 f-w-600">Recommended Books:</h5>
-                          <table class="table">
                             {% for book in recommended_books %}
-                              <tr>
-                                <td>{{ book.author }}</a></td>
-                                <td>{{ book.publisher }}</a></td>
-                              </tr>
+                            <div class="card" style="width: 18rem;">
+                              <div class="card-body">
+                                <img src="{{ book.image_url_m }}" alt="Image not found">
+                                <p></p>
+                                <h5 class="card-title">{{ book.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+                                <a href="{% url 'show_book' book.id %}" class="card-link">See more</a>
+                              </div>
+                            </div>
                             {% endfor %}
-                          </table>
+
 
                         </div>
 
@@ -104,22 +108,8 @@
           <div class="col-12">
             <h1>Other Books by the author</h1>
             <a class="btn btn-primary" href="{% url 'get_books_by_author' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
             <h1>Other Books by the Publisher</h1>
             <a class="btn btn-primary" href="{% url 'get_books_by_publisher' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Recommended Books</h1>
-            <a class="btn btn-primary" href="{% url 'get_recommended_books' book.id %}">Show</a>
           </div>
         </div>
       </div>
