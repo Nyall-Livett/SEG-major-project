@@ -7,6 +7,7 @@
 # else:
 #     ssl._create_default_https_context = _create_unverified_https_context
 import re
+import os
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
@@ -17,24 +18,23 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-books = pd.read_csv("/Users/bdalam/Desktop/SEG-major-project/clubs/book_review_dataset/Preprocessed_data.csv")
+books = pd.read_csv("/Users/bdalam/Desktop/SEG-major-project/clubs/book_review_dataset/final3.csv")
 # print(books)
 
-counts = books['Category'].value_counts()
-counts.to_csv('name.csv')
+
 
 df = books.copy()
-df.dropna(inplace=True)
-df.reset_index(drop=True, inplace=True)
-df.drop(columns = ['Unnamed: 0','location','isbn',
-                   'img_s','img_m','city','age',
-                   'state','Language','country',
-                   'year_of_publication'],axis=1,inplace = True)
-df.drop(index=df[df['Category'] == '9'].index, inplace=True) #remove 9 in category
+# df.dropna(inplace=True)
+# df.reset_index(drop=True, inplace=True)
+# df.drop(columns = ['Unnamed: 0','location','isbn',
+#                    'img_s','img_m','city','age',
+#                    'state','Language','country',
+#                    'year_of_publication'],axis=1,inplace = True)
+# df.drop(index=df[df['Category'] == '9'].index, inplace=True) #remove 9 in category
 
-df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
+# df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
 
-df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
+# df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
 
 
 """Uses book title, author, publisher and Category to give recommendations"""
@@ -136,7 +136,7 @@ def content_based_recommender_2(book_title):
 
 # print("recommendation based on book title, author, publisher and category")
 # print(content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)"))
-print(content_based_recommender("The Testament"))
+# print(content_based_recommender("The Testament"))
 # print(content_based_recommender("1st to Die: A Novel"))
 # print(content_based_recommender("Harry Potter and the Order of the Phoenix (Book 5)"))
 # print(content_based_recommender("Fahrenheit 451"))
