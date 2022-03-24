@@ -80,6 +80,24 @@ class ClubModelTestCase(TestCase):
         self.default_club.leader = None
         self._assert_club_is_invalid()
 
+    # def test_add_or_remove_member(self):
+    #     self.client.login(username=self.user, password='Password123')
+    #     self.client.login(username=self.applicant, password='Password123')
+    #     applicants_before = self.club.applicants.all().count()
+    #     Club.applicant_manager(self.club, self.applicant)
+    #     applicants_after = self.club.applicants.all().count()
+    #     self.assertEqual(applicants_before+1, applicants_after)
+    #     members_before = self.club.members.all().count()
+    #     self.club.acceptmembership(self.applicant)
+    #     applicants_after_acceptance = self.club.applicants.all().count()
+    #     members_after = self.club.members.all().count()
+    #     self.assertEqual(applicants_after_acceptance, applicants_after-1)
+    #     self.assertEqual(members_before+1, members_after)
+    #     joined = self.applicant in self.club.members.all()
+    #     self.assertTrue(joined)
+    #     is_member = self.club.is_member(self.applicant)
+    #     self.assertTrue(is_member)
+
     def _assert_club_is_valid(self):
         try:
             self.default_club.full_clean()
@@ -89,3 +107,5 @@ class ClubModelTestCase(TestCase):
     def _assert_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.default_club.full_clean()
+
+   
