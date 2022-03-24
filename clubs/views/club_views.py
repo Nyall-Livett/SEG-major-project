@@ -24,7 +24,7 @@ from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURL, create_JSON_meeting_data, convertDateTime
-
+from PIL import Image
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""
@@ -33,8 +33,18 @@ class CreateClubView(LoginRequiredMixin, FormView):
     form_class = ClubForm
 
     def form_valid(self, form):
+
         club = form.instance
         club.leader = self.request.user
+
+        if self.request.FILES:
+            club.crop_image(
+             self.request.FILES['image'].image,
+             self.request.POST['inputImageHeight'],
+             self.request.POST['inputImageWidth'],
+             self.request.POST['croppedX'],
+             self.request.POST['croppedY'])
+
         club.save()
         club.add_or_remove_member(self.request.user)
         notifier = CreateNotification()
