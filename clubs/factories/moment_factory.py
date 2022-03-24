@@ -40,7 +40,7 @@ class CreateMoment:
             type=MomentType.CLUB_CREATED,
             body = body,
             user = self.user,
-            associated_club = club.id
+            associated_club = club
         )
 
     def _book_recommendation(self, user, **kwargs):
