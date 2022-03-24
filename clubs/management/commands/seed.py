@@ -145,6 +145,8 @@ class Command(BaseCommand):
         with open(csv_file, encoding ='ISO-8859-1') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
             for book in csv_reader:
+                print("The first line of book seeder")
+                print(book[0])
                 if(book[0] != 'ISBN'):
                     try:
                         try:
