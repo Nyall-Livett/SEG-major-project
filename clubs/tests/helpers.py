@@ -53,3 +53,4 @@ def isUrlLegit(url):
             return True
     except Exception:
         return False
+        

@@ -91,16 +91,18 @@ class SignUpView(LoginProhibitedMixin, FormView):
         # Create avatar
         color = self.request.POST['color']
         if len(color) < 1:
-            color = AvatarColor.values[random.randint(0, len(AvatarColor.values))]
+            color = AvatarColor.values[random.randint(0, len(AvatarColor.values)-1)]
         icon = self.request.POST['icon']
         if len(icon) < 1:
-            icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values))]
+            icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values)-1)]
         CustomAvatar.objects.create(color=color, icon=icon, user=object)
         login(self.request, object)
-        if (object.favourite_book == None):
+        book = object.favourite_book
+        if ((object.favourite_book == None or object.favourite_book == '') and (Book.objects.count() != 0)):
             # object.favourite_book = generate_a_random_book()
             book = Book.objects.get(id=1)
-        generate_favourite_ratings(book,object.id)
+        if book:
+            generate_favourite_ratings(book,object.id)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
