@@ -35,20 +35,39 @@ class PendingRequest(TestCase, LogInTester):
     def test_accept_club_applicant(self):
         self.client.login(username=self.user, password='Password123')
         self.client.login(username=self.applicant, password='Password123')
+        applicants_before = self.club.applicants.all().count()
         Club.applicant_manager(self.club, self.applicant)
+        applicants_after = self.club.applicants.all().count()
+        self.assertEqual(applicants_before+1, applicants_after)
         members_before = self.club.members.all().count()
-        Club.acceptmembership(self.club, self.applicant)
+        self.club.acceptmembership(self.applicant)
+        applicants_after_acceptance = self.club.applicants.all().count()
         members_after = self.club.members.all().count()
+        self.assertEqual(applicants_after_acceptance, applicants_after-1)
         self.assertEqual(members_before+1, members_after)
+        joined = self.applicant in self.club.members.all()
+        self.assertTrue(joined)
+        is_member = self.club.is_member(self.applicant)
+        self.assertTrue(is_member)
 
     def test_reject_membership(self):
         self.client.login(username=self.user, password='Password123')
         self.client.login(username=self.applicant, password='Password123')
+        applicants_before = self.club.applicants.all().count()
         Club.applicant_manager(self.club, self.applicant)
+        applicants_after = self.club.applicants.all().count()
+        self.assertEqual(applicants_before+1, applicants_after)
         members_before = self.club.members.all().count()
-        Club.rejectmembership(self.club, self.applicant)
+        self.club.rejectmembership(self.applicant)
+        applicants_after_rejection = self.club.applicants.all().count()
+        members_after = self.club.members.all().count()
+        self.assertEqual(applicants_after_rejection, applicants_after-1)
         members_after = self.club.members.all().count()
         self.assertEqual(members_before, members_after)
+        joined = self.applicant in self.club.members.all()
+        self.assertFalse(joined)
+        is_member = self.club.is_member(self.applicant)
+        self.assertFalse(is_member)
 
-
+    
     
