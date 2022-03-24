@@ -1,15 +1,358 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <h2>Create club</h2>
+<div class="container" style="padding:0 26px;">
+  <form action="{% url 'create_club' %}" method="post" enctype='multipart/form-data'>
+      {% csrf_token %}
+
   <div class="row">
-    <div class="col-12">
-      <form class="brown-form mt-4" action="{% url 'create_club' %}" method="post">
-        {% csrf_token %}
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Create club" class="btn btn-primary w-100 mt-3">
-      </form>
+    <div class="col-4">
+      <div class="row">
+        <div style="color:#878787">Upload club image</div>
+      </div>
+      <div class="wrap-100">
+        <div class=" card create-icon-container">
+
+          <!-- Preview -->
+          <div class="col" style="padding:0 16px;">
+            <div class="slider-title">
+              <h6 style="color:#878787; margin-top:16px;">Preview</h6>
+              <!-- <input class="crop-slider" type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
+              <h6 style="color:#878787;  margin-top:16px;">Crop size</h6>
+            </div>
+            <div class="slider-wrap">
+              <input oninput="onSliderChange(this.value)" type="range" min="50" max="100" value="100" class="slider" id="crop-size-slider">
+            </div>
+
+            <div class="image-wrap">
+              <div id="image-holder">
+                <div id="crop-wrap">
+                  <img id="preview-image" src="#" alt="">
+                  <div id="crop-square"> <!-- Empty --> </div>
+                </div>
+              </div>
+            </div>
+            <small style="color:#878787">Jpeg/Jpg/Png only</small>
+            <div id="before-crop">
+              <p style="color:#878787">Click to select crop</p>
+            </div>
+            <div id="after-crop">
+              <p style="color:#878787">Click to reset crop</p>
+            </div>
+
+            <!-- Image input field -->
+            <div class="form-image-input">
+              <input oninput="showPreview()" id="id_image" name="image" type="file" class="form-control">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Gutter -->
+
+
+    <!-- Profile form -->
+    <div class="col-8" style="padding: 0 26px">
+
+
+      <h6 style="color:#878787">Create new club</h6>
+
+        <div class="row mb-3">
+
+
+          <!-- Club name -->
+          <div class="col">
+            <label for="name-input" class="form-label">Club name:</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+
+          </div>
+
+
+          <!--  last name-->
+          <div class="col">
+            <label for="leader-input" class="form-label">Leader:</label>
+            <input class="form-control" type="text" readonly value={{user.username}}>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+
+          <!-- Theme -->
+          <div class="col">
+            <label for="username-input" autocomplete="off" class="form-label">Theme:</label>
+            {{ form.theme }}
+            {{ form.theme.errors }}
+
+          </div>
+
+          <!-- Maximum members -->
+          <div class="col">
+            <label for="email-address-input" class="form-label">Maximum members:</label>
+            {{ form.maximum_members}}
+            {{ form.maximum_members.errors }}
+
+          </div>
+        </div>
+
+        <!-- description -->
+        <div class="row mb-3">
+          <div class="col">
+            <label for="bio-input" class="form-label">Club description:</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+
+          </div>
+        </div>
+
+        <input type="hidden" id="inputImageHeight" name="inputImageHeight" value="#">
+        <input type="hidden" id="inputImageWidth" name="inputImageWidth" value="#">
+        <input type="hidden" id="croppedX" name="croppedX" value="#">
+        <input type="hidden" id="croppedY" name="croppedY" value="#">
+
+        <input type="submit" value="Update" class="btn btn-primary">
+
+      <br>
+      {{ form.media }}
+
     </div>
   </div>
+</form>
 </div>
+{% endblock %}
+{% block javascript %}
+
+ <script type="text/javascript">
+
+  let cropSqaureSet = false
+  var previewH = -1
+  var previewW = -1
+  var yLimit
+  var xLimit
+
+  $(document).ready(function() {
+    inputImageHeight = $('#inputImageHeight')
+    inputImageWidth = $('#inputImageWidth')
+    croppedX = $('#croppedX')
+    croppedY = $('#croppedY')
+
+
+    previewImage = $('#preview-image')
+    imageHolder = $('#image-holder')
+    id_image = $('#id_image')
+    cropWrap = $('#crop-wrap')
+    cropSquare = $('#crop-square')
+    slider = $('#crop-size-slider')[0]
+    afterCrop = $('#after-crop')
+    beforeCrop = $('#before-crop')
+    slider = $('#crop-size-slider')[0]
+    setIntialSlider()
+
+    cropWrap.hover(hoverIn, hoverOut)
+
+    cropWrap.click(()=>{
+      cropSqaureSet = !cropSqaureSet
+      beforeCrop.toggle()
+      afterCrop.toggle()
+    })
+
+    cropWrap.mousemove((event) => {
+      if (!cropSqaureSet) {
+        setHiddenInput()
+        moveXCropSquare(event)
+        moveYCropSquare(event)
+      }
+    })
+  })
+
+  const setHiddenInput = () => {
+    croppedX.val(
+    [ parseInt(cropSquare.offset().left - cropWrap.offset().left),
+      parseInt(cropSquare.offset().left - cropWrap.offset().left + cropSquare.width())
+    ])
+
+    croppedY.val(
+    [parseInt(cropSquare.offset().top - cropWrap.offset().top),
+      parseInt(cropSquare.offset().top - cropWrap.offset().top + cropSquare.height())
+    ])
+  }
+
+  // Intially set the crop slider to disabled while there is no image.
+  const setIntialSlider = () => {
+    enableSlider(false)
+  }
+
+
+  // Movement crop Square
+  const moveXCropSquare = (event) => {
+    let mouseX = event.pageX - ($(cropWrap).offset().left + cropSquare.width()/ 2)
+    if (mouseX <= 0 || event.pageX + (cropSquare.width()/2) >= xLimit) {
+      return
+    }
+    cropSquare.css("left", `${mouseX}px`)
+  }
+
+  const moveYCropSquare = (event) => {
+    let mouseY = event.pageY - ($(cropWrap).offset().top + cropSquare.height()/ 2)
+    if (mouseY <= 0 || event.pageY + (cropSquare.height()/2) >= yLimit) {
+      return
+    }
+    cropSquare.css("top", `${mouseY}px`)
+  }
+
+  // Set the square in a certain place
+  const setSquareXInPlace = (x) => {
+    cropSquare.css("left", x)
+  }
+
+  const setSquareYInPlace = (y) => {
+    cropSquare.css("top", y)
+  }
+
+  // Resets all crop components back to intial stage
+  const resetCropComponents = () => {
+    slider.value = 100
+    enableSlider(false)
+    cropSquare.hide()
+  }
+
+  // Set the height of the crop square to least value of height and width
+  // Enable the slider
+  // Show crop square
+  const hoverIn = () => {
+    yLimit = $(cropWrap).offset().top + $(cropWrap).height() - 2
+    xLimit = $(cropWrap).offset().left + $(cropWrap).width() - 2
+
+    if (cropSquare.is(":hidden")) {
+      setHeight()
+      setWidth()
+      sizeCropSquare()
+      enableSlider(true)
+      cropSquare.show()
+      setHiddenInput()
+      setImageHeight()
+    }
+  }
+
+  const positionSquare = () => {
+    let xCenter = cropWrap.offset().left + $(cropWrap).width() - 2
+    let yCenter = cropWrap.offset().top + $(cropWrap).height() - 2
+
+    if (event.pageX > xCenter) {
+      if (event.pageX > xLimit) {
+        setSquareXInPlace((xLimit - cropWrap.offset().left) - cropSquare.width())
+      }
+      // has the mouse gone over xLimit
+    } else {
+      if (event.pageX <= cropWrap.offset().left) {
+        setSquareXInPlace(0)
+      }
+    }
+
+    if (event.pageY > yCenter) {
+      if (event.pageY > yLimit) {
+        setSquareYInPlace((yLimit - cropWrap.offset().top) - cropSquare.height())
+      }
+      // has the mouse gone over xLimit
+    } else {
+      if (event.pageY <= cropWrap.offset().top) {
+        setSquareYInPlace(0)
+      }
+    }
+  }
+
+  // Show crop square
+  const hoverOut = (event) => {
+    if (cropSquare.is(":visible")) {
+      if (!cropSqaureSet) {
+        positionSquare(event)
+      }
+    }
+  }
+
+  // Enable/Disable slider
+  const enableSlider = (value) => {
+    slider.disabled = !value
+  }
+
+  // Set height of crop square
+  const sizeCropSquare = () => {
+    size = previewW > previewH ? previewH : previewW
+    cropSquare.height(size)
+    cropSquare.width(size)
+  }
+
+
+  // Get height of image
+  const setImageHeight = () => {
+    inputImageHeight.val($('#crop-wrap').height())
+    inputImageWidth.val($('#crop-wrap').width())
+  }
+
+  // Get height of image
+  const setHeight = () => {
+    previewH = $('#crop-wrap').height()
+  }
+
+  // Get width of image
+  const setWidth = () => {
+    previewW = $('#crop-wrap').width()
+  }
+
+  const resizeCropSquare = (value) => {
+
+    if (cropSquare.offset().top + cropSquare.height() > yLimit -2 ) {
+      setSquareYInPlace((yLimit - cropWrap.offset().top) - cropSquare.height())
+    }
+    if (cropSquare.offset().left + cropSquare.width() > xLimit -2) {
+      setSquareXInPlace((xLimit - cropWrap.offset().left) - cropSquare.width())
+    }
+    cropSquare.height(size * (value / 100))
+    cropSquare.width(size * (value / 100))
+
+    setHiddenInput()
+
+  }
+
+  const onSliderChange = (value) => {
+    resizeCropSquare(value)
+  }
+
+  // Show the image in the preview
+  const showPreview = (input) => {
+    getFile()
+  }
+
+  const getFile = () => {
+    reader = new FileReader()
+    reader.onload = function (e) {
+      resetCropComponents()
+
+
+      // check its a image/
+      var allowedExtension = ['jpeg', 'jpg', 'png'];
+      if ( allowedExtension.some( string => e.target.result.split(';')[0].split('/')[1] === string )) {
+        testImage = new Image()
+        //
+        testImage.src = e.target.result;
+        //Validate the File Height and Width.
+        testImage.onload = function () {
+          // debugger
+          var height = this.height;
+          var width = this.width;
+          if (height >= width) {
+            $('#preview-image').removeClass( "max-width" ).addClass( "max-width" );
+          } else {
+            $('#preview-image').removeClass( "max-height" ).addClass( "max-width" );
+          }
+        }
+        $('#preview-image').attr('src', e.target.result);
+      }
+    }
+
+    reader.readAsDataURL(id_image[0].files[0])
+  }
+
+ </script>
 {% endblock %}
