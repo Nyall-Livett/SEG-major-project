@@ -106,6 +106,17 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         rating_after_drop = get_ratings_count(self.user.id)
         self.assertEqual(rating_at_first,rating_after_drop)
 
+    def test_access_dashboard_without_books(self):
+        Book.objects.all().delete()
+        self.client.login(username='johndoe', password='Password123')
+        self.assertTrue(self._is_logged_in())
+        rating_count_before = get_ratings_count(self.user.id)
+        response = self.client.get(self.dashboard_url)
+        recommendations = response.context['recommendations']
+        self.assertIsNone(recommendations)
+        rating_count_after = get_ratings_count(self.user.id)
+        self.assertEqual(rating_count_before,rating_count_after)
+
     def test_access_dashboard_without_ratings(self):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
