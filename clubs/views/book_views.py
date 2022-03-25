@@ -121,6 +121,17 @@ class ShowBookView(LoginRequiredMixin, DetailView):
     def get_context_data(self, *arg, **kwargs):
         context = super().get_context_data(*arg, **kwargs)
         context['reviews'] = BooksRead.objects.all()
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        try:
+            book_name = book.name
+            get_recommended_books = content_based_recommender(book_name)
+            books = []
+            for i in get_recommended_books:
+                book = Book.objects.filter(name=i).first()
+                books.append(book)
+            context['recommended_books'] = books
+        except:
+            context['recommended_books'] = None
         return context
 
 class CreateBookView(LoginRequiredMixin, FormView):
@@ -146,65 +157,41 @@ class CreateBookView(LoginRequiredMixin, FormView):
         """Return redirect URL after successful update."""
         return reverse("book_list")
 
-# @login_required
-# def get_recommended_books(request, book_id):
-#     book_title = Book.objects.get(id=book_id).name
 
-#     recommended_books = content_based_recommender(book_title)
+class AuthorBookListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books of a specific author."""
 
-#     return render(request, 'show_book.html', {'rec_books': recommended_books})
+    model = Book
+    template_name = "books_by_author.html"
+    paginate_by = settings.BOOKS_PER_PAGE
 
 
-# class GetRecommendedBooks(LoginRequiredMixin, ListView):
-#     model = Book
-#     context_object_name = 'book_list'
-#     paginate_by = settings.BOOKS_PER_PAGE
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        context['author'] =  book.author
+        return context
 
-#     # def setup(self, request, book_id, *args, **kwargs):
-#     #     super().setup(self, request, book_id, *args, **kwargs)
-#     #     self.book_author = Book.objects.get(id=book_id).author
+    def get_queryset(self):
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        return Book.objects.filter(author=book.author)
 
-#     def get_queryset(self):
-#         return Book.objects.filter(author='Stephen Fry')[:5]
+class PublisherBookListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books published by a specific publisher."""
 
-#     def get_context_data(self, **kwargs):
-#         context = super(GetRecommendedBooks, self).get_context_data(**kwargs)
-#         context['book_list1'] = Book.objects.filter(author='Stephen Fry')[:5]
-#         return context
+    model = Book
+    template_name = "books_by_publisher.html"
+    paginate_by = settings.BOOKS_PER_PAGE
 
-@login_required
-def get_books_by_author(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book_name = book.name
-    book_author = book.author
 
-    filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
-    context = {'books_by_author': filtered_by_author}
-    return render(request, 'books_by_author.html', context)
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        book_publisher = book.publisher
+        context['publisher'] = book_publisher
+        return context
 
-@login_required
-def get_books_by_publisher(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book_name = book.name
-    book_publisher = book.publisher
-
-    filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
-    context = {'books_by_publisher': filtered_by_publisher}
-    return render(request, 'books_by_publisher.html', context)
-
-@login_required
-def get_recommended_books(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book_name = book.name
-    get_recommended_books = content_based_recommender(book_name)       #"Harry Potter and the Order of the Phoenix (Book 5)"
-    recommended_books = []
-    for i in get_recommended_books:
-        book = Book.objects.filter(name=i).first()
-            # print(book)
-
-        recommended_books.append(book)
-            # print(recommended_books)
-    # except TypeError:
-    #     print("Lalala")
-    context = {'recommended_books': recommended_books}
-    return render(request, 'recommended_books.html', context)
+    def get_queryset(self):
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        book_publisher = book.publisher
+        return Book.objects.filter(publisher=book_publisher)
