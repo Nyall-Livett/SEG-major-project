@@ -1,9 +1,10 @@
 """Tests of the sign up view."""
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import SignUpForm
-from clubs.models import User
+from clubs.models import User, Book
 from clubs.tests.helpers import LogInTester
 from ...helpers import delete_ratings,get_ratings_count
 
@@ -99,3 +100,16 @@ class SignUpViewTestCase(TestCase, LogInTester):
         delete_ratings(self.user.id)
         rating_after_delete = get_ratings_count(self.user.id)
         self.assertEqual(0,rating_after_delete)
+
+    def test_successful_sign_up_if_books_have_not_been_seeded(self):
+        Book.objects.all().delete()
+        self.client.login(username=self.user.username, password="Password123")
+        before_count = User.objects.count()
+        response = self.client.post(self.url, self.form_input, follow=True)
+        after_count = User.objects.count()
+        self.assertEqual(after_count, before_count)
+        redirect_url = reverse('dashboard')
+        self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+        self.assertTemplateUsed(response, 'dashboard.html')  
+
+

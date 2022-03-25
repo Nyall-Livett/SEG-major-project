@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User
+from clubs.models import Notification, User
 from clubs.tests.helpers import reverse_with_next
 
 class FollowRequestTest(TestCase):
@@ -58,5 +58,18 @@ class FollowRequestTest(TestCase):
         response_url = reverse('user_list')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, "user_list.html")
+
+    def test_notification_recieved_after_user_is_followed(self):
+        self.client.login(username=self.user.username, password='Password123')
+        self.user.send_follow_request(self.followee)
+        response = self.client.get(self.url, follow=True)
+        notifications_after_follow = Notification.objects.all().count()
+        self.assertEqual(notifications_after_follow, 1)
+        notification = Notification.objects.get(id = 1)
+        self.assertFalse(notification.acted_upon)
+        followee = notification.receiver
+        self.assertEqual(followee, self.followee)
+        
+
         
 

@@ -9,10 +9,12 @@
                   <div class="card user-card-full">
                       <div class="row m-l-0 m-r-0">
                           <div class="col-sm-8">
-                              <div class="m-b-25">
-                                <img src="{{ book.image_url_l }}" alt="Image not found">
-                              </div>
+
                               <div class="card-block">
+                                <div class="m-b-25">
+                                  <img src="{{ book.image_url_l }}" alt="Image not found">
+                                </div>
+                                <p></p>
                                   <h3 class="m-b-20 p-b-5 b-b-default f-w-600">{{ book.name }}</h3>
                                   <h4 class="f-w-600"><a href="{% url 'get_books_by_author' book.id %}">By {{ book.author }}</a></h4>
                                   <div>

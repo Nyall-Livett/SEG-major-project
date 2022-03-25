@@ -21,7 +21,7 @@ class MeetingFormTestCase(TestCase ,LogInTester):
         self.default_user = User.objects.get(username='johndoe')
         self.default_club = Club.objects.get(name='Oxford Book Club')
         self.default_book = Book.objects.get(isbn= "0195153448")
-        self.url = reverse('set_meeting' , kwargs={'club_id': self.default_user.id})
+        self.url = reverse('set_meeting' , kwargs={'club_id': self.default_club.id})
        
 
         self.form_input = {

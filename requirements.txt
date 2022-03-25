@@ -6,7 +6,7 @@ cssselect==1.1.0
 Django==3.2.5
 django-bootstrap-pagination==1.7.1
 django-widget-tweaks==1.4.8
-jango-with-asserts==0.0.1
+django-with-asserts==0.0.1
 Faker==8.10.3
 greenlet==1.1.2
 joblib==1.1.0

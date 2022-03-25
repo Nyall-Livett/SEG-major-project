@@ -20,12 +20,15 @@ class DashboardView(LoginRequiredMixin, ListView):
 
     def get_recommendations(self):
         user_id = self.request.user.id
-        if((contain_ratings(user_id))==False):
-            # book = generate_a_random_book()
-            book = Book.objects.get(id=1)
-            generate_ratings(book,user_id,'neutral')
-        recommendations = generate_recommendations(user_id)
-        return recommendations
+        if(Book.objects.count() > 0):
+            if((contain_ratings(user_id))==False):
+                # book = generate_a_random_book()
+                book = Book.objects.get(id=1)
+                generate_ratings(book,user_id,'neutral')
+            recommendations = generate_recommendations(user_id)
+            return recommendations
+        else:
+            return None
 
     def flatten(self, list):
         return [item for sublist in list for item in sublist]
