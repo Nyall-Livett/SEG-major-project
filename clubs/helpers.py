@@ -86,3 +86,9 @@ def get_ratings_count(user):
     ratings = ratings.query(f'User_ID=={user}')
     counts = len(ratings)
     return counts
+
+def drop_specific_amount_ratings(amount):
+    rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
+    ratings = pd.read_csv(rating_path,delimiter=";",header=0)
+    ratings = ratings.drop(ratings.tail(amount).index)
+    ratings.to_csv(rating_path, index=False,sep = ';')
