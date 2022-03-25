@@ -19,7 +19,7 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        print('Seeding books... (It takes a few minutes.)')
+        print('Seeding books...')
         self.seed_books()
         print('Book seeding complete')
         self.seed_users()
@@ -135,12 +135,13 @@ class Command(BaseCommand):
         return name
 
     def seed_books(self):
-        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted_smaller.csv'
+        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted.csv'
         with open(csv_file, encoding ='ISO-8859-1') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
             for book in csv_reader:
-                print("The first line of book seeder")
-                print(book[0])
+                # print("The first line of book seeder")
+                print(f'Books seeded: {Book.objects.count()}',  end='\r')
+                # print(book[0])
                 if(book[0] != 'ISBN'):
                     try:
                         try:
