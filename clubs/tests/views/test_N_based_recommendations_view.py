@@ -174,23 +174,23 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
         form_input = {'book': self.book_read.id,'rating': 'neutral'}
-        rating_at_first = get_ratings_count(self.user.id)
-        generate_ratings(self.book,self.user.id,'like')
+        # rating_at_first = get_ratings_count(self.user.id)
+        # generate_ratings(self.book,self.user.id,'like')
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.book_review_url, form_input, follow=True)
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after-1)
-        amount = rating_count_after - rating_at_first
+        amount = rating_count_after - rating_count_before
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
-        self.assertEqual(rating_at_first,rating_after_drop)
+        self.assertEqual(rating_count_before,rating_after_drop)
 
     def test_add_book_read_will_not_generate_duplicated_ratings(self):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
         form_input = {'book': self.book_read.id,'rating': 'neutral'}
         rating_at_first = get_ratings_count(self.user.id)
-        generate_ratings(self.book,self.user.id,'like')
+        # generate_ratings(self.book,self.user.id,'like')
         generate_ratings(self.book_read,self.user.id,'neutral')
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.book_review_url, form_input, follow=True)
