@@ -18,7 +18,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-books = pd.read_csv(os.getcwd() +"/clubs/content_based_recommender/data_set.csv")
+books = pd.read_csv(os.getcwd() +"/clubs/content_based_recommender/data_set_smaller.csv")
 # print(books)
 
 
