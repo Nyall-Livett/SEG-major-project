@@ -57,7 +57,6 @@ class Command(BaseCommand):
         username = f'@{first_name}{last_name}'
         email = self._email(first_name,last_name)
         bio = self.faker.text(max_nb_chars=520)
-        # favourite_book = self._favourite_book()
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
@@ -66,7 +65,6 @@ class Command(BaseCommand):
             username = username,
             password=Command.PASSWORD,
         )
-        # generate_favourite_ratings(favourite_book,user.id)
 
     def _create_club(self):
         name = self.faker.first_name()
@@ -135,10 +133,6 @@ class Command(BaseCommand):
     def _club_name(self, name):
         name = f'{name} Book Club'
         return name
-
-    def _favourite_book(self):
-        favourite_book = random.choice(Book.objects.all())
-        return favourite_book
 
     def seed_books(self):
         csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted.csv'

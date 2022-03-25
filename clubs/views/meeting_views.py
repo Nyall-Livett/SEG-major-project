@@ -22,7 +22,7 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditM
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import json
 import random
-from ..helpers import generate_ratings,contain_ratings,generate_a_random_book
+from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
@@ -34,7 +34,6 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
     def get_recommendations(self):
         user_id = self.request.user.id
         if((contain_ratings(user_id))==False):
-            # book = generate_a_random_book()
             book = Book.objects.get(id=1)
             generate_ratings(book,user_id,'neutral')
         recommendations = generate_recommendations(user_id)

@@ -18,7 +18,7 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 import json
 import random
-from ..helpers import generate_ratings,contain_ratings,generate_a_random_book
+from ..helpers import generate_ratings,contain_ratings
 from clubs.models import Book, Club, User, Notification, Post
 from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification

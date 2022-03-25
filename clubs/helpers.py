@@ -78,11 +78,6 @@ def drop_repeated_data():
     ratings = ratings.drop_duplicates()
     ratings.to_csv(rating_path, index=False,sep = ';')
 
-def generate_a_random_book():
-    """Random pick a book from database"""
-    random_book = random.choice(Book.objects.all())
-    return random_book
-
 def get_ratings_count(user):
     """Get the count of specific user ratings"""
     rating_path = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'

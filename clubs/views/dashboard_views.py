@@ -7,7 +7,7 @@ import random, operator
 from operator import attrgetter
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
-from ..helpers import generate_favourite_ratings,delete_ratings,generate_a_random_book
+from ..helpers import generate_favourite_ratings,delete_ratings
 
 class DashboardView(LoginRequiredMixin, ListView):
     """docstring for DashboardView."""
@@ -22,7 +22,6 @@ class DashboardView(LoginRequiredMixin, ListView):
         user_id = self.request.user.id
         if(Book.objects.count() > 0):
             if((contain_ratings(user_id))==False):
-                # book = generate_a_random_book()
                 book = Book.objects.get(id=1)
                 generate_ratings(book,user_id,'neutral')
             recommendations = generate_recommendations(user_id)
