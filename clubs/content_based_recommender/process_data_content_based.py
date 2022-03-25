@@ -22,8 +22,8 @@ class ProcessData:
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/BX-Book-Ratings_formatted_smaller.csv'
-    booksPath = current_directory +  '/BX_Books_formatted_smaller.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_test_set.csv'
+    booksPath = current_directory +  '/BX_Books_test_set.csv'
 
     def loadBooks(self):
 
@@ -87,7 +87,7 @@ class ProcessData:
         return rankings
 
     def getCombined(self):
-        df = pd.read_csv(self.current_directory + '/BX_Books_formatted_smaller.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
         df['index'] = [i for i in range(df.shape[0])]
         target_cols = ['Book-Title','Book-Author','Publisher', 'Category']
         df = df.astype(str)
@@ -99,7 +99,7 @@ class ProcessData:
         return df
 
     def getSummary(self):
-        df = pd.read_csv(self.current_directory + '/BX_Books_formatted_smaller.csv', sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
 
 
         df['index'] = [i for i in range(df.shape[0])]

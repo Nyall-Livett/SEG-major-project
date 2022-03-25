@@ -135,7 +135,7 @@ class Command(BaseCommand):
         return name
 
     def seed_books(self):
-        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted.csv'
+        csv_file = os.getcwd()+ '/clubs/book_database/BX_Books_formatted_smaller.csv'
         with open(csv_file, encoding ='ISO-8859-1') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';', quotechar='"')
             for book in csv_reader:
