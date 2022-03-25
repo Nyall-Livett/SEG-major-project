@@ -183,22 +183,49 @@ class CreateBookView(LoginRequiredMixin, FormView):
 #         context['book_list1'] = Book.objects.filter(author='Stephen Fry')[:5]
 #         return context
 
-@login_required
-def get_books_by_author(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book_name = book.name
-    book_author = book.author
+# @login_required
+# def get_books_by_author(request, book_id):
+#     book = Book.objects.get(id=book_id)
+#     book_author = book.author
+#
+#     filtered_by_author = Book.objects.filter(author=book_author)
+#     context = {'books_by_author': filtered_by_author}
+#     return render(request, 'books_by_author.html', context)
 
-    filtered_by_author = Book.objects.filter(author=book_author).exclude(name=book_name)
-    context = {'books_by_author': filtered_by_author}
-    return render(request, 'books_by_author.html', context)
+class AuthorBookListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books of a specific author."""
 
-@login_required
-def get_books_by_publisher(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book_name = book.name
-    book_publisher = book.publisher
+    model = Book
+    template_name = "books_by_author.html"
+    paginate_by = settings.BOOKS_PER_PAGE
 
-    filtered_by_publisher = Book.objects.filter(author=book_publisher).exclude(name=book_name)
-    context = {'books_by_publisher': filtered_by_publisher}
-    return render(request, 'books_by_publisher.html', context)
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        context['author'] =  book.author
+        return context
+
+    def get_queryset(self):
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        return Book.objects.filter(author=book.author)
+
+class PublisherBookListView(LoginRequiredMixin, ListView):
+    """View that shows a list of all books published by a specific publisher."""
+
+    model = Book
+    template_name = "books_by_publisher.html"
+    paginate_by = settings.BOOKS_PER_PAGE
+
+
+    def get_context_data(self, *arg, **kwargs):
+        context = super().get_context_data(*arg, **kwargs)
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        book_publisher = book.publisher
+        context['publisher'] = book_publisher
+        return context
+
+    def get_queryset(self):
+        book = Book.objects.get(id=self.kwargs.get('book_id'))
+        book_publisher = book.publisher
+        return Book.objects.filter(publisher=book_publisher)
