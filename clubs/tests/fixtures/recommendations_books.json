@@ -18,51 +18,6 @@
     "model": "clubs.book",
     "pk": 4,
     "fields": {
-      "isbn": "0446520802",
-      "name": "The Notebook",
-      "author": "Nicholas Sparks",
-      "publication_year": "1996",
-      "publisher": "Warner Books",
-      "image_url_s": "http://images.amazon.com/images/P/0446520802.01.THUMBZZZ.jpg",
-      "image_url_m": "http://images.amazon.com/images/P/0446520802.01.MZZZZZZZ.jpg",
-      "image_url_l":"http://images.amazon.com/images/P/0446520802.01.LZZZZZZZ.jpg"
-    }
-  },
-
-  {
-    "model": "clubs.book",
-    "pk": 5,
-    "fields": {
-      "isbn": "2080674722",
-      "name": "Les Particules Elementaires",
-      "author": "Michel Houellebecq",
-      "publication_year": "1998",
-      "publisher": "Flammarion",
-      "image_url_s": "http://images.amazon.com/images/P/2080674722.01.THUMBZZZ.jpg",
-      "image_url_m": "http://images.amazon.com/images/P/2080674722.01.MZZZZZZZ.jpg",
-      "image_url_l":"http://images.amazon.com/images/P/2080674722.01.LZZZZZZZ.jpg"
-    }
-  },
-
-  {
-    "model": "clubs.book",
-    "pk": 6,
-    "fields": {
-      "isbn": "038550120X",
-      "name": "A Painted House",
-      "author": "JOHN GRISHAM",
-      "publication_year": "2001",
-      "publisher": "Doubleday",
-      "image_url_s": "http://images.amazon.com/images/P/038550120X.01.THUMBZZZ.jpg",
-      "image_url_m": "http://images.amazon.com/images/P/038550120X.01.MZZZZZZZ.jpg",
-      "image_url_l":"http://images.amazon.com/images/P/038550120X.01.LZZZZZZZ.jpg"
-    }
-  },
-
-  {
-    "model": "clubs.book",
-    "pk": 7,
-    "fields": {
       "isbn": "0425115801",
       "name": "Lightning",
       "author": "Dean R. Koontz",
@@ -72,5 +27,51 @@
       "image_url_m": "http://images.amazon.com/images/P/0425115801.01.MZZZZZZZ.jpg",
       "image_url_l":"http://images.amazon.com/images/P/0425115801.01.LZZZZZZZ.jpg"
     }
+  },
+
+  {
+    "model": "clubs.book",
+    "pk": 5,
+    "fields": {
+      "isbn": "0449006522",
+      "name": "Manhattan Hunt Club",
+      "author": "JOHN SAUL",
+      "publication_year": "2002",
+      "publisher": "Ballantine Books",
+      "image_url_s": "http://images.amazon.com/images/P/0449006522.01.THUMBZZZ.jpg",
+      "image_url_m": "http://images.amazon.com/images/P/0449006522.01.MZZZZZZZ.jpg",
+      "image_url_l":"http://images.amazon.com/images/P/0449006522.01.LZZZZZZZ.jpg"
+    }
+  },
+
+  {
+    "model": "clubs.book",
+    "pk": 6,
+    "fields": {
+      "isbn": "0553561618",
+      "name": "TAMI HOAG",
+      "author": "Nicholas Sparks",
+      "publication_year": "1994",
+      "publisher": "Bantam",
+      "image_url_s": "http://images.amazon.com/images/P/0553561618.01.THUMBZZZ.jpg",
+      "image_url_m": "http://images.amazon.com/images/P/0553561618.01.MZZZZZZZ.jpg",
+      "image_url_l":"http://images.amazon.com/images/P/0553561618.01.LZZZZZZZ.jpg"
+    }
+  },
+
+  {
+    "model": "clubs.book",
+    "pk": 7,
+    "fields": {
+      "isbn": "055356451X",
+      "name": "Night Sins",
+      "author": "TAMI HOAG",
+      "publication_year": "1995",
+      "publisher": "Bantam",
+      "image_url_s": "http://images.amazon.com/images/P/055356451X.01.THUMBZZZ.jpg",
+      "image_url_m": "http://images.amazon.com/images/P/055356451X.01.MZZZZZZZ.jpg",
+      "image_url_l":"http://images.amazon.com/images/P/055356451X.01.LZZZZZZZ.jpg"
+    }
   }
+
 ]
