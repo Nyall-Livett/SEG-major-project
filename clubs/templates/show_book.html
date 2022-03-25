@@ -76,41 +76,29 @@
                               </div>
                           </div>
                       </div>
+                      {% if recommended_books  %}
                       <div class="col-sm-3">
                         <div class="card-block">
                           <h5 class="m-b-10 f-w-600">Recommended Books:</h5>
-                            {% for book in recommended_books %}
-                            <div class="card" style="width: 18rem;">
-                              <div class="card-body">
-                                <img src="{{ book.image_url_m }}" alt="Image not found">
-                                <p></p>
-                                <h5 class="card-title">{{ book.name }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
-                                <a href="{% url 'show_book' book.id %}" class="card-link">See more</a>
+                            {% for book_rec in recommended_books %}
+                              {% if book_rec%}
+                              <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <img src="{{ book_rec.image_url_m }}" alt="Image not found">
+                                  <p></p>
+                                  <h5 class="card-title">{{ book_rec.name }}</h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{ book_rec.author }}</h6>
+                                  <a href="{% url 'show_book' book_rec.id %}" class="card-link">See more</a>
+                                </div>
                               </div>
-                            </div>
+                              {%endif%}
                             {% endfor %}
                         </div>
                       </div>
+                      {% endif %}
                   </div>
               </div>
           </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Other Books by the author</h1>
-            <a class="btn btn-primary" href="{% url 'get_books_by_author' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Other Books by the Publisher</h1>
-            <a class="btn btn-primary" href="{% url 'get_books_by_publisher' book.id %}">Show</a>
-          </div>
-        </div>
       </div>
   </div>
 </div>

@@ -16,6 +16,7 @@ class ShowBookTest(TestCase):
         self.book = Book.objects.get(isbn="0195153448")
         self.url = reverse('show_book', kwargs={'book_id': self.book.id})
 
+
     def test_show_book_url(self):
         self.assertEqual(self.url,f'/book/{self.book.id}')
 
@@ -28,7 +29,7 @@ class ShowBookTest(TestCase):
         self.assertContains(response, "Classical Mythology")
         self.assertContains(response, "Mark P. O. Morford")
         self.assertContains(response, "Oxford University Press")
-        response = self.client.get(self.url)
+
 
     def test_get_show_book_with_invalid_id(self):
         self.client.login(username=self.user.username, password='Password123')
