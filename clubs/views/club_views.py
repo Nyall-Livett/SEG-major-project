@@ -25,7 +25,7 @@ from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
-from clubs.zoom_api_url_generator_helper import getZoomMeetingURL, create_JSON_meeting_data, convertDateTime
+from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime
 from PIL import Image
 
 class CreateClubView(LoginRequiredMixin, FormView):
