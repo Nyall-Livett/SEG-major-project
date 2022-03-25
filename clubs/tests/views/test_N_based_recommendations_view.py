@@ -87,9 +87,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         generate_ratings(self.book,self.user.id,'like')
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after)
-        # delete_ratings(self.user.id)
-        # rating_after_delete = get_ratings_count(self.user.id)
-        # self.assertEqual(0,rating_after_delete)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
@@ -132,9 +129,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         response = self.client.get(self.start_meeting_url)
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after)
-        # delete_ratings(self.user.id)
-        # rating_after_delete = get_ratings_count(self.user.id)
-        # self.assertEqual(0,rating_after_delete)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
@@ -164,9 +158,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         response = self.client.post(self.book_review_url, form_input, follow=True)
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after-1)
-        # delete_ratings(self.user.id)
-        # rating_after_delete = get_ratings_count(self.user.id)
-        # self.assertEqual(0,rating_after_delete)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
@@ -183,9 +174,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         response = self.client.post(self.book_review_url, form_input, follow=True)
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after)
-        # delete_ratings(self.user.id)
-        # rating_after_delete = get_ratings_count(self.user.id)
-        # self.assertEqual(0,rating_after_delete)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
@@ -217,9 +205,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertContains(response, f'{book_4.name}')
         self.assertContains(response, f'{book_5.name}')
         rating_count_after = get_ratings_count(self.user.id)
-        # delete_ratings(self.user.id)
-        # rating_after_delete = get_ratings_count(self.user.id)
-        # self.assertEqual(0,rating_after_delete)
         amount = rating_count_after - rating_count_before
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
