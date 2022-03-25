@@ -174,8 +174,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
         form_input = {'book': self.book_read.id,'rating': 'neutral'}
-        # rating_at_first = get_ratings_count(self.user.id)
-        # generate_ratings(self.book,self.user.id,'like')
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.book_review_url, form_input, follow=True)
         rating_count_after = get_ratings_count(self.user.id)
@@ -190,7 +188,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertTrue(self._is_logged_in())
         form_input = {'book': self.book_read.id,'rating': 'neutral'}
         rating_at_first = get_ratings_count(self.user.id)
-        # generate_ratings(self.book,self.user.id,'like')
         generate_ratings(self.book_read,self.user.id,'neutral')
         rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.book_review_url, form_input, follow=True)
