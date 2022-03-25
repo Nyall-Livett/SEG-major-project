@@ -23,7 +23,7 @@ from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, cr
 import json
 import random
 from ..helpers import generate_ratings,contain_ratings,generate_a_random_book
-from ..book_database.N_based_MSD_Item import generate_recommendations
+from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model

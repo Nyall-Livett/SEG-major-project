@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import random, operator
 from operator import attrgetter
 from ..helpers import generate_ratings,contain_ratings
-from ..book_database.N_based_MSD_Item import generate_recommendations
+from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 from ..helpers import generate_favourite_ratings,delete_ratings,generate_a_random_book
 
 class DashboardView(LoginRequiredMixin, ListView):
