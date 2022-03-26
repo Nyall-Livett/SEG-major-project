@@ -3,7 +3,8 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-12">
+
+    <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
       <h1>Start meeting</h1>
       <form method="post">
         {% csrf_token %}
@@ -13,16 +14,11 @@
       {{ form.media }}
       <br>
     </div>
-  </div>
-  <div class="" >
-    <div class="row">
-      <div>
-        <p style="color:#878787">Recommended reads</p>
-      </div>
-    </div>
 
+  <div class="col-sm-2" style="height:100%">
     <div class="row card s-40 p-16">
       <div class="collection-wrap">
+        <p style="color:#878787"><b>Recommended Books</b></p>
         {% if recommendations %}
           {% for recommendation in recommendations %}
             <div class="single-item-wrap">
@@ -37,5 +33,7 @@
           {% endif %}
       </div>
     </div>
+    </div>
   </div>
+</div>
 {% endblock %}
