@@ -104,6 +104,7 @@
 
           <!-- BECAME_FRIENDS -->
           {% elif moment.type == 1 %}
+            {% include 'partials/become_friends_moment_partial.html' with moment=moment %}
 
           <!-- CLUB_CREATED -->
           {% elif moment.type == 2 %}

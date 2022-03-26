@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from clubs.models import User, Post, Club, Book, Meeting
+from clubs.models import User, Post, Club, Book, Meeting, Moment, Notification, BooksRead
 from ...helpers import delete_ratings
 
 class Command(BaseCommand):
@@ -12,6 +12,9 @@ class Command(BaseCommand):
         Book.objects.all().delete()
         Meeting.objects.all().delete()
         User.objects.filter(is_staff=False).delete()
+        Moment.objects.all().delete()
+        Notification.objects.all().delete()
+        BooksRead.objects.all().delete()
 
     def delete_user_ratings(self):
         users = User.objects.filter(is_staff=False)
