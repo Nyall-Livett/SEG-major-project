@@ -65,7 +65,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         rating_after_drop = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_after_drop)
 
-
     def test_generate_favourite_ratings(self):
         self.client.login(username='johndoe', password='Password123')
         rating_count_before = get_ratings_count(self.user.id)
@@ -293,6 +292,32 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertContains(response, f'{book_3.name}')
         self.assertContains(response, f'{book_4.name}')
         self.assertContains(response, f'{book_5.name}')
+        rating_count_after = get_ratings_count(self.user.id)
+        amount = rating_count_after - rating_count_before
+        drop_specific_amount_ratings(amount)
+        rating_after_drop = get_ratings_count(self.user.id)
+        self.assertEqual(rating_count_before,rating_after_drop)
+
+    def test_access_dashboard_contain_one_book_no_error(self):
+        Book.objects.exclude(pk=1).delete()
+        book_count = Book.objects.count()
+        self.assertEqual(book_count,1)
+        rating_count_before = get_ratings_count(self.user.id)
+        generate_ratings(self.book,self.user.id,'neutral')
+        response = self.client.get(self.dashboard_url)
+        rating_count_after = get_ratings_count(self.user.id)
+        amount = rating_count_after - rating_count_before
+        drop_specific_amount_ratings(amount)
+        rating_after_drop = get_ratings_count(self.user.id)
+        self.assertEqual(rating_count_before,rating_after_drop)
+
+    def test_access_start_meeting_contain_one_book_no_error(self):
+        Book.objects.exclude(pk=1).delete()
+        book_count = Book.objects.count()
+        self.assertEqual(book_count,1)
+        rating_count_before = get_ratings_count(self.user.id)
+        generate_ratings(self.book,self.user.id,'neutral')
+        response = self.client.get(self.start_meeting_url)
         rating_count_after = get_ratings_count(self.user.id)
         amount = rating_count_after - rating_count_before
         drop_specific_amount_ratings(amount)
