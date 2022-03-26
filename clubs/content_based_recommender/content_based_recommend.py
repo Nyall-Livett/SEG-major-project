@@ -1,4 +1,4 @@
-"""This uses the 'preprocessed_data.csv' dataset to give recommendation. 'preprocessed_data.csv' contains genre data and a brief summary of the books"""
+
 # import ssl
 # try:
 #      _create_unverified_https_context =     ssl._create_unverified_context
@@ -18,28 +18,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-<<<<<<< HEAD:clubs/book_review_dataset/content_based_recommend_2.py
-current_directory = os.getcwd()
-books = pd.read_csv(current_directory + "/clubs/book_review_dataset/final3.csv")
-=======
 books = pd.read_csv(os.getcwd() +"/clubs/content_based_recommender/data_set_smaller.csv")
->>>>>>> 34e81d5df07653329626baa941702e3b2a17725f:clubs/content_based_recommender/content_based_recommend.py
-# print(books)
+
 
 
 
 df = books.copy()
-# df.dropna(inplace=True)
-# df.reset_index(drop=True, inplace=True)
-# df.drop(columns = ['Unnamed: 0','location','isbn',
-#                    'img_s','img_m','city','age',
-#                    'state','Language','country',
-#                    'year_of_publication'],axis=1,inplace = True)
-# df.drop(index=df[df['Category'] == '9'].index, inplace=True) #remove 9 in category
-
-# df.drop(index=df[df['rating'] == 0].index, inplace=True) #remove 0 in rating
-
-# df['Category'] = df['Category'].apply(lambda x: re.sub('[\W_]+',' ',x).strip())
 
 
 """Uses book title, author, publisher and Category to give recommendations"""
@@ -57,13 +41,6 @@ def content_based_recommender(book_title):
 
             random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
             return random
-            # print('There are no recommendations for this book')
-            # print('Try: \n')
-            # print('{}'.format(random[0]),'\n')
-            # print('{}'.format(random[1]),'\n')
-            # print('{}'.format(random[2]),'\n')
-            # print('{}'.format(random[3]),'\n')
-            # print('{}'.format(random[4]),'\n')
         else:
             common_books['index'] = [i for i in range(common_books.shape[0])]
             target_cols = ['book_title','book_author','publisher', 'Category']
@@ -83,7 +60,6 @@ def content_based_recommender(book_title):
             return books
 
     else:
-    #   print('Cant find book in dataset, please check spelling')
         random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
         return random
 
@@ -96,19 +72,11 @@ def content_based_recommender_2(book_title):
     common_books = common_books.drop_duplicates(subset=['book_title'])
     common_books.reset_index(inplace= True)
     if book_title in df['book_title'].values:
-
-
         if book_title in rare_books:
 
             random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
             return random
-            # print('There are no recommendations for this book')
-            # print('Try: \n')
-            # print('{}'.format(random[0]),'\n')
-            # print('{}'.format(random[1]),'\n')
-            # print('{}'.format(random[2]),'\n')
-            # print('{}'.format(random[3]),'\n')
-            # print('{}'.format(random[4]),'\n')
+    
         else:
             common_books['index'] = [i for i in range(common_books.shape[0])]
 
@@ -133,44 +101,8 @@ def content_based_recommender_2(book_title):
             return books
 
     else:
-    #   print('Cant find book in dataset, please check spelling')
         random = list(pd.Series(common_books['book_title'].unique()).sample(5).values)
         return random
 
 
 
-# print("recommendation based on book title, author, publisher and category")
-# print(content_based_recommender("Husband, Lover, Stranger (Husband, Lover, Stranger)"))
-# print(content_based_recommender("The Testament"))
-# print(content_based_recommender("1st to Die: A Novel"))
-# print(content_based_recommender("Harry Potter and the Order of the Phoenix (Book 5)"))
-# print(content_based_recommender("Fahrenheit 451"))
-# print(content_based_recommender("The Street Lawyer"))
-# print(content_based_recommender("Divine Secrets of the Ya-Ya Sisterhood: A Novel"))
-# print(content_based_recommender("To Kill a Mockingbird"))
-# print(content_based_recommender("A Walk to Remember"))
-# print(content_based_recommender("A Painted House"))
-# print(content_based_recommender("The Summons"))
-# print(content_based_recommender("Snow Falling on Cedars"))
-# print(content_based_recommender("Tuesdays with Morrie: An Old Man, a Young Man, and Life's Greatest Lesson"))
-# print(content_based_recommender("Girl with a Pearl Earring"), '\n')
-
-# print(content_based_recommender("Dreamcatcher"))
-# print(content_based_recommender_2("Dreamcatcher"))
-
-
-# print("recommendation based on summary")
-# print(content_based_recommender_2("Husband, Lover, Stranger (Husband, Lover, Stranger)"))
-# print(content_based_recommender_2("The Testament"))
-# print(content_based_recommender_2("1st to Die: A Novel"))
-# print(content_based_recommender_2("Harry Potter and the Order of the Phoenix (Book 5)"))
-# print(content_based_recommender_2("Fahrenheit 451"))
-# print(content_based_recommender_2("The Street Lawyer"))
-# print(content_based_recommender_2("Divine Secrets of the Ya-Ya Sisterhood: A Novel"))
-# print(content_based_recommender_2("To Kill a Mockingbird"))
-# print(content_based_recommender_2("A Walk to Remember"))
-# print(content_based_recommender_2("A Painted House"))
-# print(content_based_recommender_2("The Summons"))
-# print(content_based_recommender_2("Snow Falling on Cedars"))
-# print(content_based_recommender_2("Tuesdays with Morrie: An Old Man, a Young Man, and Life's Greatest Lesson"))
-# print(content_based_recommender_2("Girl with a Pearl Earring"))
