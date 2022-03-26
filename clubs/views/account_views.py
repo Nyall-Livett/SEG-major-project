@@ -54,7 +54,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Return redirect URL after successful update."""
         user = self.get_object()
-        generate_favourite_ratings(user.favourite_book,user.id)
+        book = user.favourite_book
+        if book:
+            generate_favourite_ratings(user.favourite_book,user.id)
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
@@ -99,7 +101,8 @@ class SignUpView(LoginProhibitedMixin, FormView):
         login(self.request, object)
         book = object.favourite_book
         if ((object.favourite_book == None or object.favourite_book == '') and (Book.objects.count() != 0)):
-            book = Book.objects.get(id=1)
+            # book = Book.objects.get(id=1)
+            book = Book.objects.all().first()
         if book:
             generate_favourite_ratings(book,object.id)
         return super().form_valid(form)
