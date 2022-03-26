@@ -46,6 +46,29 @@
                                   <a href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
                                 {% endif %}
                                 {% endfor %}
+
+                                <p></p><p></p>
+                                {% if user in club.members.all %}
+                                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary">Leave {{club.name}}</button>
+                                  </form>
+                                {% else %}
+                                  {% if user in club.applicants.all %}
+                                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                      {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Request sent</button>
+                                    </form>
+                                  {% else %}
+                                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                      {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Join {{club.name}}</button>
+                                    </form>
+                                  {% endif %}
+                                {% endif %}
+                                <p></p>
+
+
                             </div>
                         </div>
                     </div>
