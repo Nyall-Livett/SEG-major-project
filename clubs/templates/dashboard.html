@@ -49,12 +49,18 @@
             {% for a in c.meetings.all %}
               <div class="single-item-wrap">
 
+                {% if user.now < a.date %}
                 <div class="book-details">
                   <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
-
+                  <form target="_blank" action="{{ a.URL }}">
+                  <p></p>
+                  {% if a.URL %}
+                  <input type="submit" value="Join meeting" class="btn btn-primary"/>
                   </form>
-
+                  {% endif %}
                 </div>
+                {% endif %}
+
               </div>
               {% endfor %}
             {% endfor %}
