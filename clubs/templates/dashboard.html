@@ -51,19 +51,19 @@
 
                 {% if user.now < a.date %}
                 <div class="book-details">
-                  <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
+                  <a href="{% url 'show_club' a.club.id %}">{{a.club.name}}</a>
+                  <p><small style="font-size:12px">{{a.date}}</small></p>
                   <form target="_blank" action="{{ a.URL }}">
-                  <p></p>
                   {% if a.URL %}
                   <input type="submit" value="Join meeting" class="btn btn-primary"/>
                   </form>
                   {% endif %}
                 </div>
                 {% endif %}
-
               </div>
               {% endfor %}
             {% endfor %}
+            <p></p><p></p>
           </div>
           <!-- end meetings -->
 
