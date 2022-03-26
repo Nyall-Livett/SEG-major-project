@@ -10,8 +10,9 @@ from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
 
 class Command(BaseCommand):
-    """The database seeder."""
-
+    """The database seeder. Password is Password123 for all users seeded"""
+    
+    # Hash of Password123
     PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
     CLUB_COUNT = 4
     USER_COUNT = 8
@@ -41,8 +42,28 @@ class Command(BaseCommand):
 
         self.add_followers_for_users()
         print('Followers added to all users')
+
+        self.add_follow_request_for_users()
+        print('Follow requests has been added for all users')
+
         # self.seed_books()
         # print('Book seeding complete')
+
+    def add_follow_request_for_users(self):
+        users = list(User.objects.all())
+        no_of_follow_requests_to_add = User.objects.count() // 3
+        if(no_of_follow_requests_to_add == 0):
+            return
+        
+        for user in users:
+            follow_requests_added = 0
+            while(follow_requests_added != no_of_follow_requests_to_add):
+                following_request_user = random.choice(users)
+                while(not self._is_user_safe_to_add_as_follow_request):
+                    following_request_user = random.choice(users)
+                user.follow_requests.add(following_request_user)
+                follow_requests_added += 1
+
 
     def add_followers_for_users(self):
         users = list(User.objects.all())
@@ -60,7 +81,13 @@ class Command(BaseCommand):
                 followers_added += 1
 
     def _is_user_safe_to_add_as_follower(self, main_user, following_user):
-        return (following_user != main_user and not following_user.is_superuser and not following_user in main_user.followers.all()) 
+        return (following_user != main_user and 
+                not following_user.is_superuser and 
+                not following_user in main_user.followers.all()) 
+
+    def _is_user_safe_to_add_as_follow_request(self, main_user, following_request_user):
+        return (self._is_user_safe_to_add_as_follower(main_user=main_user, following_user=following_request_user)
+                and following_request_user not in main_user.follow_requests.all())
 
     def seed_users(self):
         user_count = User.objects.all().count()
