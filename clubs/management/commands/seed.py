@@ -14,7 +14,7 @@ from clubs.zoom_api_url_generator_helper import convertDateTime, create_JSON_mee
 
 class Command(BaseCommand):
     """The database seeder. Password is Password123 for all users seeded"""
-    
+
     # Hash of Password123
     PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
     CLUB_COUNT = 4
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        print('Seeding books... (It takes a few minutes.)')
+        print('Seeding books...')
         self.seed_books()
         print('Book seeding complete')
         self.seed_users()
@@ -92,7 +92,7 @@ class Command(BaseCommand):
         no_of_follow_requests_to_add = User.objects.count() // 3
         if(no_of_follow_requests_to_add == 0):
             return
-        
+
         for user in users:
             if not user.is_superuser:
                 follow_requests_added = 0
@@ -127,9 +127,9 @@ class Command(BaseCommand):
                         followers_added += 1
 
     def _is_user_safe_to_add_as_follower(self, main_user, following_user):
-        return (following_user != main_user and 
-                not following_user.is_superuser and 
-                not following_user in main_user.followers.all()) 
+        return (following_user != main_user and
+                not following_user.is_superuser and
+                not following_user in main_user.followers.all())
 
     def _is_user_safe_to_add_as_follow_request(self, main_user, following_request_user):
         return (self._is_user_safe_to_add_as_follower(main_user=main_user, following_user=following_request_user)
