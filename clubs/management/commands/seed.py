@@ -2,12 +2,15 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
-from clubs.models import User, Post, Club, Book
+from datetime import datetime, timedelta
+from django.utils import timezone
+from clubs.models import User, Post, Club, Book, Meeting
 import os, csv
 from ...helpers import generate_favourite_ratings
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
+from clubs.zoom_api_url_generator_helper import convertDateTime, create_JSON_meeting_data, getZoomMeetingURLAndPasscode
 
 class Command(BaseCommand):
     """The database seeder. Password is Password123 for all users seeded"""
@@ -55,6 +58,34 @@ class Command(BaseCommand):
         # self.seed_books()
         # print('Book seeding complete')
 
+
+    def seed_meetings(self):
+        for club in Club.objects.all():
+            self._create_meeting(club, 'past')
+            self._create_meeting(club, 'future')
+
+    def _create_meeting(self, club, pastOrFuture):
+        if(pastOrFuture == 'past'):
+            d = timezone.make_aware(datetime.now() - timedelta(days=2))
+            no_of_meeting = 1
+        elif(pastOrFuture == 'future'):
+            d = timezone.make_aware(datetime.now() + timedelta(days=2))
+            no_of_meeting = 2
+        else:
+            return
+
+        for i in range(no_of_meeting):
+            title = club.name + " meeting"
+            desc = "Online Meeting"
+            json_data = create_JSON_meeting_data(title, convertDateTime(d), desc)
+            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            Meeting.objects.create(
+                club = club,
+                date = d,
+                location = "online",
+                URL = meet_url_pass[0],
+                passcode = meet_url_pass[1],
+            )
 
     def add_follow_request_for_users(self):
         users = list(User.objects.all())
