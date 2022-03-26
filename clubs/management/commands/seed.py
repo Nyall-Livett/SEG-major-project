@@ -5,23 +5,26 @@ import random
 from clubs.models import User, Post, Club, Book
 import os, csv
 from ...helpers import generate_favourite_ratings
+from clubs.factories.notification_factory import CreateNotification
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import NotificationType, MomentType
 
 class Command(BaseCommand):
     """The database seeder."""
 
-    PASSWORD = "Password123"
-    CLUB_COUNT = 2
-    USER_COUNT = 2
-    POST_COUNT_PER_CLUB = 3
+    PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
+    CLUB_COUNT = 4
+    USER_COUNT = 8
+    POST_COUNT_PER_CLUB = 4
 
     def __init__(self):
         super().__init__()
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        print('Seeding books... (It takes a few minutes.)')
-        self.seed_books()
-        print('Book seeding complete')
+        #print('Seeding books... (It takes a few minutes.)')
+        #self.seed_books()
+        #print('Book seeding complete')
         self.seed_users()
         print()
         self.seed_clubs()
@@ -71,6 +74,9 @@ class Command(BaseCommand):
     def _create_club(self):
         name = self.faker.first_name()
         leader = random.choice(User.objects.all())
+        while(leader.is_superuser):
+            leader = random.choice(User.objects.all())
+
         club = Club.objects.create(
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
@@ -79,6 +85,10 @@ class Command(BaseCommand):
             leader = leader
         )
         club.add_or_remove_member(leader)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_CREATED, leader, {'club': club})
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.CLUB_CREATED, leader, {'club': club})
 
     def seed_clubs(self):
         club_count = Club.objects.all().count()
