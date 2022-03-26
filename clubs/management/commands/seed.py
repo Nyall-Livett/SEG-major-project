@@ -38,8 +38,29 @@ class Command(BaseCommand):
             print()
         print()
         print('Users, Clubs and Posts seeding complete.')
+
+        self.add_followers_for_users()
+        print('Followers added to all users')
         # self.seed_books()
         # print('Book seeding complete')
+
+    def add_followers_for_users(self):
+        users = list(User.objects.all())
+        no_of_followers_to_add = User.objects.count() // 3
+        if(no_of_followers_to_add == 0):
+            return
+
+        for user in users:
+            followers_added = 0
+            while(followers_added != no_of_followers_to_add):
+                following_user = random.choice(users)
+                while(not self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+                    following_user = random.choice(users)
+                user.add_follower(following_user)
+                followers_added += 1
+
+    def _is_user_safe_to_add_as_follower(self, main_user, following_user):
+        return (following_user != main_user and not following_user.is_superuser and not following_user in main_user.followers.all()) 
 
     def seed_users(self):
         user_count = User.objects.all().count()
