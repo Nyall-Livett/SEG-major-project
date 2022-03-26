@@ -1,0 +1,38 @@
+{% load humanize %}
+
+
+<div class="row flex-center">
+  <div class="col">
+    <div class="container-fluid notification-card" style="padding-left: 8px;">
+      <div class="card-top">
+
+        <!-- Avatar -->
+        {% if moment.user.using_gravatar %}
+          <div class="notification-image" style="height:70px; width:70px">
+            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+          </div>
+        {% else %}
+          <div class="notification-image" style="height:70px;width:70px">
+            <div id="{{moment.user.customavatar.color}}" class="moment-avatar">
+              <img src="/static/images/{{moment.user.customavatar.icon}}.svg">
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="col" style="padding-left:4px; padding-top:6px;">
+          <div class="align-text">
+            <a href="{% url 'show_user' moment.user.id %}">you</a> <small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small>
+          </div>
+          <div>
+            <small style="color: #6d6d6d">{{moment.created_on|naturaltime}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="card-bottom" style="margin-bottom:8px;">
+        {{moment.body}}
+        <br>
+        <small>Check <a href="{% url 'show_user' moment.associated_user %}">follower's profile</a></small>
+      </div>
+    </div>
+  </div>
+</div>

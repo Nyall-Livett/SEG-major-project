@@ -25,7 +25,7 @@ class CreateMoment:
 
     def _became_friends(self, user, **kwargs):
         other_user = kwargs['other_user']
-        body = " started following "
+        body = "{other_user} started following you.".format(other_user=other_user.username)
         Moment.objects.create(
             type=MomentType.BECAME_FRIENDS,
             body = body,

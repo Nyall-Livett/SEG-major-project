@@ -2,24 +2,31 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
-from clubs.models import User, Post, Club, Book
+from datetime import datetime, timedelta
+from django.utils import timezone
+from clubs.models import User, Post, Club, Book, Meeting
 import os, csv
 from ...helpers import generate_favourite_ratings
+from clubs.factories.notification_factory import CreateNotification
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import NotificationType, MomentType
+from clubs.zoom_api_url_generator_helper import convertDateTime, create_JSON_meeting_data, getZoomMeetingURLAndPasscode
 
 class Command(BaseCommand):
-    """The database seeder."""
-
-    PASSWORD = "Password123"
-    CLUB_COUNT = 2
-    USER_COUNT = 2
-    POST_COUNT_PER_CLUB = 3
+    """The database seeder. Password is Password123 for all users seeded"""
+    
+    # Hash of Password123
+    PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
+    CLUB_COUNT = 4
+    USER_COUNT = 8
+    POST_COUNT_PER_CLUB = 4
 
     def __init__(self):
         super().__init__()
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
-        print('Seeding books...')
+        print('Seeding books... (It takes a few minutes.)')
         self.seed_books()
         print('Book seeding complete')
         self.seed_users()
@@ -35,8 +42,98 @@ class Command(BaseCommand):
             print()
         print()
         print('Users, Clubs and Posts seeding complete.')
+
+        print()
+        self.seed_meetings()
+        print('Meetings seeding complete')
+
+        print()
+        self.add_followers_for_users()
+        print('Followers added to all users')
+
+        print()
+        self.add_follow_request_for_users()
+        print('Follow requests has been added for all users')
+
         # self.seed_books()
         # print('Book seeding complete')
+
+
+    def seed_meetings(self):
+        for club in Club.objects.all():
+            self._create_meeting(club, 'past')
+            self._create_meeting(club, 'future')
+
+    def _create_meeting(self, club, pastOrFuture):
+        if(pastOrFuture == 'past'):
+            d = timezone.make_aware(datetime.now() - timedelta(days=2))
+            no_of_meeting = 1
+        elif(pastOrFuture == 'future'):
+            d = timezone.make_aware(datetime.now() + timedelta(days=2))
+            no_of_meeting = 2
+        else:
+            return
+
+        for i in range(no_of_meeting):
+            title = club.name + " meeting"
+            desc = "Online Meeting"
+            json_data = create_JSON_meeting_data(title, convertDateTime(d), desc)
+            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            Meeting.objects.create(
+                club = club,
+                date = d,
+                location = "online",
+                URL = meet_url_pass[0],
+                passcode = meet_url_pass[1],
+            )
+
+    def add_follow_request_for_users(self):
+        users = list(User.objects.all())
+        no_of_follow_requests_to_add = User.objects.count() // 3
+        if(no_of_follow_requests_to_add == 0):
+            return
+        
+        for user in users:
+            if not user.is_superuser:
+                follow_requests_added = 0
+                while(follow_requests_added != no_of_follow_requests_to_add):
+                    following_request_user = random.choice(users)
+                    while(not self._is_user_safe_to_add_as_follow_request(main_user=user, following_request_user=following_request_user)):
+                        following_request_user = random.choice(users)
+                    if(self._is_user_safe_to_add_as_follow_request(main_user=user, following_request_user=following_request_user)):
+                        user.follow_requests.add(following_request_user)
+                        notifier = CreateNotification()
+                        notifier.notify(NotificationType.FOLLOW_REQUEST, user, {'user': following_request_user})
+                        follow_requests_added += 1
+
+
+    def add_followers_for_users(self):
+        users = list(User.objects.all())
+        no_of_followers_to_add = User.objects.count() // 3
+        if(no_of_followers_to_add == 0):
+            return
+
+        for user in users:
+            if not user.is_superuser:
+                followers_added = 0
+                while(followers_added != no_of_followers_to_add):
+                    following_user = random.choice(users)
+                    while(not self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+                        following_user = random.choice(users)
+                    if(self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+                        user.add_follower(following_user)
+                        moment_notifier = CreateMoment()
+                        moment_notifier.notify(MomentType.BECAME_FRIENDS, user, {'other_user': following_user})
+                        followers_added += 1
+
+    def _is_user_safe_to_add_as_follower(self, main_user, following_user):
+        return (following_user != main_user and 
+                not following_user.is_superuser and 
+                not following_user in main_user.followers.all()) 
+
+    def _is_user_safe_to_add_as_follow_request(self, main_user, following_request_user):
+        return (self._is_user_safe_to_add_as_follower(main_user=main_user, following_user=following_request_user)
+                and following_request_user not in main_user.follow_requests.all())
 
     def seed_users(self):
         user_count = User.objects.all().count()
@@ -69,6 +166,9 @@ class Command(BaseCommand):
     def _create_club(self):
         name = self.faker.first_name()
         leader = random.choice(User.objects.all())
+        while(leader.is_superuser):
+            leader = random.choice(User.objects.all())
+
         club = Club.objects.create(
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
@@ -77,6 +177,10 @@ class Command(BaseCommand):
             leader = leader
         )
         club.add_or_remove_member(leader)
+        notifier = CreateNotification()
+        notifier.notify(NotificationType.CLUB_CREATED, leader, {'club': club})
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.CLUB_CREATED, leader, {'club': club})
 
     def seed_clubs(self):
         club_count = Club.objects.all().count()
