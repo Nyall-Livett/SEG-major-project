@@ -64,7 +64,7 @@ def generate_recommendations(user_id):
                 continue
             else:
                 recommendations.append(book)
-            pos += 1
+                pos += 1
             if (pos > k-1):
                 break
 
