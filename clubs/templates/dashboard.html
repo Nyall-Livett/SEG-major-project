@@ -104,7 +104,9 @@
 
           <!-- BECAME_FRIENDS -->
           {% elif moment.type == 1 %}
-            {% include 'partials/become_friends_moment_partial.html' with moment=moment %}
+            {% if moment.user.id == request.user.id %}
+              {% include 'partials/become_friends_moment_partial.html' with moment=moment %}
+            {% endif %}
 
           <!-- CLUB_CREATED -->
           {% elif moment.type == 2 %}

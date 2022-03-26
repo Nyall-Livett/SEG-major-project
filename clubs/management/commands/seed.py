@@ -40,9 +40,9 @@ class Command(BaseCommand):
         print()
         print('Users, Clubs and Posts seeding complete.')
 
-        #print()
-        #self.seed_meetings()
-        #print('Meetings seeding complete')
+        print()
+        self.seed_meetings()
+        print('Meetings seeding complete')
 
         print()
         self.add_followers_for_users()
@@ -63,15 +63,17 @@ class Command(BaseCommand):
             return
         
         for user in users:
-            follow_requests_added = 0
-            while(follow_requests_added != no_of_follow_requests_to_add):
-                following_request_user = random.choice(users)
-                while(not self._is_user_safe_to_add_as_follow_request):
+            if not user.is_superuser:
+                follow_requests_added = 0
+                while(follow_requests_added != no_of_follow_requests_to_add):
                     following_request_user = random.choice(users)
-                user.follow_requests.add(following_request_user)
-                notifier = CreateNotification()
-                notifier.notify(NotificationType.FOLLOW_REQUEST, user, {'user': following_request_user})
-                follow_requests_added += 1
+                    while(not self._is_user_safe_to_add_as_follow_request(main_user=user, following_request_user=following_request_user)):
+                        following_request_user = random.choice(users)
+                    if(self._is_user_safe_to_add_as_follow_request(main_user=user, following_request_user=following_request_user)):
+                        user.follow_requests.add(following_request_user)
+                        notifier = CreateNotification()
+                        notifier.notify(NotificationType.FOLLOW_REQUEST, user, {'user': following_request_user})
+                        follow_requests_added += 1
 
 
     def add_followers_for_users(self):
@@ -81,15 +83,17 @@ class Command(BaseCommand):
             return
 
         for user in users:
-            followers_added = 0
-            while(followers_added != no_of_followers_to_add):
-                following_user = random.choice(users)
-                while(not self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+            if not user.is_superuser:
+                followers_added = 0
+                while(followers_added != no_of_followers_to_add):
                     following_user = random.choice(users)
-                user.add_follower(following_user)
-                moment_notifier = CreateMoment()
-                moment_notifier.notify(MomentType.BECAME_FRIENDS, user, {'other_user': following_user})
-                followers_added += 1
+                    while(not self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+                        following_user = random.choice(users)
+                    if(self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
+                        user.add_follower(following_user)
+                        moment_notifier = CreateMoment()
+                        moment_notifier.notify(MomentType.BECAME_FRIENDS, user, {'other_user': following_user})
+                        followers_added += 1
 
     def _is_user_safe_to_add_as_follower(self, main_user, following_user):
         return (following_user != main_user and 
