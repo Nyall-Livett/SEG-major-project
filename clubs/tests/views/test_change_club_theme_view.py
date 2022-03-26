@@ -43,13 +43,13 @@ class ChangeClubThemeTest(TestCase, LogInTester):
     def test_update_change_theme_view(self):
         self.client.login(username=self.user.username, password='Password123')
         response = self.client.post(reverse('change_theme', kwargs={'club_id': self.club.id}), 
-        {'theme': 'new_theme'})
+        {'theme': 'Humor'})
         self.assertEqual(response.status_code, 302)
         self.club.refresh_from_db()
-        self.assertEqual(self.club.theme, 'new_theme')
+        self.assertEqual(self.club.theme, 'Humor')
 
     def test_other_than_leader_will_recieve_404_when_trying_to_update_theme(self):
         self.client.login(username = self.other.username, password = 'Password123')
         response = self.client.post(reverse('change_theme', kwargs={'club_id': self.club.id}), 
-        {'theme': 'new_theme'})
+        {'theme': 'Humor'})
         self.assertEqual(response.status_code, 404)

@@ -84,3 +84,7 @@ class ProfileViewTest(TestCase):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.post(self.url, self.form_input)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+    def test_home_page_renders_correctly(self):
+        url = reverse('home')
+        self.assertEqual(url, '/')

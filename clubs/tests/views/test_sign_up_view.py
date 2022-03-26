@@ -1,9 +1,10 @@
 """Tests of the sign up view."""
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import SignUpForm
-from clubs.models import User
+from clubs.models import User, Book
 from clubs.tests.helpers import LogInTester
 
 class SignUpViewTestCase(TestCase, LogInTester):
@@ -22,7 +23,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
         }
-        
+
         self.user = User.objects.get(username='johndoe')
 
     def test_sign_up_url(self):
@@ -56,7 +57,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertTrue(form.is_bound)
         self.assertFalse(self._is_logged_in())
 
-    #TODO: test gives  error because of a color attribute
+    # TODO: test gives  error because of a color attribute
     # def test_succesful_sign_up(self):
     #     before_count = User.objects.count()
     #     response = self.client.post(self.url, self.form_input, follow=True)

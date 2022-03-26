@@ -3,7 +3,8 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-12">
+
+    <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
       <h1>Start meeting</h1>
       <form method="post">
         {% csrf_token %}
@@ -12,6 +13,26 @@
       </form>
       {{ form.media }}
       <br>
+    </div>
+
+  <div class="col-sm-2" style="height:100%">
+    <div class="row card s-40 p-16">
+      <div class="collection-wrap">
+        <p style="color:#878787"><b>Recommended Books</b></p>
+        {% if recommendations %}
+          {% for recommendation in recommendations %}
+            <div class="single-item-wrap">
+            <img src="{{ recommendation.image_url_s }}" alt="Image not found" >
+              <div class="book-details">
+                <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
+              </div>
+            </div>
+          {% endfor %}
+          {% else %}
+            <p>There are currently no books in the system to generate recommendations</p>
+          {% endif %}
+      </div>
+    </div>
     </div>
   </div>
 </div>

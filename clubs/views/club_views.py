@@ -18,6 +18,7 @@ from django import forms
 from django.http import JsonResponse
 from django.db import IntegrityError
 import json
+import random
 from clubs.models import Book, Club, User, Notification, Post
 from clubs.forms import ClubForm, MeetingForm
 from clubs.factories.notification_factory import CreateNotification
@@ -47,7 +48,7 @@ class CreateClubView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
-        return reverse("dashboard")
+        return reverse("club_list")
 
 class TransferClubLeadership(LoginRequiredMixin, View):
     """docstring for TransferClubLeadership."""

@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
 
@@ -147,3 +147,6 @@ USERS_PER_PAGE = 10
 POSTS_PER_PAGE = 20
 BOOKS_PER_PAGE = 20
 MEETINGS_PER_PAGE = 10
+
+#Random book
+RANDOM_BOOK = 1

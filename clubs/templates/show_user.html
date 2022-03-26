@@ -2,6 +2,7 @@
 {% block content %}
 
 <div class="container">
+
   <div class="main-body">
       <div class="page-content page-container" id="page-content">
           <div class="row container d-flex justify-content-center">
@@ -106,7 +107,9 @@
                   </div>
               </div>
 
-<h1> my moments </h1>
+
+{% if user in request.user.followers.all or user == request.user %}
+<h1> moments </h1>
       <!-- View moments -->
       <div id="moment-wrapper">
         {% for moment in moments %}
@@ -132,6 +135,7 @@
           {% endif %}
         {% endfor %}
       </div>
+      {% endif %}
 
     
  

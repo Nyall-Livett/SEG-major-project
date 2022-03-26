@@ -1,0 +1,10 @@
+[
+  {
+    "model": "clubs.meeting",
+    "pk": 2,
+    "fields": {
+      "date": "2023-01-27 11:00:00",
+      "club": 1
+    }
+  }
+]

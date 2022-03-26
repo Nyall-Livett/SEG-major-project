@@ -7,9 +7,10 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import Moment, User, Club, CustomAvatar
+from clubs.models import Moment, User, Club, CustomAvatar, Book
 from clubs.enums import AvatarIcon, AvatarColor
 import random
+from ..helpers import generate_favourite_ratings,delete_ratings
 
 class PasswordView(LoginRequiredMixin, FormView):
     """View that handles password change requests."""
@@ -52,6 +53,10 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
+        user = self.get_object()
+        book = user.favourite_book
+        if book:
+            generate_favourite_ratings(user.favourite_book,user.id)
         messages.add_message(self.request, messages.SUCCESS, "Profile updated!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
@@ -59,7 +64,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['avatar_icons'] = AvatarIcon.values
         context['avatar_colors'] = AvatarColor.values
-        
+
         return context
 
     def form_valid(self, form):
@@ -88,12 +93,18 @@ class SignUpView(LoginProhibitedMixin, FormView):
         # Create avatar
         color = self.request.POST['color']
         if len(color) < 1:
-            color = AvatarColor.values[random.randint(0, len(AvatarColor.values))]
+            color = AvatarColor.values[random.randint(0, len(AvatarColor.values)-1)]
         icon = self.request.POST['icon']
         if len(icon) < 1:
-            icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values))]
+            icon = AvatarIcon.values[random.randint(0, len(AvatarIcon.values)-1)]
         CustomAvatar.objects.create(color=color, icon=icon, user=object)
         login(self.request, object)
+        book = object.favourite_book
+        if ((object.favourite_book == None or object.favourite_book == '') and (Book.objects.count() != 0)):
+            # book = Book.objects.get(id=1)
+            book = Book.objects.all().first()
+        if book:
+            generate_favourite_ratings(book,object.id)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -119,10 +130,9 @@ class DeleteAccount(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         user = User.objects.get(id= self.kwargs.get('user_id'))
         context['club_list'] = Club.objects.filter(leader=user)
-
         return context
 
     def get_success_url(self):
+        user_id = self.request.user.id
+        delete_ratings(user_id)
         return reverse('sign_up')
-
-    

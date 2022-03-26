@@ -17,17 +17,37 @@ from django.shortcuts import render
 from django import forms
 from django.http import JsonResponse
 from django.db import IntegrityError
-from clubs.models import User, Club, Meeting
+from clubs.models import User, Club, Meeting, Book
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import json
 import random
+from ..helpers import generate_ratings,contain_ratings
+from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
 class StartMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = StartMeetingForm
     template_name = 'start_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
+
+    def get_recommendations(self):
+        user_id = self.request.user.id
+        if(Book.objects.count() > 0):
+            if((contain_ratings(user_id))==False):
+                # book = Book.objects.get(id=1)
+                book = Book.objects.all().first()
+                generate_ratings(book,user_id,'neutral')
+            recommendations = generate_recommendations(user_id)
+            return recommendations
+        else:
+            return None
+
+    def get_context_data(self, **kwargs):
+        recommended_books = self.get_recommendations()
+        context = super().get_context_data(**kwargs)
+        context['recommendations'] = recommended_books
+        return context
 
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
