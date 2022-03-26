@@ -16,7 +16,8 @@
                                 </div>
                                 <p></p>
                                   <h3 class="m-b-20 p-b-5 b-b-default f-w-600">{{ book.name }}</h3>
-                                  <h4 class="f-w-600"><a href="{% url 'get_books_by_author' book.id %}">By {{ book.author }}</a></h4>
+                                  <h4 class="f-w-600">By <a href="{% url 'get_books_by_author' book.id %}">{{ book.author }}</a></h4>
+                                  <br>
                                   <div>
                                       <h5 class="m-b-10 f-w-600">ISBN:</h5>
                                       <p class="text-muted">{{ book.isbn }}</p>
@@ -68,9 +69,9 @@
                                     {% endif %}
                                     {% endfor %}
                                     <h5 class="m-b-10 f-w-600">Reviews:</h5>
-                                    <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100, '%)'); </script></p>
-                                    <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100, '%)'); </script></p>
-                                    <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
+                                    <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
+                                    <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
                                     <hr>
                                     <p><b>Read by: </b><script> document.write(liked+disliked+neutral); </script></p>
                                   </div>
@@ -81,16 +82,15 @@
                       {% if recommended_books  %}
                       <div class="col-sm-3">
                         <div class="card-block">
-                          <h5 class="m-b-10 f-w-600">Recommended Books:</h5>
+                          <h5 class="m-b-10 f-w-600">Similar Books:</h5>
                             {% for book_rec in recommended_books %}
                               {% if book_rec%}
                               <div class="card" style="width: 18rem;">
                                 <div class="card-body">
                                   <img src="{{ book_rec.image_url_m }}" alt="Image not found">
                                   <p></p>
-                                  <h5 class="card-title">{{ book_rec.name }}</h5>
+                                  <h5><a href="{% url 'show_book' book_rec.id %}" class="card-link">{{ book_rec.name }}</a></h5>
                                   <h6 class="card-subtitle mb-2 text-muted">{{ book_rec.author }}</h6>
-                                  <a href="{% url 'show_book' book_rec.id %}" class="card-link">See more</a>
                                 </div>
                               </div>
                               {%endif%}
