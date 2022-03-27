@@ -310,7 +310,7 @@ a {
 .book-image{
   height: 75px;
   width: 50px;
-  background-color: grey;
+  /* background-color: grey; */
 }
 
 .collection-wrap{
@@ -386,9 +386,92 @@ a {
   align-items: center;
 }
 
+.image-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 48px 0;
+  padding: 0;
+}
+
+#image-holder{
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  height: 250px;
+  width: 100%;
+  max-width: inherit;
+  border: 1px solid #dedede;
+  background: repeating-linear-gradient( 135deg, #d3d3d3, #d3d3d3 10px, #ffffff 10px, #ffffff 20px);
+  border-radius: 5px;
+}
+
+#show-club-image{
+  width: 250px;
+  height: 250px;
+}
+
+.slider-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.max-width{
+  max-width:100%;
+}
+
+.max-height{
+  max-height:100%;
+}
+
+.crop-slider {
+  margin-top: 16px
+}
+
+#crop-wrap {
+  position: relative;
+}
+
+#crop-square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  height: 100px;
+  width: 100px;
+  border: 4px #7796ce dotted;
+  border-radius: 5px;
+  z-index: 99;
+}
+
+.fit-height{
+  height: fit-content;
+}
+
+#after-crop {
+  display: none
+}
+
+.preview-wrap {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
 #icon-image {
   height: 100px;
-  width: 100px
+}
+
+.thumbnail-holder{
+  min-height: 53px;
+  min-width: 53px;
+  border: #c1c1c1 2px solid;
+  border-radius: 2px;
+  height: fit-content;
 }
 
 .wrap-100 {
@@ -481,4 +564,8 @@ a {
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
   top: 6px !important;
+}
+
+.form-image-input{
+  margin: 16px 0;
 }

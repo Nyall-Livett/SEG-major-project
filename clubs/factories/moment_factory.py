@@ -33,7 +33,7 @@ class CreateMoment:
             type=MomentType.BECAME_FRIENDS,
             body = body,
             user = self.user,
-            associated_user = other_user.id
+            associated_user = other_user
         )
 
     def _create_club(self, user, **kwargs):
@@ -43,7 +43,7 @@ class CreateMoment:
             type=MomentType.CLUB_CREATED,
             body = body,
             user = self.user,
-            associated_club = club.id
+            associated_club = club
         )
 
     def _book_recommendation(self, user, **kwargs):
