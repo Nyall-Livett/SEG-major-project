@@ -146,12 +146,14 @@
                                   {% endif %}
                                   {% endfor %}
                                   <a href={% url 'start_meeting' i.id %} class="btn btn-primary">Start Meeting</a>
+                                  {% if i.URL == 'KeyError' %}
+                                  <form target="_blank" action="{% url 'zoom_meeting' %}">
+                                  {% else %}
                                   <form target="_blank" action="{{ i.URL }}">
+                                  {% endif %}
                                   <p></p>
-                                  {% if i.URL %}
                                   <input type="submit" value="Join meeting" class="btn btn-primary"/>
                                   </form>
-                                  {% endif %}
                                   <p></p>
                                 </div>
                               </div>

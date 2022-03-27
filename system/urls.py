@@ -21,6 +21,7 @@ from clubs.forms import BookAutocomplete
 
 
 urlpatterns = [
+    path('zoom_meeting/', views.ErrorZoomMeetingView.as_view(), name='zoom_meeting'),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
