@@ -8,10 +8,12 @@ from django.views.generic import ListView, TemplateView
 from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import MultipleObjectMixin
+from clubs.factories.moment_factory import CreateMoment
 from clubs.models import Moment, User, Club, BooksRead, Notification
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from clubs.factories.notification_factory import CreateNotification, NotificationType
+from clubs.enums import MomentType
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -158,6 +160,9 @@ def accept_request(request, user_id):
     try:
         followee_request = User.objects.get(id=user_id)
         logged_in_user.accept_request(followee_request)
+        moment_notifier = CreateMoment()
+        moment_notifier.notify(MomentType.BECAME_FRIENDS, logged_in_user, {'other_user': followee_request, 'body':''})
+        moment_notifier.notify(MomentType.BECAME_FRIENDS, followee_request, {'other_user': logged_in_user, 'body': '{user} has accepted your follow request'.format(user=logged_in_user)})
     except ObjectDoesNotExist:
         return redirect('follow_requests_page')
     else:

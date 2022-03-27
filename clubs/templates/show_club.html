@@ -40,6 +40,7 @@
                                 <p></p>
                                 <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
                                 <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
+                                <p class="text-muted font-size-sm">Members: {{ club.members.count }}/{{ club.maximum_members }} </p>
                                 {% if club in user.clubs.all %}
                                   <a href={% url 'member_list' club.id %}>Members list</a>
                                 {% endif %}
@@ -51,6 +52,29 @@
                                   <a href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
                                 {% endif %}
                                 {% endfor %}
+
+                                <p></p><p></p>
+                                {% if user in club.members.all %}
+                                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary">Leave {{club.name}}</button>
+                                  </form>
+                                {% else %}
+                                  {% if user in club.applicants.all %}
+                                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                      {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Request sent</button>
+                                    </form>
+                                  {% else %}
+                                    <form action="{% url 'join_club' user.id club.id %}" method="post">
+                                      {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Join {{club.name}}</button>
+                                    </form>
+                                  {% endif %}
+                                {% endif %}
+                                <p></p>
+
+
                             </div>
                         </div>
                     </div>
@@ -108,7 +132,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
 
-                            <p class="text font-size-sm"> Next meetings: <p> </p>
+                            <p class="text font-size-sm"> Upcoming meetings: <p> </p>
                             {% for i in  club.meetings.all %}
                             {% if user.now < i.date %}
 
@@ -117,13 +141,22 @@
                                 <div class="card-body">
                                   <h5 class="card-title"><b>Date:</b><br>{{ i.date }}</h5>
                                   <h6 class="card-subtitle mb-2 text-muted"><b>Book:</b><br>{{ i.book.name }}</h6>
+                                  <h7 class="card-subtitle mb-2 text-muted"><b>Chosen member:</b><br>{{ i.chosen_member.username }}</h7>
+                                  <br><br>
                                   <b>Meeting notes:</b> <br> {{ i.notes }}
                                   {% if i.passcode and i.URL%}
                                     <br><b>Meeting passcode:</b> <br> {{ i.passcode }}
                                   {% endif %}
                                   <br><br>
+                                  {% for i in request.user.leader_of.all  %}
+                                  {% if i.id == club.id %}
                                   <a href={% url 'edit_meeting' i.id %} class="btn btn-secondary">Edit Details</a>
                                   <a href={% url 'start_meeting' i.id %} class="btn btn-primary">Start Meeting</a>
+                                  {% endif %}
+                                  {% endfor %}
+                                  {% if user.id == i.chosen_member.id %}
+                                   <a href={% url 'start_meeting' i.id %} class="btn btn-primary">Start Meeting</a>
+                                  {% endif %}
                                   <form target="_blank" action="{{ i.URL }}">
                                   <p></p>
                                   {% if i.URL %}

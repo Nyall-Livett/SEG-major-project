@@ -59,9 +59,12 @@ def generate_recommendations(user_id):
             #print(isbn)
             #print(ml.getMovieName(int(movieID)), ratingSum)
             # print(book_ratings.getBookTitle(isbn), ratingSum)
-            book = Book.objects.get(isbn = isbn)
-            recommendations.append(book)
-            pos += 1
+            book = Book.objects.filter(isbn = isbn).first()
+            if (book == None):
+                continue
+            else:
+                recommendations.append(book)
+                pos += 1
             if (pos > k-1):
                 break
 

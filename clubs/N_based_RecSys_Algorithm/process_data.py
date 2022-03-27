@@ -8,19 +8,19 @@ from collections import defaultdict
 import numpy as np
 import json
 from urllib.request import urlopen
-from evaluator import Evaluator
+from .evaluator import Evaluator
 import pandas as pd
 import random
+from django.conf import settings
 
 class ProcessData:
 
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    parent_directory = os.path.dirname(os.path.normpath(os.getcwd()))
-    ratingsPath = parent_directory + '/book_database/BX-Book-Ratings_formatted.csv'
-    booksPath = parent_directory + '/book_database/BX_Books_formatted.csv'
-    preprocessedBooksPath = parent_directory + '/clubs/book_database/Preprocessed_Books_formatted.csv'
+    ratingsPath = settings.BASE_DIR /'clubs/book_database/BX-Book-Ratings_formatted.csv'
+    booksPath = settings.BASE_DIR /'clubs/book_database/BX_Books_formatted.csv'
+    preprocessedBooksPath = settings.BASE_DIR /'clubs/book_database/Preprocessed_Books_formatted.csv'
 
     def loadBooks(self):
 

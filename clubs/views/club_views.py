@@ -1,4 +1,5 @@
 """Club related views."""
+import random
 from django.conf import settings
 from django.views.generic.edit import FormView, UpdateView
 from django.views import View
@@ -18,15 +19,14 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 import json
 import random
-from ..helpers import generate_ratings,contain_ratings,generate_a_random_book
-from ..book_database.N_based_MSD_Item import generate_recommendations
 from clubs.models import Book, Club, User, Notification, Post
-from clubs.forms import ClubForm
+from clubs.forms import ClubForm, MeetingForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
-from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime
-from PIL import Image
+
+from clubs.zoom_api_url_generator_helper import create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
+
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""

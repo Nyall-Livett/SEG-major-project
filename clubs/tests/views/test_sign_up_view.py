@@ -1,19 +1,16 @@
 """Tests of the sign up view."""
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import SignUpForm
-from clubs.models import User
+from clubs.models import User, Book
 from clubs.tests.helpers import LogInTester
-from ...helpers import delete_ratings,get_ratings_count
 
 class SignUpViewTestCase(TestCase, LogInTester):
     """Tests of the sign up view."""
 
-    fixtures = ['clubs/tests/fixtures/default_user.json',
-        'clubs/tests/fixtures/default_book.json',
-        'clubs/tests/fixtures/recommendations_books'
-        ]
+    fixtures = ['clubs/tests/fixtures/default_user.json']
 
     def setUp(self):
         self.url = reverse('sign_up')
@@ -42,16 +39,10 @@ class SignUpViewTestCase(TestCase, LogInTester):
 
     def test_get_sign_up_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
-        rating_count_before = get_ratings_count(self.user.id)
         response = self.client.get(self.url, follow=True)
-        rating_count_after = get_ratings_count(self.user.id)
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
-        self.assertEqual(rating_count_before,rating_count_after-1)
-        delete_ratings(self.user.id)
-        rating_after_delete = get_ratings_count(self.user.id)
-        self.assertEqual(0,rating_after_delete)
 
     def test_unsuccesful_sign_up(self):
         self.form_input['username'] = ''
@@ -66,7 +57,7 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertTrue(form.is_bound)
         self.assertFalse(self._is_logged_in())
 
-    #TODO: test gives  error because of a color attribute
+    # TODO: test gives  error because of a color attribute
     # def test_succesful_sign_up(self):
     #     before_count = User.objects.count()
     #     response = self.client.post(self.url, self.form_input, follow=True)
@@ -87,15 +78,9 @@ class SignUpViewTestCase(TestCase, LogInTester):
     def test_post_sign_up_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")
         before_count = User.objects.count()
-        rating_count_before = get_ratings_count(self.user.id)
         response = self.client.post(self.url, self.form_input, follow=True)
         after_count = User.objects.count()
-        rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(after_count, before_count)
-        self.assertEqual(rating_count_before,rating_count_after-1)
         redirect_url = reverse('dashboard')
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'dashboard.html')
-        delete_ratings(self.user.id)
-        rating_after_delete = get_ratings_count(self.user.id)
-        self.assertEqual(0,rating_after_delete)

@@ -19,6 +19,7 @@
 
         <div class="row card s-40 p-16">
           <div class="collection-wrap">
+<<<<<<< HEAD
             {% for recommendation in recommendations %}
               <div class="single-item-wrap">
 
@@ -30,9 +31,20 @@
 
                 <div class="book-details">
                   <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
+=======
+            {% if recommendations %}
+              {% for recommendation in recommendations %}
+                <div class="single-item-wrap">
+                <img src="{{ recommendation.image_url_s }}" alt="Image not found" >
+                  <div class="book-details">
+                    <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
+                  </div>
+>>>>>>> 110acddd165fcd6328726494833837a8346a84e2
                 </div>
-              </div>
-            {% endfor %}
+              {% endfor %}
+              {% else %}
+                <p>There are currently no books in the system to generate recommendations</p>
+              {% endif %}
           </div>
         </div>
       </div>
@@ -51,15 +63,21 @@
             {% for a in c.meetings.all %}
               <div class="single-item-wrap">
 
+                {% if user.now < a.date %}
                 <div class="book-details">
-                  <a href="{% url 'show_club' a.club.id %}"><small style="font-size:12px">club: {{a.club.name}}<p> {{a.date}}</p></small></a>
-
+                  <a href="{% url 'show_club' a.club.id %}">{{a.club.name}}</a>
+                  <p><small style="font-size:12px">{{a.date}}</small></p>
+                  <form target="_blank" action="{{ a.URL }}">
+                  {% if a.URL %}
+                  <input type="submit" value="Join meeting" class="btn btn-primary"/>
                   </form>
-
+                  {% endif %}
                 </div>
+                {% endif %}
               </div>
               {% endfor %}
             {% endfor %}
+            <p></p><p></p>
           </div>
           <!-- end meetings -->
 
@@ -106,6 +124,9 @@
 
           <!-- BECAME_FRIENDS -->
           {% elif moment.type == 1 %}
+            {% if moment.user.id == request.user.id %}
+              {% include 'partials/become_friends_moment_partial.html' with moment=moment %}
+            {% endif %}
 
           <!-- CLUB_CREATED -->
           {% elif moment.type == 2 %}

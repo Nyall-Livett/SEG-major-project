@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User
 from clubs.tests.helpers import reverse_with_next
+from clubs.models import Moment
 
 class FollowToggleTest(TestCase):
 
@@ -22,6 +23,23 @@ class FollowToggleTest(TestCase):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
+
+    def test_moments_created_after_user_accepts_follow_request(self):
+        moments_before_accept = Moment.objects.all().count()
+        self.client.login(username=self.user.username, password='Password123')
+        self.followee.send_follow_request(self.user)
+        self.user.accept_request(self.followee)
+        response = self.client.get(self.url, follow=True)
+        moments_after_accept = Moment.objects.all().count()
+        self.assertEqual(moments_before_accept+2, moments_after_accept)
+        user_moment = Moment.objects.get(id=1)
+        self.assertEqual(user_moment.type, 1)
+        self.assertEqual(user_moment.user, self.user)
+        self.assertEqual(user_moment.associated_user, self.followee.id)
+        followee_moment = Moment.objects.get(id=2)
+        self.assertEqual(followee_moment.type, 1)
+        self.assertEqual(followee_moment.user, self.followee)
+        self.assertEqual(followee_moment.associated_user, self.user.id)
 
     def test_get_accept_request_for_followee(self):
         self.client.login(username=self.user.username, password='Password123')

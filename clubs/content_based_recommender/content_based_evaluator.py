@@ -1,4 +1,4 @@
-from process_data import ProcessData
+from process_data_content_based import ProcessData
 from content_based_KNN import ContentKNNAlgorithm
 from evaluator import Evaluator
 from surprise import NormalPredictor
@@ -24,7 +24,7 @@ random.seed(0)
 evaluator = Evaluator(evaluationData, rankings)
 
 contentKNN = ContentKNNAlgorithm()
-print(contentKNN)
+
 evaluator.AddAlgorithm(contentKNN, "ContentKNN")
 
 # Just make random recommendations

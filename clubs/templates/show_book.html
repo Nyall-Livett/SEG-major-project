@@ -1,21 +1,23 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-<div class="container">
+<div class="container" style="padding:0 26px; height:100%">
   <div class="main-body">
       <div class="page-content page-container" id="page-content">
           <div class="row container d-flex justify-content-center">
               <div>
                   <div class="card user-card-full">
                       <div class="row m-l-0 m-r-0">
-                          <div class="m-b-25">
-                            <img src="{{ book.image_url_l }}" alt="Image not found">
-                          </div>
-
                           <div class="col-sm-8">
+
                               <div class="card-block">
+                                <div class="m-b-25">
+                                  <img src="{{ book.image_url_l }}" alt="Image not found">
+                                </div>
+                                <p></p>
                                   <h3 class="m-b-20 p-b-5 b-b-default f-w-600">{{ book.name }}</h3>
-                                  <h4 class="f-w-600">By {{ book.author }}</h4>
+                                  <h4 class="f-w-600">By <a href="{% url 'get_books_by_author' book.id %}">{{ book.author }}</a></h4>
+                                  <br>
                                   <div>
                                       <h5 class="m-b-10 f-w-600">ISBN:</h5>
                                       <p class="text-muted">{{ book.isbn }}</p>
@@ -37,9 +39,9 @@
                                   <div>
                                       <h5 class="m-b-10 f-w-600">Publisher:</h5>
                                       {% if book.publication_year == 0 %}
-                                      <p class="text-muted">{{book.publisher}}</p>
+                                      <p class="text-muted"><a href="{% url 'get_books_by_publisher' book.id %}">{{book.publisher}}</a></p>
                                       {% else %}
-                                      <p class="text-muted">{{book.publisher}} - {{book.publication_year}}</p>
+                                      <p class="text-muted"><a href="{% url 'get_books_by_publisher' book.id %}">{{book.publisher}} - {{book.publication_year}}</a></p>
                                       {% endif %}
                                   </div>
 
@@ -67,9 +69,9 @@
                                     {% endif %}
                                     {% endfor %}
                                     <h5 class="m-b-10 f-w-600">Reviews:</h5>
-                                    <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100, '%)'); </script></p>
-                                    <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100, '%)'); </script></p>
-                                    <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100, '%)'); </script></p>
+                                    <p><b>Liked by: </b><script> document.write(liked, '&nbsp', '(', (liked/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
+                                    <p><b>Neutral: </b><script> document.write(neutral, '&nbsp', '(', (neutral/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
+                                    <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
                                     <hr>
                                     <p><b>Read by: </b><script> document.write(liked+disliked+neutral); </script></p>
                                   </div>
@@ -77,36 +79,32 @@
                               </div>
                           </div>
                       </div>
+                      {% if recommended_books  %}
+                      <div class="col-sm-3">
+                        <div class="card-block">
+                          <h5 class="m-b-10 f-w-600">Recommended Books:</h5>
+                            {% for book_rec in recommended_books %}
+                              {% if book_rec%}
+                              <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <img src="{{ book_rec.image_url_m }}" alt="Image not found">
+                                  <p></p>
+                                  <h5><a href="{% url 'show_book' book_rec.id %}" class="card-link">{{ book_rec.name }}</a></h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">{{ book_rec.author }}</h6>
+                                </div>
+                              </div>
+                              {%endif%}
+                            {% endfor %}
+                        </div>
+                      </div>
+                      {% endif %}
                   </div>
               </div>
           </div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Other Books by the author</h1>
-            <a class="btn btn-primary" href="{% url 'get_books_by_author' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Other Books by the Publisher</h1>
-            <a class="btn btn-primary" href="{% url 'get_books_by_publisher' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Recommended Books</h1>
-            <a class="btn btn-primary" href="{% url 'get_recommended_books' book.id %}">Show</a>
-          </div>
-        </div>
-      </div>
   </div>
 </div>
+
 
 
 {% endblock %}

@@ -11,16 +11,19 @@ from urllib.request import urlopen
 from evaluator import Evaluator
 import pandas as pd
 import random
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+nltk.download('punkt')
+
 
 class ProcessData:
 
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    parent_directory = os.path.dirname(os.path.normpath(os.getcwd()))
-    ratingsPath = parent_directory + '/book_database/BX-Book-Ratings_formatted.csv'
-    booksPath = parent_directory + '/book_database/BX_Books_formatted.csv'
-    preprocessedBooksPath = parent_directory + '/clubs/book_database/Preprocessed_Books_formatted.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_test_set.csv'
+    booksPath = current_directory +  '/BX_Books_test_set.csv'
 
     def loadBooks(self):
 
@@ -82,6 +85,38 @@ class ProcessData:
             rankings[isbn] = rank
             rank += 1
         return rankings
+
+    def getCombined(self):
+        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+        df['index'] = [i for i in range(df.shape[0])]
+        target_cols = ['Book-Title','Book-Author','Publisher', 'Category']
+        df = df.astype(str)
+        df['combined_features'] = [' '.join(df[target_cols].iloc[i,].values) for i in range(df[target_cols].shape[0])]
+
+
+        df = pd.Series(df.combined_features.values,index=df.ISBN).to_dict()
+
+        return df
+
+    def getSummary(self):
+        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+
+
+        df['index'] = [i for i in range(df.shape[0])]
+        df = df.astype(str)
+
+        summary_filtered = []
+        for i in df['Summary']:
+            i = re.sub("[^a-zA-Z]"," ",i).lower()
+            i = nltk.word_tokenize(i)
+            i = [word for word in i if not word in set(stopwords.words("english"))]
+            i = " ".join(i)
+            summary_filtered.append(i)
+
+        df['Summary'] = summary_filtered
+        df = pd.Series(df.Summary.values, index=df.ISBN).to_dict()
+
+        return df
 
     def getGenres(self):
         genres = defaultdict(list)

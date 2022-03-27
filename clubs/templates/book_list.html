@@ -5,11 +5,19 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <a class="btn btn-primary" style="float: right;" href = "{% url 'upload_books' %}">Upload Books</a>
+      {% if user.is_superuser %}
+        <a class="btn btn-primary" style="float: right;" href = "{% url 'upload_books' %}">Upload Books</a>
+      {% endif %}
       <h1>Books</h1>
       {% if books %}
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Author</th>
+          <th>ISBN</th>
+        </tr>
         {% for book in books %}
           <tr>
             <td>
