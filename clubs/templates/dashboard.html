@@ -53,11 +53,16 @@
                 <div class="book-details">
                   <a href="{% url 'show_club' a.club.id %}">{{a.club.name}}</a>
                   <p><small style="font-size:12px">{{a.date}}</small></p>
+
+                  {% if a.URL == 'KeyError' %}
+                  <form target="_blank" action="{% url 'zoom_meeting' %}">
+                  {% else %}
                   <form target="_blank" action="{{ a.URL }}">
-                  {% if a.URL %}
-                  <input type="submit" value="Join meeting" class="btn btn-primary"/>
-                  </form>
                   {% endif %}
+                  <p></p>
+                  <input type="submit" value="Join meeting" class="btn btn-primary"/> 
+                  </form> 
+
                 </div>
                 {% endif %}
               </div>
