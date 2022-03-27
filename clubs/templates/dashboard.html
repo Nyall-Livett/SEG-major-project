@@ -19,19 +19,7 @@
 
         <div class="row card s-40 p-16">
           <div class="collection-wrap">
-<<<<<<< HEAD
-            {% for recommendation in recommendations %}
-              <div class="single-item-wrap">
 
-                <div class="book-image">
-
-                </div>
-
-                <img src="{{ recommendation.image_url_s }}" alt="Image not found" >
-
-                <div class="book-details">
-                  <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
-=======
             {% if recommendations %}
               {% for recommendation in recommendations %}
                 <div class="single-item-wrap">
@@ -39,7 +27,6 @@
                   <div class="book-details">
                     <a href="{% url 'show_book' recommendation.id %}"><small style="font-size:12px">{{recommendation.name}}</small></a>
                   </div>
->>>>>>> 110acddd165fcd6328726494833837a8346a84e2
                 </div>
               {% endfor %}
               {% else %}
