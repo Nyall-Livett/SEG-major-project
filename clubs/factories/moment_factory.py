@@ -33,7 +33,7 @@ class CreateMoment:
             type=MomentType.BECAME_FRIENDS,
             body = body,
             user = self.user,
-            associated_user = other_user.id
+            associated_user = other_user
         )
 
     def _create_club(self, user, **kwargs):
