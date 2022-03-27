@@ -7,19 +7,20 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from clubs.models import User, Post, Club, Book, Meeting, BooksRead
 import os, csv
-from ...helpers import generate_favourite_ratings
+from ...helpers import generate_favourite_ratings, generate_ratings
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
 from clubs.zoom_api_url_generator_helper import convertDateTime, create_JSON_meeting_data, getZoomMeetingURLAndPasscode
+from clubs.models import GENRE_CATEGORY_CHOICES
 
 class Command(BaseCommand):
     """The database seeder. Password is Password123 for all users seeded"""
 
     # Hash of Password123
     PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
-    CLUB_COUNT = 4
-    USER_COUNT = 8
+    CLUB_COUNT = 2
+    USER_COUNT = 4
     POST_COUNT_PER_CLUB = 4
 
     def __init__(self):
@@ -83,6 +84,8 @@ class Command(BaseCommand):
                         book=book,
                         rating=rating
                     )
+                    generate_ratings(book, user.id, rating)
+
 
     def _can_be_reviewed(self, user, book):
         user_reviews = list(BooksRead.objects.filter(reviewer=user))
@@ -111,13 +114,39 @@ class Command(BaseCommand):
             desc = "Online Meeting"
             json_data = create_JSON_meeting_data(title, convertDateTime(d), desc)
             meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            book = self._getBook('', club.theme)
             Meeting.objects.create(
                 club = club,
                 date = d,
                 location = "online",
                 URL = meet_url_pass[0],
                 passcode = meet_url_pass[1],
+                chosen_member = random.choice(club.members.all()),
+                book = book,
+                next_book = self._getBook(book, club.theme),
+                notes = self.faker.text(max_nb_chars=200)
             )
+
+    def _getBook(self, prevBook, theme):
+        books = Book.objects.filter(grouped_category=theme)
+        if len(books) > 1:
+            book = random.choice(books)
+            if not prevBook:
+                return book
+            else:
+                while prevBook == book:
+                    book = random.choice(books)
+                return book
+        else:
+            book = random.choice(Book.objects.all())
+            if not prevBook:
+                return book
+            else:
+                while prevBook == book:
+                    book = random.choice(Book.objects.all())
+                return book
+
+
 
     def add_follow_request_for_users(self):
         users = list(User.objects.all())
@@ -204,7 +233,7 @@ class Command(BaseCommand):
         club = Club.objects.create(
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
-            theme = self.faker.text(max_nb_chars=512),
+            theme = random.choice(GENRE_CATEGORY_CHOICES)[0],
             maximum_members = 2,
             leader = leader
         )
