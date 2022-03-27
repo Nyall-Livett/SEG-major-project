@@ -123,7 +123,7 @@ class Command(BaseCommand):
                     if(self._is_user_safe_to_add_as_follower(main_user=user, following_user=following_user)):
                         user.add_follower(following_user)
                         moment_notifier = CreateMoment()
-                        moment_notifier.notify(MomentType.BECAME_FRIENDS, user, {'other_user': following_user})
+                        moment_notifier.notify(MomentType.BECAME_FRIENDS, user, {'other_user': following_user, 'body':''})
                         followers_added += 1
 
     def _is_user_safe_to_add_as_follower(self, main_user, following_user):
