@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from clubs.models import User, Post, Club, Book, Meeting, BooksRead
 import os, csv
-from ...helpers import generate_favourite_ratings, generate_ratings
+from ...helpers import generate_ratings
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
@@ -113,7 +113,10 @@ class Command(BaseCommand):
             title = club.name + " meeting"
             desc = "Online Meeting"
             json_data = create_JSON_meeting_data(title, convertDateTime(d), desc)
-            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            try:
+                meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+            except KeyError:
+                meet_url_pass = ('KeyError', 'Zoom_API_call_limit_reached')
             book = self._getBook('', club.theme)
             Meeting.objects.create(
                 club = club,
