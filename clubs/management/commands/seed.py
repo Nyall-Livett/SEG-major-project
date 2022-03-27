@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 from faker import Faker
 import random
+from tabulate import tabulate
 from datetime import datetime, timedelta
 from django.utils import timezone
 from clubs.models import User, Post, Club, Book, Meeting, BooksRead
@@ -28,43 +29,36 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print('Seeding books...')
         self.seed_books()
-        print('Book seeding complete')
-        print()
+        print("Book seeding complete")
         self.seed_users()
-        print()
+        print("Users seeding complete")
         self.seed_clubs()
-        print()
+        print("Clubs seeding complete")
         self.add_users_to_clubs()
+        print("Adding users to clubs complete")
         self.club_list = list(Club.objects.all())
         for club in self.club_list:
-            print()
             self.seed_posts(club=club)
-            print()
-        print()
-        print('Users, Clubs and Posts seeding complete.')
-
-        print()
+        print("Posts seeding complete")
         self.seed_meetings()
-        print('Meetings seeding complete')
-
-        print()
-        self.add_followers_for_users()
-        print('Followers added to all users')
-
-        print()
-        self.add_follow_request_for_users()
-        print('Follow requests has been added for all users')
-
-        print()
+        print("Meetings seeding complete")
         self.seed_booksRead()
-        print('BooksRead seeding complete')
-
+        print("BooksRead seeding complete")
+        self.add_followers_for_users()
+        print("Adding followers to users complete")
+        self.add_follow_request_for_users()
+        print("Adding follow requests to users complete")
+        self._print_seed_data()
+        
     def seed_booksRead(self):
         ratings = ['like', 'neutral', 'dislike']
         for user in User.objects.all():
             if not user.is_superuser:
                 for rating in ratings:
-                    book = random.choice(Book.objects.all())
+                    try:
+                        book = random.choice(Book.objects.all())
+                    except IndexError:
+                        print("Cannot Complete seeding BooksRead. Please Check if the system has books")
                     while(not self._can_be_reviewed(user, book)):
                         book = random.choice(Book.objects.all())
                     BooksRead.objects.create(
@@ -230,12 +224,10 @@ class Command(BaseCommand):
     def seed_posts(self,club):
         post_count = Post.objects.all().filter(club=club).count()
         seed_try = post_count
-        print(f'{club.name} Posts seeded: {post_count}',  end='\r')
         while seed_try < Command.POST_COUNT_PER_CLUB:
             try:
                 self._create_post(club)
                 post_count += 1
-                print(f'{club.name} Posts seeded: {post_count}',  end='\r')
             except (IntegrityError):
                 continue
             seed_try += 1
@@ -296,3 +288,25 @@ class Command(BaseCommand):
                             )
                     except IndexError:
                         messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")
+
+    def _count_users(self):
+        count = User.objects.count()
+        if count > 0:
+            for user in User.objects.all():
+                if user.is_superuser:
+                    count -= 1
+                    return count
+        return count
+
+    def _print_seed_data(self):
+        print()
+        print("printing seed data...............")
+        table = [
+            ['User', str(self._count_users())],
+            ['Post', str(Post.objects.count())],
+            ['Club', str(Club.objects.count())],
+            ['Book', str(Book.objects.count())],
+            ['Meeting', str(Meeting.objects.count())],
+            ['BooksRead', str(BooksRead.objects.count())]
+        ]
+        print(tabulate(table))
