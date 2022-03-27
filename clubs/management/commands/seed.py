@@ -4,7 +4,7 @@ from faker import Faker
 import random
 from datetime import datetime, timedelta
 from django.utils import timezone
-from clubs.models import User, Post, Club, Book, Meeting
+from clubs.models import User, Post, Club, Book, Meeting, BooksRead
 import os, csv
 from ...helpers import generate_favourite_ratings
 from clubs.factories.notification_factory import CreateNotification
@@ -29,6 +29,7 @@ class Command(BaseCommand):
         print('Seeding books...')
         self.seed_books()
         print('Book seeding complete')
+        print()
         self.seed_users()
         print()
         self.seed_clubs()
@@ -37,7 +38,6 @@ class Command(BaseCommand):
         self.club_list = list(Club.objects.all())
         for club in self.club_list:
             print()
-            # print(f'Seeding {club.name} Posts...')
             self.seed_posts(club=club)
             print()
         print()
@@ -55,9 +55,29 @@ class Command(BaseCommand):
         self.add_follow_request_for_users()
         print('Follow requests has been added for all users')
 
-        # self.seed_books()
-        # print('Book seeding complete')
+        print()
+        self.seed_booksRead()
+        print('BooksRead seeding complete')
 
+    def seed_booksRead(self):
+        ratings = ['like', 'neutral', 'dislike']
+        for user in User.objects.all():
+            for rating in ratings:
+                book = random.choice(Book.objects.all())
+                while(not self._can_be_reviewed(user, book)):
+                    book = random.choice(Book.objects.all())
+                BooksRead.objects.create(
+                    reviewer=user,
+                    book=book,
+                    rating=rating
+                )
+
+    def _can_be_reviewed(self, user, book):
+        user_reviews = list(BooksRead.objects.filter(reviewer=user))
+        for review in user_reviews:
+            if book == review.book:
+                return False
+        return True
 
     def seed_meetings(self):
         for club in Club.objects.all():
