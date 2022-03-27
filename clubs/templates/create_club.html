@@ -125,7 +125,7 @@
 
  <script type="text/javascript">
 
-  let cropSqaureSet = false
+  let cropSquareSet = false
   var previewH = -1
   var previewW = -1
   var yLimit
@@ -137,7 +137,6 @@
     croppedX = $('#croppedX')
     croppedY = $('#croppedY')
 
-
     previewImage = $('#preview-image')
     imageHolder = $('#image-holder')
     id_image = $('#id_image')
@@ -146,19 +145,18 @@
     slider = $('#crop-size-slider')[0]
     afterCrop = $('#after-crop')
     beforeCrop = $('#before-crop')
-    slider = $('#crop-size-slider')[0]
     setIntialSlider()
 
     cropWrap.hover(hoverIn, hoverOut)
 
     cropWrap.click(()=>{
-      cropSqaureSet = !cropSqaureSet
+      cropSquareSet = !cropSquareSet
       beforeCrop.toggle()
       afterCrop.toggle()
     })
 
     cropWrap.mousemove((event) => {
-      if (!cropSqaureSet) {
+      if (!cropSquareSet) {
         setHiddenInput()
         moveXCropSquare(event)
         moveYCropSquare(event)
@@ -168,7 +166,7 @@
 
   const setHiddenInput = () => {
     croppedX.val(
-    [ parseInt(cropSquare.offset().left - cropWrap.offset().left),
+    [parseInt(cropSquare.offset().left - cropWrap.offset().left),
       parseInt(cropSquare.offset().left - cropWrap.offset().left + cropSquare.width())
     ])
 
@@ -184,16 +182,37 @@
   }
 
 
-  // Movement crop Square
+  // Movement X crop Square
   const moveXCropSquare = (event) => {
+
+    if (event.pageX >= (xLimit - cropSquare.width()/2)) {
+      setSquareXInPlace((xLimit - cropWrap.offset().left) - cropSquare.width())
+      return
+
+    } else if (event.pageX <= (cropWrap.offset().left + cropSquare.width()/2)) {
+      setSquareXInPlace(0)
+    }
+
     let mouseX = event.pageX - ($(cropWrap).offset().left + cropSquare.width()/ 2)
+
     if (mouseX <= 0 || event.pageX + (cropSquare.width()/2) >= xLimit) {
       return
     }
+
     cropSquare.css("left", `${mouseX}px`)
   }
 
+  // Movement X crop Square
   const moveYCropSquare = (event) => {
+
+    if (event.pageY >= (yLimit - cropSquare.width()/2)) {
+      setSquareYInPlace((yLimit - cropWrap.offset().top) - cropSquare.height())
+      return
+
+    } else if (event.pageY <= (cropWrap.offset().top + cropSquare.height()/2)) {
+      setSquareYInPlace(0)
+    }
+
     let mouseY = event.pageY - ($(cropWrap).offset().top + cropSquare.height()/ 2)
     if (mouseY <= 0 || event.pageY + (cropSquare.height()/2) >= yLimit) {
       return
@@ -215,14 +234,14 @@
     slider.value = 100
     enableSlider(false)
     cropSquare.hide()
+    setSquareXInPlace(0)
+    setSquareYInPlace(0)
   }
 
-  // Set the height of the crop square to least value of height and width
-  // Enable the slider
-  // Show crop square
+
   const hoverIn = () => {
-    yLimit = $(cropWrap).offset().top + $(cropWrap).height() - 2
-    xLimit = $(cropWrap).offset().left + $(cropWrap).width() - 2
+    yLimit = $(cropWrap).offset().top + $(cropWrap).height() - 7
+    xLimit = $(cropWrap).offset().left + $(cropWrap).width() - 7
 
     if (cropSquare.is(":hidden")) {
       setHeight()
@@ -265,7 +284,7 @@
   // Show crop square
   const hoverOut = (event) => {
     if (cropSquare.is(":visible")) {
-      if (!cropSqaureSet) {
+      if (!cropSquareSet) {
         positionSquare(event)
       }
     }
@@ -279,8 +298,8 @@
   // Set height of crop square
   const sizeCropSquare = () => {
     size = previewW > previewH ? previewH : previewW
-    cropSquare.height(size)
-    cropSquare.width(size)
+    cropSquare.height(size - 10)
+    cropSquare.width(size - 10)
   }
 
 
@@ -302,14 +321,14 @@
 
   const resizeCropSquare = (value) => {
 
-    if (cropSquare.offset().top + cropSquare.height() > yLimit -2 ) {
+    if (cropSquare.offset().top + cropSquare.height() > yLimit -4 ) {
       setSquareYInPlace((yLimit - cropWrap.offset().top) - cropSquare.height())
     }
-    if (cropSquare.offset().left + cropSquare.width() > xLimit -2) {
+    if (cropSquare.offset().left + cropSquare.width() > xLimit -4) {
       setSquareXInPlace((xLimit - cropWrap.offset().left) - cropSquare.width())
     }
-    cropSquare.height(size * (value / 100))
-    cropSquare.width(size * (value / 100))
+    cropSquare.height(size * (value / 100)- 10)
+    cropSquare.width(size * (value / 100)- 10)
 
     setHiddenInput()
 
@@ -321,33 +340,42 @@
 
   // Show the image in the preview
   const showPreview = (input) => {
+    resetCropComponents()
     getFile()
   }
 
   const getFile = () => {
     reader = new FileReader()
     reader.onload = function (e) {
-      resetCropComponents()
-
 
       // check its a image/
       var allowedExtension = ['jpeg', 'jpg', 'png'];
       if ( allowedExtension.some( string => e.target.result.split(';')[0].split('/')[1] === string )) {
         testImage = new Image()
-        //
         testImage.src = e.target.result;
         //Validate the File Height and Width.
         testImage.onload = function () {
-          // debugger
           var height = this.height;
           var width = this.width;
           if (height >= width) {
+            imageHolder.css("height", "250px");
             $('#preview-image').removeClass( "max-width" ).addClass( "max-height" );
           } else {
+            imageHolder.css("height", "fit-content");
+            $('#preview-image').removeClass( "max-height" ).addClass( "max-width" );
+          }
+          $('#preview-image').attr('src', e.target.result);
+          var height = this.height;
+          var width = this.width;
+          if (height >= width) {
+            imageHolder.removeAttr("height", "fit-content");
+            $('#preview-image').removeClass( "max-width" ).addClass( "max-height" );
+          } else {
+            imageHolder.attr("height", "fit-content");
             $('#preview-image').removeClass( "max-height" ).addClass( "max-width" );
           }
         }
-        $('#preview-image').attr('src', e.target.result);
+
       }
     }
 

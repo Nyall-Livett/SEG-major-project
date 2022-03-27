@@ -403,7 +403,6 @@ a {
   border: 1px solid #dedede;
   background: repeating-linear-gradient( 135deg, #d3d3d3, #d3d3d3 10px, #ffffff 10px, #ffffff 20px);
   border-radius: 5px;
-  align-items: center;
 }
 
 #show-club-image{
@@ -444,9 +443,13 @@ a {
   display: none;
   height: 100px;
   width: 100px;
-  border: 1px grey dotted;
+  border: 4px #7796ce dotted;
   border-radius: 5px;
   z-index: 99;
+}
+
+.fit-height{
+  height: fit-content;
 }
 
 #after-crop {
