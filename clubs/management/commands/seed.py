@@ -12,6 +12,7 @@ from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
 from clubs.zoom_api_url_generator_helper import convertDateTime, create_JSON_meeting_data, getZoomMeetingURLAndPasscode
+from clubs.models import GENRE_CATEGORY_CHOICES
 
 class Command(BaseCommand):
     """The database seeder. Password is Password123 for all users seeded"""
@@ -204,7 +205,7 @@ class Command(BaseCommand):
         club = Club.objects.create(
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
-            theme = self.faker.text(max_nb_chars=512),
+            theme = random.choice(GENRE_CATEGORY_CHOICES)[0],
             maximum_members = 2,
             leader = leader
         )
