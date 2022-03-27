@@ -62,15 +62,16 @@ class Command(BaseCommand):
     def seed_booksRead(self):
         ratings = ['like', 'neutral', 'dislike']
         for user in User.objects.all():
-            for rating in ratings:
-                book = random.choice(Book.objects.all())
-                while(not self._can_be_reviewed(user, book)):
+            if not user.is_superuser:
+                for rating in ratings:
                     book = random.choice(Book.objects.all())
-                BooksRead.objects.create(
-                    reviewer=user,
-                    book=book,
-                    rating=rating
-                )
+                    while(not self._can_be_reviewed(user, book)):
+                        book = random.choice(Book.objects.all())
+                    BooksRead.objects.create(
+                        reviewer=user,
+                        book=book,
+                        rating=rating
+                    )
 
     def _can_be_reviewed(self, user, book):
         user_reviews = list(BooksRead.objects.filter(reviewer=user))
