@@ -231,4 +231,3 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         # self.delete_account_url =  f'/delete_account/{self.user.id}'
         return reverse('club_list')
-

@@ -1,12 +1,17 @@
 <table class="table">
+  <tr>
+    <th></th>
+    <th>Name</th>
+    <th>Username</th>
+  </tr>
     {% for user in users %}
     {% if not user.is_superuser %}
         <tr>
-        <td>
-            <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
-        </td>
-        <td>{{ user.full_name }}</td>
-        <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
+          <td>
+              <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+          </td>
+          <td>{{ user.full_name }}</td>
+          <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
         </tr>
     {% endif %}
     {% endfor %}
