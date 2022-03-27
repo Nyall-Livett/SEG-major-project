@@ -27,6 +27,22 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **options):
+        if self._data_exists():
+            print("There seems to be already existing data in the database system. Please run \n\n\t\t'python3 manage.py unseed'\n\nThen run this command again..... ")
+        else:
+            self.seed()
+
+    def _data_exists(self):
+        return (
+            Post.objects.count() > 0 or
+            Club.objects.count() > 0 or 
+            Book.objects.count() > 0 or
+            Meeting.objects.count() > 0 or
+            BooksRead.objects.count() > 0 or
+            User.objects.all().exclude(is_superuser=True).count() > 0
+        )
+
+    def seed(self):
         print('Seeding books...')
         self.seed_books()
         print("Book seeding complete")
@@ -49,6 +65,7 @@ class Command(BaseCommand):
         self.add_follow_request_for_users()
         print("Adding follow requests to users complete")
         self._print_seed_data()
+
         
     def seed_booksRead(self):
         ratings = ['like', 'neutral', 'dislike']
@@ -289,20 +306,11 @@ class Command(BaseCommand):
                     except IndexError:
                         messages.add_message(self.request, messages.WARNING, f"{book[0]} could not be added to the system.")
 
-    def _count_users(self):
-        count = User.objects.count()
-        if count > 0:
-            for user in User.objects.all():
-                if user.is_superuser:
-                    count -= 1
-                    return count
-        return count
-
     def _print_seed_data(self):
         print()
         print("printing seed data...............")
         table = [
-            ['User', str(self._count_users())],
+            ['User', str(User.objects.all().exclude(is_superuser=True).count())],
             ['Post', str(Post.objects.count())],
             ['Club', str(Club.objects.count())],
             ['Book', str(Book.objects.count())],
