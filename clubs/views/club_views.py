@@ -203,7 +203,6 @@ class acceptClubapplication(LoginRequiredMixin, View):
         self.user = User.objects.get(id=user_id)
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
-        import pdb; pdb.set_trace()
         self.club.acceptmembership(self.user)
         notifier = CreateNotification()
         notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
