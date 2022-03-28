@@ -17,6 +17,8 @@ from django.views.generic.detail import DetailView
 from ..helpers import generate_ratings
 from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
+from clubs.factories.moment_factory import CreateMoment
+from clubs.enums import MomentType
 
 class BookListView(LoginRequiredMixin, ListView):
     """View that shows a list of all users."""
@@ -37,7 +39,9 @@ class BookReviewView(LoginRequiredMixin, FormView):
         review.reviewer = self.request.user
         try:
             review.save()
-            generate_ratings(review.book,review.reviewer.id,review.rating)
+            moment_notifier = CreateMoment()
+            moment_notifier.notify(MomentType.BOOK_RATING, self.request.user, {'book': review.book, 'rating': review.rating })
+            generate_ratings(review.book, review.reviewer.id, review.rating)
             return super().form_valid(form)
         except IntegrityError as e:
             return render(self.request, "book_review.html")
