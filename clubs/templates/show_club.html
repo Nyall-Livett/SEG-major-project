@@ -48,7 +48,7 @@
                                 {% if i.id == club.id %}
                                   <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
                                   <a href="#" data-bs-toggle="modal" data-bs-target="#modal">Transfer Leadership</a>
-                                  <a href = "{% url 'change_club_details' club_id=club.pk %}">Change club details</a>
+                                  <a href = "{% url 'change_club_details' club_id=club.pk %}">Change Club Details</a>
                                   <a href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
                                 {% endif %}
                                 {% endfor %}
