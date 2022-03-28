@@ -78,11 +78,27 @@
                             </div>
                         </div>
                     </div>
+                    {% if club in user.clubs.all %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">About us:</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <p>{{club.description}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 <!-- write here to be added beneath club leader card -->
         </div>
 
 
         <div class="col-md-5">
+            <!-- write here to be added beneath middle column  -->
+            {% if club not in user.clubs.all %}
             <div class="card mb-2">
                 <div class="card-body">
                     <div class="row">
@@ -95,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            <!-- write here to be added beneath about us  -->
+            {% endif %}
             {% if club in user.clubs.all %}
             <div class="card mb-2">
               <div class="card-body">

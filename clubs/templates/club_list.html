@@ -14,19 +14,19 @@
           <td></td>
           <td>Club</td>
           <td>Leader</td>
+          <td>Theme</td>
           <td>Members</td>
-          <td></td>
           <td></td>
         </tr>
         {% for club in clubs %}
           <tr>
-            <td>
+            <td><a href="{% url 'show_club' club.id %}">
               <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-            </td>
-            <td>{{ club.name }}</td>
+            </a></td>
+            <td><a href="{% url 'show_club' club.id %}">{{ club.name }}</a></td>
             <td>{{ club.leader }}</td>
+            <td>{{ club.theme }}</td>
             <td>{{ club.members.count }}/{{ club.maximum_members }}</td>
-            <td><a href="{% url 'show_club' club.id %}"><button type="button" class="btn btn-info">View</button></a></td>
             <td>
                 {% if user in club.members.all %}
                   <form action="{% url 'join_club' user.id club.id %}" method="post">
