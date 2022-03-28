@@ -150,12 +150,13 @@
 
                             <p class="text font-size-sm"> Upcoming meetings: <p> </p>
                             {% for i in  club.meetings.all %}
-                            {% if user.now < i.date %}
+                            {% if user.now < i.finish %}
 
 
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
-                                  <h5 class="card-title"><b>Date:</b><br>{{ i.date }}</h5>
+                                  <h5 class="card-title"><b>Start:</b><br>{{ i.start }}</h5>
+                                  <h6 class="card-subtitle mb-2 text-muted"><b>Finish:</b><br>{{ i.finish }}</h6>
                                   <h6 class="card-subtitle mb-2 text-muted"><b>Book:</b><br>{{ i.book.name }}</h6>
                                   <h7 class="card-subtitle mb-2 text-muted"><b>Chosen member:</b><br>{{ i.chosen_member.username }}</h7>
                                   <br><br>

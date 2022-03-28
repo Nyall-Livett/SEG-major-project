@@ -24,7 +24,7 @@ class MeetingModelTestCase(TestCase):
         self.default_club = Club.objects.get(name='Oxford Book Club')
         self.default_book = Book.objects.get(isbn= "0195153448")
         self.default_meeting = Meeting(
-            date="2022-01-27 11:00:00",
+            start="2022-01-27 11:00:00",
             club=self.default_club,
             book= self.default_book,
             location="Online",

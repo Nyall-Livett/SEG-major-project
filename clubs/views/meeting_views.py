@@ -99,7 +99,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
             # get meeting title, start time, meeting description and generate a zoom meeting URL
             title = obj.club.name
-            start_time = convertDateTime(form.cleaned_data['date'])
+            start_time = convertDateTime(form.cleaned_data['start'])
             meet_desc = form.cleaned_data['notes']
             json_data = create_JSON_meeting_data(title, start_time, meet_desc)
             try:
