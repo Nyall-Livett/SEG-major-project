@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User, Club, Meeting
+from clubs.models import Notification, User, Club, Meeting
 from clubs.tests.helpers import LogInTester, isUrlLegit
 from datetime import datetime, timedelta
 
@@ -101,3 +101,14 @@ class MeetingTestCase(TestCase, LogInTester):
         site_url = recently_created_meeting.URL
         if site_url != 'KeyError':
             self.assertTrue(isUrlLegit(site_url))
+
+    def test_creating_meeting_creates_notification_for_all_users_of_the_club(self):
+        self.client.login(username=self.user.username, password='Password123')
+        club = Club.objects.get(id=1)
+        user_one = User.objects.get(id=2)
+        user_two = User.objects.get(id=3)
+        club.add_or_remove_member(user_one)
+        notification_before = Notification.objects.count()
+        self.client.post(self.url, self.form_input, follow=True)
+        notification_after = Notification.objects.count()
+        self.assertTrue(notification_before+2, notification_after)
