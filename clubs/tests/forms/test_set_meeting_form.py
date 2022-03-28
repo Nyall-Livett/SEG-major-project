@@ -22,11 +22,12 @@ class MeetingFormTestCase(TestCase ,LogInTester):
         self.default_club = Club.objects.get(name='Oxford Book Club')
         self.default_book = Book.objects.get(isbn= "0195153448")
         self.url = reverse('set_meeting' , kwargs={'club_id': self.default_club.id})
-       
+
 
         self.form_input = {
             #"date": "2022-02-27 11:00:00",
-            "date": "2022-02-27 11:00:00",
+            "start": "2022-02-27 11:00:00",
+            "finish": "2022-02-27 12:00:00",
             "location": "Online",
             "URL": "www.aaa.com",
             "club":1,
@@ -47,7 +48,8 @@ class MeetingFormTestCase(TestCase ,LogInTester):
     # Test Form has the correct fields in the form
     def test_form_contains_required_fields(self):
         form = MeetingForm()
-        self.assertIn('date', form.fields)
+        self.assertIn('start', form.fields)
+        self.assertIn('finish', form.fields)
         self.assertIn('location', form.fields)
         self.assertIn('notes', form.fields)
         self.assertIn('book', form.fields)
