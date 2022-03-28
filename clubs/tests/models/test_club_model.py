@@ -80,23 +80,25 @@ class ClubModelTestCase(TestCase):
         self.default_club.leader = None
         self._assert_club_is_invalid()
 
-    # def test_add_or_remove_member(self):
-    #     self.client.login(username=self.user, password='Password123')
-    #     self.client.login(username=self.applicant, password='Password123')
-    #     applicants_before = self.club.applicants.all().count()
-    #     Club.applicant_manager(self.club, self.applicant)
-    #     applicants_after = self.club.applicants.all().count()
-    #     self.assertEqual(applicants_before+1, applicants_after)
-    #     members_before = self.club.members.all().count()
-    #     self.club.acceptmembership(self.applicant)
-    #     applicants_after_acceptance = self.club.applicants.all().count()
-    #     members_after = self.club.members.all().count()
-    #     self.assertEqual(applicants_after_acceptance, applicants_after-1)
-    #     self.assertEqual(members_before+1, members_after)
-    #     joined = self.applicant in self.club.members.all()
-    #     self.assertTrue(joined)
-    #     is_member = self.club.is_member(self.applicant)
-    #     self.assertTrue(is_member)
+    def test_leadership_of_club_can_be_granted_to_another_user(self):
+        current_leader = self.default_club.leader
+        new_leader = User.objects.get(username='petrapickles')
+        self.default_club.grant_leadership(new_leader)
+        self.assertNotEquals(current_leader, self.default_club.leader)
+
+    def test_member_can_be_added_and_removed_from_club(self):
+        petra = User.objects.get(username='petrapickles')
+        members_before = self.default_club.members.all().count()
+        self.default_club.add_or_remove_member(petra)
+        members_after = self.default_club.members.all().count()
+        self.assertEqual(members_before+1, members_after)
+        self.default_club.add_or_remove_member(petra)
+        members_after_removal = self.default_club.members.all().count()
+        self.assertEqual(members_before, members_after_removal)
+
+    def test_club_returns_string_of_its_name(self):
+        club_name = self.default_club.name
+        self.assertEqual(club_name, str(self.default_club))
 
     def _assert_club_is_valid(self):
         try:
