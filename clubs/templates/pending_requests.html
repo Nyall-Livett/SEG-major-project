@@ -4,20 +4,17 @@
 <style>
 
 .container-pending-requests {
-  margin-left: 20ex;
-
-}
-.h1-title{
   margin-left: 5ex;
+
 }
 </style>
 
 
-<h1 class= "h1-title">Applicant List</h1>
  <div class="container-pending-requests">
   <div class="row">
     <div class="col-12">
-
+      <h1>Applicant List</h1>
+      <h3>Members: {{ club.members.count }}/{{ club.maximum_members }}</h3>
       <p></p>
       <table class="table">
         {% if club.applicants.all %}
