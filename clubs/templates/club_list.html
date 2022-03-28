@@ -1,7 +1,8 @@
 {% extends 'base_content.html' %}
+{% block content %}
+
 {% load bootstrap_pagination %}
 
-{% block content %}
 <div class="container">
   <div class="row">
     <div class="col-12">
@@ -10,6 +11,8 @@
       <br>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
+
+        <!-- Table header -->
         <tr>
           <th></th>
           <th>Club</th>
@@ -20,34 +23,49 @@
         </tr>
         {% for club in clubs %}
           <tr>
-            <td><a href="{% url 'show_club' club.id %}">
-              <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ club.name }}" class="rounded-circle" >
-            </a></td>
-            <td><a href="{% url 'show_club' club.id %}">{{ club.name }}</a></td>
-            <td>{{ club.leader }}</td>
-            <td>{{ club.theme }}</td>
-            <td>{{ club.members.count }}/{{ club.maximum_members }}</td>
-            <td>
-                {% if user in club.members.all %}
-                  <form action="{% url 'join_club' user.id club.id %}" method="post">
+
+
+          <!-- Club image -->
+          <td>
+            {% if club.thumbnail.url is not None %}
+              <img src={{club.thumbnail.url}}>
+              {% else %}
+                <img src="https://cdn.vectorstock.com/images/1000x1000/66/09/29666609.jpg"
+                    alt="Logo" width="50">
+            {% endif %}
+          </td>
+
+          <!-- Club details -->
+          <td>{{ club.name }}</td>
+          <td>{{ club.leader }}</td>
+          <td>{{ club.member_count }}</td>
+
+          <!-- Club join buttons -->
+          <!-- View club -->
+          <td><a class="btn btn-info" href="{% url 'show_club' club.id %}">View</a></td>
+
+
+          <td>
+              {% if user in club.members.all %}
+                <form action="{% url 'join_club' club.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">Leave</button>
+                </form>
+              {% else %}
+                {% if user in club.applicants.all %}
+                  <form action="{% url 'join_club' club.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-secondary">Leave</button>
+                      <button type="submit" class="btn btn-primary">Request sent</button>
                   </form>
                 {% else %}
-                  {% if user in club.applicants.all %}
-                    <form action="{% url 'join_club' user.id club.id %}" method="post">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Request sent</button>
-                    </form>
-                  {% else %}
-                    <form action="{% url 'join_club' user.id club.id %}" method="post">
-                      {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Join</button>
-                    </form>
-                  {% endif %}
+                  <form action="{% url 'join_club' club.id %}" method="post">
+                    {% csrf_token %}
+                      <button type="submit" class="btn btn-primary">Join</button>
+                  </form>
                 {% endif %}
-            </td>
-          </tr>
+              {% endif %}
+          </td>
+        </tr>
         {% endfor %}
       </table>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}

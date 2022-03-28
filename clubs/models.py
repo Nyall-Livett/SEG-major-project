@@ -476,6 +476,7 @@ class Moment(models.Model):
     created_on = models.DateTimeField(default=timezone.now, blank=False)
     associated_user = models.ForeignKey(User, blank=True, null=True, related_name="associated_user", on_delete=models.CASCADE)
     associated_club = models.ForeignKey(Club, blank=True, null=True, related_name="associated_club", on_delete=models.CASCADE)
+    associated_book = models.ForeignKey(Book, blank=True, null=True, related_name="associated_book", on_delete=models.CASCADE)
 
 
 class Post(models.Model):

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block body %}
   {% include 'partials/navbar.html' %}
-  {% include 'partials/messages.html' %}
   <div style="padding-top: 75px;">
+    {% include 'partials/messages.html' %}
     {% block content %}
     {% endblock %}
   </div>
