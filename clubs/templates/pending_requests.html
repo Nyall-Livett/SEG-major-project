@@ -4,27 +4,44 @@
 <style>
 
 .container-pending-requests {
-  margin-left: 20ex;
-
-}
-.h1-title{
   margin-left: 5ex;
+
 }
 </style>
 
 
-<h1 class= "h1-title">Applicant List</h1>
  <div class="container-pending-requests">
   <div class="row">
     <div class="col-12">
-      
+      <h1>Applicant List</h1>
+      <h3>Members: {{ club.members.count }}/{{ club.maximum_members }}</h3>
       <p></p>
       <table class="table">
         {% if club.applicants.all %}
+        <tr>
+          <th></th>
+          <th>Username</th>
+          <th>Name</th>
+          <th>Bio</th>
+          <th>Favourite Book</th>
+          <th>Favourite Character</th>
+          <th>Favourite Genre</th>
+          <th>Favourite Author</th>
+          <th>Want to read next</th>
+        </tr>
         {% for i in club.applicants.all %}
           <tr>
-
-            <td><a href="{% url 'show_user'  user_id=i.id %}">{{ i.full_name }}</a></td>
+            <td><a href="{% url 'show_user'  user_id=i.id %}">
+              <img src="{{ i.mini_gravatar }}" alt="Gravatar of {{ i.username }}" class="rounded-circle" >
+            </a></td>
+            <td><a href="{% url 'show_user'  user_id=i.id %}">{{ i.username }}</a></td>
+            <td>{{ i.full_name }}</td>
+            <td>{{ i.bio }}</td>
+            <td>{{ i.favourite_book }}</td>
+            <td>{{ i.favourite_character }}</td>
+            <td>{{ i.favourite_genre }}</td>
+            <td>{{ i.favourite_author }}</td>
+            <td>{{ i.want_to_read_next }}</td>
             <td>
             <form action="{% url 'acceptMembership' i.id club.id %}" method="post">
                             {% csrf_token %}
@@ -45,7 +62,5 @@
       </table>
     </div>
   </div>
-</div> 
+</div>
 {% endblock %}
-
-

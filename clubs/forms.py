@@ -194,6 +194,7 @@ class MeetingForm(forms.ModelForm):
         model = Meeting
         fields = ['date', 'location', 'book', 'notes']
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
+    location = forms.CharField(initial='Online')
 
 class StartMeetingForm(forms.ModelForm):
     class Meta:
