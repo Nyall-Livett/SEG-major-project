@@ -87,7 +87,7 @@ class ProcessData:
         return rankings
 
     def getCombined(self):
-        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
+        df = pd.read_csv(self.booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
         df['index'] = [i for i in range(df.shape[0])]
         target_cols = ['Book-Title','Book-Author','Publisher', 'Category']
         df = df.astype(str)
@@ -99,8 +99,7 @@ class ProcessData:
         return df
 
     def getSummary(self):
-        df = pd.read_csv(booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
-
+        df = pd.read_csv(self.booksPath, sep=';', encoding="iso-8859-1", on_bad_lines='skip', quotechar = '"')
 
         df['index'] = [i for i in range(df.shape[0])]
         df = df.astype(str)

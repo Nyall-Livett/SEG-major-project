@@ -1,6 +1,7 @@
 """Meeting related views."""
 from re import template
 from django.conf import settings
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, UpdateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -33,12 +34,14 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
 
     def get_recommendations(self):
         user_id = self.request.user.id
+        meeting = Meeting.objects.get(pk=self.kwargs.get('pk'))
+        chosen_member_id = meeting.chosen_member.id
         if(Book.objects.count() > 0):
-            if((contain_ratings(user_id))==False):
+            if((contain_ratings(chosen_member_id))==False):
                 # book = Book.objects.get(id=1)
                 book = Book.objects.all().first()
-                generate_ratings(book,user_id,'neutral')
-            recommendations = generate_recommendations(user_id)
+                generate_ratings(book,chosen_member_id,'neutral')
+            recommendations = generate_recommendations(chosen_member_id)
             return recommendations
         else:
             return None
@@ -99,9 +102,13 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             start_time = convertDateTime(form.cleaned_data['date'])
             meet_desc = form.cleaned_data['notes']
             json_data = create_JSON_meeting_data(title, start_time, meet_desc)
-            meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
-            obj.URL = meet_url_pass[0]
-            obj.passcode = meet_url_pass[1]
+            try:
+                meet_url_pass = getZoomMeetingURLAndPasscode(json_data)
+                obj.URL = meet_url_pass[0]
+                obj.passcode = meet_url_pass[1]
+            except KeyError:
+                obj.URL = 'KeyError'
+                obj.passcode = 'Zoom_API_call_limit_reached'
 
             list = []
             for i in Club.objects.get(id=self.kwargs.get('club_id')).members.all():
@@ -117,3 +124,9 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
             }
 
         return render(request,"set_meeting.html", context)
+
+class ErrorZoomMeetingView(LoginRequiredMixin, TemplateView):
+    template_name = 'error_zoom_meeting.html'
+
+    def get(self, request):
+        return render(request, self.template_name, None)
