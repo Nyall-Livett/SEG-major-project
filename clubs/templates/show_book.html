@@ -74,6 +74,8 @@
                                     <p><b>Disliked by: </b><script> document.write(disliked, '&nbsp', '(', (disliked/(liked+disliked+neutral))*100 || 0, '%)'); </script></p>
                                     <hr>
                                     <p><b>Read by: </b><script> document.write(liked+disliked+neutral); </script></p>
+
+                                    <a class="btn btn-primary" style="float: right;" href = "{% url 'book_review' %}">Add Book Review</a>
                                   </div>
 
                               </div>

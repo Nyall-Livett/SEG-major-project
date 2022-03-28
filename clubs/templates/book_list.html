@@ -5,6 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
+      <a class="btn btn-primary" style="float: right;" href = "{% url 'book_review' %}">Add Book Review</a>
       {% if user.is_superuser %}
         <a class="btn btn-primary" style="float: right;" href = "{% url 'upload_books' %}">Upload Books</a>
       {% endif %}
