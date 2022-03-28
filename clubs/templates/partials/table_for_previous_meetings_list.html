@@ -1,6 +1,7 @@
 <table class="table">
         <tr>
-          <td><b>Date:</b></td>
+          <td><b>Start:</b></td>
+          <td><b>Finish:</b></td>
           <td><b>Location:</b></td>
           <td><b>Book:</b></td>
           <td><b>Next Book:</b></td>
@@ -8,9 +9,10 @@
           <td><b>Notes:</b></td>
         </tr>
         {% for meeting in club.meetings.all %}
-        {% if meeting.date < user.now %}
+        {% if meeting.finish < user.now %}
         <tr>
-          <td>{{ meeting.date }}</td>
+          <td>{{ meeting.start }}</td>
+          <td>{{ meeting.finish }}</td>
           <td>{{ meeting.location }}</td>
           <td><a href="/book/{{meeting.book.id}}">{{ meeting.book }}</a></td>
           <td><a href="/book/{{meeting.next_book.id}}">{{ meeting.next_book }}</a></td>

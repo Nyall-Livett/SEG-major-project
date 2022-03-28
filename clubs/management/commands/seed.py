@@ -102,9 +102,11 @@ class Command(BaseCommand):
     def _create_meeting(self, club, pastOrFuture):
         if(pastOrFuture == 'past'):
             d = timezone.make_aware(datetime.now() - timedelta(days=2))
+            e = timezone.make_aware(datetime.now() - timedelta(days=1))
             no_of_meeting = 1
         elif(pastOrFuture == 'future'):
             d = timezone.make_aware(datetime.now() + timedelta(days=2))
+            e = timezone.make_aware(datetime.now() - timedelta(days=3))
             no_of_meeting = 2
         else:
             return
@@ -120,7 +122,8 @@ class Command(BaseCommand):
             book = self._getBook('', club.theme)
             Meeting.objects.create(
                 club = club,
-                date = d,
+                start = d,
+                finish = e,
                 location = "online",
                 URL = meet_url_pass[0],
                 passcode = meet_url_pass[1],

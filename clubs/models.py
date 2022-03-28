@@ -514,7 +514,8 @@ class Post(models.Model):
 class Meeting(models.Model):
     """Meeting model"""
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
-    date = models.DateTimeField("date", default=timezone.now)
+    start = models.DateTimeField("start", default=timezone.now)
+    finish = models.DateTimeField("finish", default=timezone.now)
     location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
     passcode = models.CharField(blank=True, null=True, max_length=100)
