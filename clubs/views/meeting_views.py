@@ -34,12 +34,14 @@ class StartMeetingView(LoginRequiredMixin, UpdateView):
 
     def get_recommendations(self):
         user_id = self.request.user.id
+        meeting = Meeting.objects.get(pk=self.kwargs.get('pk'))
+        chosen_member_id = meeting.chosen_member.id
         if(Book.objects.count() > 0):
-            if((contain_ratings(user_id))==False):
+            if((contain_ratings(chosen_member_id))==False):
                 # book = Book.objects.get(id=1)
                 book = Book.objects.all().first()
-                generate_ratings(book,user_id,'neutral')
-            recommendations = generate_recommendations(user_id)
+                generate_ratings(book,chosen_member_id,'neutral')
+            recommendations = generate_recommendations(chosen_member_id)
             return recommendations
         else:
             return None
