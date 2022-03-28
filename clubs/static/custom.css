@@ -14,6 +14,32 @@ a {
   margin-top:6cm
 }
 
+.main-container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 5%;
+}
+
+.error-image-container{
+  height: 50%;
+  width: 30%;
+}
+
+.error-image{
+  height: 100%;
+  width: 100%;
+}
+
+.error-msg-container{
+  padding-top: 2%;
+  height: 20%;
+  width: 15%;
+}
+
 
 
 /*Customization for the main body of the landing page*/
