@@ -14,14 +14,16 @@
               <td>{{ user.full_name }} </td>
               <td>{{ user.bio }}</td>
               <td>
-              {% for i in request.user.leader_of.all  %}
-              {% if i.id == club.id %}
-              <form action="{% url 'join_club' user.id  club.id %}" method="post">
+             
+              {% if request.user == club.leader %}
+              {% if user != request.user %}
+              <form action="{% url 'remove_from_club' user.id  club.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Remove</button>
               </form>
               {% endif %}
-              {% endfor %}
+              {% endif %}
+              
             </td>
             </tr>
           {% endfor %}

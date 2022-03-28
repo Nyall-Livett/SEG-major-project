@@ -45,6 +45,7 @@ urlpatterns = [
     path('book/', views.CreateBookView.as_view(), name='book'),
     path('clubs/', views.ClubListView.as_view(), name='club_list'),
     path('join_club/<int:user_id><int:club_id>', views.JoinRemoveClubView.as_view(), name='join_club'),
+    path('remove_from_club/<int:user_id><int:club_id>', views.RemoveFromClubView.as_view(), name='remove_from_club'),
     path('acceptMembership/<int:user_id><int:club_id>', views.acceptClubapplication.as_view() ,name = 'acceptMembership'),
     path('rejectMembership/<int:user_id><int:club_id>', views.rejectMembership.as_view() ,name = 'rejectMembership'),
     path('create_club/', views.CreateClubView.as_view(), name='create_club'),
