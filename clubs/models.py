@@ -347,6 +347,11 @@ class User(AbstractUser):
         if self.has_request(user):
             self.follow_requests.remove(user)
 
+    """ method for getting current time """
+    def now(self):
+        utc=pytz.UTC
+        return datetime.now().replace(tzinfo=utc)
+
 
 class Club(models.Model):
     """Club model"""
@@ -493,8 +498,8 @@ class Post(models.Model):
 class Meeting(models.Model):
     """Meeting model"""
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="meetings")
-    start = models.DateTimeField("start", default=timezone.now)
-    finish = models.DateTimeField("finish", default=timezone.now)
+    start = models.DateTimeField(default=timezone.now)
+    finish = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=100, blank=True)
     URL = models.CharField(max_length=300, blank=True)
     passcode = models.CharField(blank=True, null=True, max_length=100)
