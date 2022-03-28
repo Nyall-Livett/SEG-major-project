@@ -137,3 +137,32 @@ class ErrorZoomMeetingView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         return render(request, self.template_name, None)
+
+
+class DeleteMeeting(LoginRequiredMixin, DeleteView):
+    """View that allows a club to delete their meeting"""
+
+    model = Meeting
+    template_name = "delete_meeting.html"
+    pk_url_kwarg = 'meeting_id'
+
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['meeting'] = Meeting.objects.get(id=self.kwargs.get('meeting_id'))
+        return context
+
+    def delete(self, request, *args, **kwargs):
+
+        self.meeting = Meeting.objects.get(id=self.kwargs.get('meeting_id'))
+        self.user = request.user
+        club_leader = self.meeting.club.leader.id
+
+        if self.user.id is club_leader:
+            return super(DeleteMeeting, self).delete(request, *args, **kwargs)
+        else:
+            raise Http404("Object you are looking for doesn't exist")
+
+    def get_success_url(self):
+        return redirect('show_club', self.kwargs.get('club_id'))

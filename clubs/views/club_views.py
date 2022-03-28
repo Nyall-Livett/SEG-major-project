@@ -221,10 +221,10 @@ class rejectMembership(LoginRequiredMixin, View):
 
         return redirect('pending_requests', club_id = self.club.id)
 
-class ChangeClubTheme(LoginRequiredMixin, UpdateView):
+class ChangeClubDetails(LoginRequiredMixin, UpdateView):
     model = Club
-    fields = ['theme']
-    template_name = 'change_theme.html'
+    fields = ['name', 'description', 'theme', 'maximum_members']
+    template_name = 'change_club_details.html'
     pk_url_kwarg = 'club_id'
 
     def get_context_data(self, **kwargs):

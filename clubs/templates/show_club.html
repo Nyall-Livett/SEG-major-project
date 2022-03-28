@@ -48,7 +48,7 @@
                                 {% if i.id == club.id %}
                                   <a href = "{% url 'pending_requests' club_id=club.pk %}">Pending requests</a>
                                   <a href="#" data-bs-toggle="modal" data-bs-target="#modal">Transfer Leadership</a>
-                                  <a href = "{% url 'change_theme' club_id=club.pk %}">Change club theme</a>
+                                  <a href = "{% url 'change_club_details' club_id=club.pk %}">Change club details</a>
                                   <a href = "{% url 'delete_club' club_id=club.id %}">Delete Club</a>
                                 {% endif %}
                                 {% endfor %}
@@ -158,8 +158,7 @@
                                   <h5 class="card-title"><b>Start:</b><br>{{ i.start }}</h5>
                                   <h6 class="card-subtitle mb-2 text-muted"><b>Finish:</b><br>{{ i.finish }}</h6>
                                   <h6 class="card-subtitle mb-2 text-muted"><b>Book:</b><br>{{ i.book.name }}</h6>
-                                  <h7 class="card-subtitle mb-2 text-muted"><b>Chosen member:</b><br>{{ i.chosen_member.username }}</h7>
-                                  <br><br>
+                                  <h6 class="card-subtitle mb-2 text-muted"><b>Chosen member:</b><br>{{ i.chosen_member.username }}</h6>
                                   <b>Meeting notes:</b> <br> {{ i.notes }}
                                   {% if i.passcode and i.URL%}
                                     <br><b>Meeting passcode:</b> <br> {{ i.passcode }}
@@ -169,6 +168,8 @@
                                   {% if r.id == club.id %}
                                   <a href={% url 'edit_meeting' i.id %} class="btn btn-secondary">Edit Details</a>
                                   <a href={% url 'start_meeting' i.id %} class="btn btn-primary">Start Meeting</a>
+                                  <p></p>
+                                  <a href={% url 'delete_meeting' meeting_id=i.id club_id=club.id  %} class="btn btn-danger">Delete Meeting</a>
                                   {% endif %}
                                   {% endfor %}
 
