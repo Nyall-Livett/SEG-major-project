@@ -16,8 +16,8 @@ class CreateMoment:
         elif type == MomentType.CLUB_CREATED:
             return self._create_club
 
-        elif type == MomentType.BOOK_RECOMMENDATION:
-            return self._book_recommendation
+        elif type == MomentType.BOOK_RATING:
+            return self._book_rating
 
         elif type == MomentType.READING_NEW_BOOK:
             return self._reading_new_book
@@ -46,19 +46,21 @@ class CreateMoment:
             associated_club = club
         )
 
-    def _book_recommendation(self, user, **kwargs):
+    def _book_rating(self, user, **kwargs):
         book = kwargs['book']
-        description = "{user} has recommended {book}.".format(user=self.user, book=book.name)
+        rating = kwargs['rating']
+        body = "{user} has rated {book} a {rating}.".format(user=self.user, book=book.name, rating=rating)
         Moment.objects.create(
-            type=MomentType.BOOK_RECOMMENDATION,
+            type=MomentType.BOOK_RATING,
             body = body,
-            user = self.user
+            user = self.user,
+            associated_book = book
         )
 
     def _reading_new_book(self, user, **kwargs):
         club = kwargs['club']
         book = kwargs['book']
-        description = "{user} started reading {book} in the {club}.".format(user=self.user, book=book.name, club=club.name)
+        body = "{user} started reading {book} in the {club}.".format(user=self.user, book=book.name, club=club.name)
         Moment.objects.create(
             type=MomentType.READING_NEW_BOOK,
             body = body,

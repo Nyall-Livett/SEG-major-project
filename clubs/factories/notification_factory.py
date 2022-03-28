@@ -23,9 +23,8 @@ class CreateNotification:
         elif type == NotificationType.FOLLOW_REQUEST:
             return self._follow_request
 
-        elif type == NotificationType.MEETING_SOON:
-            return self._meeting_soon
-
+        elif type == NotificationType.MEETING_CREATED:
+            return self._meeting_created
 
     def _create_club(self, title, receiver, **kwargs):
         club = kwargs['club']
@@ -75,12 +74,12 @@ class CreateNotification:
         )
 
 
-    def _meeting_soon(self, title, receiver, **kwargs):
+    def _meeting_created(self, title, receiver, **kwargs):
         club = kwargs['club']
         description = "You have a meeting soon for the {club}".format(club=club.name)
         Notification.objects.create(
-            type=NotificationType.MEETING_SOON,
-            title = NotificationType.MEETING_SOON.label,
+            type=NotificationType.MEETING_CREATED,
+            title = NotificationType.MEETING_CREATED.label,
             description= description,
             receiver=receiver,
             associated_club = club.id

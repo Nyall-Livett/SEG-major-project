@@ -34,12 +34,12 @@
       <button type="button" class="btn position-relative dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-bell"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          {{user.notifications_not_acted_upon_count}}
+          {{request.user.notifications_not_acted_upon_count}}
           <span class="visually-hidden">unread messages</span>
         </span>
       </button>
     <ul class="dropdown-menu  dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
-      {% for notification in user.get_unread_notifications %}
+      {% for notification in request.user.get_unread_notifications %}
         <li><a class="dropdown-item" href="#"> {{notification.title}}</a></li>
       {% empty %}
         <li><a class="dropdown-item" style="pointer-events: none" href="#"><b>No new notifications</b></a></li>

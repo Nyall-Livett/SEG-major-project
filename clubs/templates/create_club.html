@@ -7,7 +7,8 @@
   <div class="row">
     <div class="col-4">
       <div class="row">
-        <div style="color:#878787">Upload club image</div>
+        <div style="color:#878787">Upload club image </div>
+        <small>A default image will be provided otherwise</small>
       </div>
       <div class="wrap-100">
         <div class=" card create-icon-container">
@@ -16,7 +17,6 @@
           <div class="col" style="padding:0 16px;">
             <div class="slider-title">
               <h6 style="color:#878787; margin-top:16px;">Preview</h6>
-              <!-- <input class="crop-slider" type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
               <h6 style="color:#878787;  margin-top:16px;">Crop size</h6>
             </div>
             <div class="slider-wrap">
@@ -111,7 +111,7 @@
         <input type="hidden" id="croppedX" name="croppedX" value="#">
         <input type="hidden" id="croppedY" name="croppedY" value="#">
 
-        <input type="submit" value="Update" class="btn btn-primary">
+        <input type="submit" id="create-button" value="Create" class="btn btn-primary">
 
       <br>
       {{ form.media }}
@@ -137,6 +137,7 @@
     croppedX = $('#croppedX')
     croppedY = $('#croppedY')
 
+    createButton = $('#create-button')
     previewImage = $('#preview-image')
     imageHolder = $('#image-holder')
     id_image = $('#id_image')
@@ -153,6 +154,14 @@
       cropSquareSet = !cropSquareSet
       beforeCrop.toggle()
       afterCrop.toggle()
+    })
+
+    createButton.click((event) => {
+      // Check if image cropped
+      if (id_image[0].files[0] && !cropSquareSet) {
+        alert("Please crop your image")
+        return false
+      }
     })
 
     cropWrap.mousemove((event) => {
@@ -202,7 +211,7 @@
     cropSquare.css("left", `${mouseX}px`)
   }
 
-  // Movement X crop Square
+  // Movement Y crop Square
   const moveYCropSquare = (event) => {
 
     if (event.pageY >= (yLimit - cropSquare.width()/2)) {
@@ -273,7 +282,7 @@
       if (event.pageY > yLimit) {
         setSquareYInPlace((yLimit - cropWrap.offset().top) - cropSquare.height())
       }
-      // has the mouse gone over xLimit
+      // has the mouse gone over yLimit
     } else {
       if (event.pageY <= cropWrap.offset().top) {
         setSquareYInPlace(0)
@@ -348,12 +357,13 @@
     reader = new FileReader()
     reader.onload = function (e) {
 
-      // check its a image/
+      // check its a image
       var allowedExtension = ['jpeg', 'jpg', 'png'];
       if ( allowedExtension.some( string => e.target.result.split(';')[0].split('/')[1] === string )) {
         testImage = new Image()
+        cropSquareSet = false
         testImage.src = e.target.result;
-        //Validate the File Height and Width.
+
         testImage.onload = function () {
           var height = this.height;
           var width = this.width;
@@ -365,20 +375,11 @@
             $('#preview-image').removeClass( "max-height" ).addClass( "max-width" );
           }
           $('#preview-image').attr('src', e.target.result);
-          var height = this.height;
-          var width = this.width;
-          if (height >= width) {
-            imageHolder.removeAttr("height", "fit-content");
-            $('#preview-image').removeClass( "max-width" ).addClass( "max-height" );
-          } else {
-            imageHolder.attr("height", "fit-content");
-            $('#preview-image').removeClass( "max-height" ).addClass( "max-width" );
-          }
+
         }
 
       }
     }
-
     reader.readAsDataURL(id_image[0].files[0])
   }
 

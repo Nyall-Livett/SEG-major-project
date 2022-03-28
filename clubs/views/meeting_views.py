@@ -18,6 +18,8 @@ from django.shortcuts import render
 from django import forms
 from django.http import JsonResponse
 from django.db import IntegrityError
+from clubs.enums import NotificationType
+from clubs.factories.notification_factory import CreateNotification
 from clubs.models import User, Club, Meeting, Book
 from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
@@ -115,6 +117,11 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
                 list.append(i)
             obj.chosen_member = random.choice(list)
             obj.save()
+
+            notifier = CreateNotification()
+            for user in obj.club.members.all():
+                notifier.notify(NotificationType.MEETING_CREATED, user, {'club': obj.club})
+
             return redirect('show_club', self.kwargs.get('club_id'))
 
         else:

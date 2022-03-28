@@ -2,7 +2,7 @@ from django.db import models
 
 class NotificationType(models.IntegerChoices):
     FOLLOW_REQUEST = 0, "Follow request"
-    MEETING_SOON = 1, "Meeting reminder"
+    MEETING_CREATED = 1, "Meeting scheduled"
     CLUB_CREATED = 2, "Club created"
     CLUB_JOINED = 3, "Club joined"
     CLUB_RECEIVED = 4, "Received club leadership"
@@ -12,7 +12,7 @@ class MomentType(models.IntegerChoices):
     CUSTOM = 0
     BECAME_FRIENDS = 1
     CLUB_CREATED = 2
-    BOOK_RECOMMENDATION = 3
+    BOOK_RATING = 3
     READING_NEW_BOOK = 4
 
 class AvatarIcon(models.TextChoices):

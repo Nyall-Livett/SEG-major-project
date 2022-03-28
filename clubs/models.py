@@ -276,6 +276,26 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=50)
 
+    def future_meetings(self):
+        utc=pytz.UTC
+        list = []
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
+
+    def previous_meetings(self):
+        utc=pytz.UTC
+        list = []
+        for i in Meeting.objects.all():
+            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
+                list.append(i)
+        return list
+
+    def now(self):
+        utc=pytz.UTC
+        return datetime.now().replace(tzinfo=utc)
+
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
 
@@ -476,6 +496,7 @@ class Moment(models.Model):
     created_on = models.DateTimeField(default=timezone.now, blank=False)
     associated_user = models.ForeignKey(User, blank=True, null=True, related_name="associated_user", on_delete=models.CASCADE)
     associated_club = models.ForeignKey(Club, blank=True, null=True, related_name="associated_club", on_delete=models.CASCADE)
+    associated_book = models.ForeignKey(Book, blank=True, null=True, related_name="associated_book", on_delete=models.CASCADE)
 
 
 class Post(models.Model):

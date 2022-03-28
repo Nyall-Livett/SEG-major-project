@@ -1,6 +1,5 @@
 {% load humanize %}
 
-
 <div class="row flex-center">
   <div class="col">
     <div class="container-fluid notification-card" style="padding-left: 8px;">
@@ -21,15 +20,32 @@
 
         <div class="col" style="padding-left:4px; padding-top:6px;">
           <div class="align-text">
-            <a href="{% url 'show_user' moment.user.id %}">{{moment.user.username}}</a> <b><small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small></b>
+            <a href="{% url 'show_user' moment.user.id %}">{{moment.user.username}}</a>
+              <b><small style="padding-left:12px; color: #6d6d6d">Book rating</small></b>
           </div>
           <div>
             <small style="color: #6d6d6d">{{moment.created_on|naturaltime}}</small>
           </div>
         </div>
       </div>
-      <div class="card-bottom" style="margin-bottom:8px;">
-        {{moment.body}}
+      <div class="card-bottom">
+        <div class="moment-content">
+          <div class="thumbnail-holder">
+            {% if moment.associated_book.thumbnail.url is not None %}
+              <img src={{moment.associated_book.image_url_s}}>
+              {% else %}
+                <img src="https://cdn.vectorstock.com/images/1000x1000/66/09/29666609.jpg"
+                    alt="Logo" width="50">
+            {% endif %}
+          </div>
+          <div style="padding-left:8px">
+            {{moment.body}} <br>
+            <small>Check it out <a href="{% url 'show_book' moment.associated_book.id %}">here!</a></small>
+          </div>
+        </div>
+        <div class="moment-buttons">
+          <!-- TODO add a like button -->
+        </div>
       </div>
     </div>
   </div>
