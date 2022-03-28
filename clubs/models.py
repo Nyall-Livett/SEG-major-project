@@ -276,28 +276,6 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=50)
 
-    def future_meetings(self):
-        utc=pytz.UTC
-        list = []
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
-                list.append(i)
-
-        return list
-
-    def previous_meetings(self):
-        utc=pytz.UTC
-        list = []
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
-                list.append(i)
-        return list
-
-    def now(self):
-        utc=pytz.UTC
-        return datetime.now().replace(tzinfo=utc)
-
-
     def notification_count(self):
         return self.notification_set.filter(read=False).count()
 
