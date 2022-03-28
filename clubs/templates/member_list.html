@@ -5,16 +5,21 @@
       <div class="col-12">
         <h1>Members of {{club.name}}</h1>
         <table class ="table">
+          <tr>
+            <th></th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Bio</th>
+          </tr>
           {% for user in club.members.all %}
             <tr>
-              <td>
+              <td><a href="{% url 'show_user' user_id=user.id %}">
                 <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
-              </td>
-              <td><a href="{% url 'show_user' user_id=user.id %}">{{ user.full_name }}</a> </td>
+              </a></td>
+              <td><a href="{% url 'show_user' user_id=user.id %}">{{ user.username }}</a> </td>
               <td>{{ user.full_name }} </td>
               <td>{{ user.bio }}</td>
               <td>
-             
               {% if request.user == club.leader %}
               {% if user != request.user %}
               <form action="{% url 'remove_from_club' user.id  club.id %}" method="post">
@@ -23,7 +28,6 @@
               </form>
               {% endif %}
               {% endif %}
-              
             </td>
             </tr>
           {% endfor %}
