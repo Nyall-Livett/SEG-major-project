@@ -25,7 +25,21 @@ class CreateNotification:
 
         elif type == NotificationType.MEETING_SOON:
             return self._meeting_soon
+        
+        elif type == NotificationType.MEETING_CREATED:
+            return self._meeting_created
 
+
+    def _meeting_created(self, title, receiver, **kwargs):
+        club = kwargs['club']
+        description = "A meeting has been created in {club}.".format(club=club.name)
+        Notification.objects.create(
+            type = NotificationType.MEETING_CREATED,
+            title = NotificationType.MEETING_CREATED.label,
+            description = description,
+            receiver = receiver,
+            associated_club = club.id
+        )
 
     def _create_club(self, title, receiver, **kwargs):
         club = kwargs['club']

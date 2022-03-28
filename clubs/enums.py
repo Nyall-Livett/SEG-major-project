@@ -6,6 +6,7 @@ class NotificationType(models.IntegerChoices):
     CLUB_CREATED = 2, "Club created"
     CLUB_JOINED = 3, "Club joined"
     CLUB_RECEIVED = 4, "Received club leadership"
+    MEETING_CREATED = 6, "Meeting created"
     DEFAULT = 5, "New notification"
 
 class MomentType(models.IntegerChoices):
