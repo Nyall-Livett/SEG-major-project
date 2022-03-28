@@ -136,26 +136,31 @@ class ClubListView(LoginRequiredMixin, ListView):
 class JoinRemoveClubView(LoginRequiredMixin, View):
     http_method_names = ['get', 'post']
 
-    def setup(self, request, user_id, club_id, *args, **kwargs):
-        super().setup(self, request, user_id, club_id, *args, **kwargs)
+    def setup(self, request, club_id, *args, **kwargs):
+        super().setup(self, request, club_id, *args, **kwargs)
         self.club = Club.objects.get(id=club_id)
-        self.user = User.objects.get(id=user_id)
 
-    def post(self, request, user_id, club_id, *args, **kwargs ):
-        if self.user in self.club.members.all():
-            if self.user.id is self.club.leader.id:
+    def post(self, request, club_id, *args, **kwargs ):
+        # User in already in the club
+        if request.user in self.club.members.all():
+            # User is leader
+            if request.user.id is self.club.leader.id:
                 messages.add_message(request, messages.WARNING,
                     f" Club leader cannot leave club ")
+            # Remove member
             else:
-                self.club.add_or_remove_member(self.user)
+                self.club.add_or_remove_member(request.user)
                 messages.add_message(request, messages.WARNING,
                     f"You have left {self.club.name} ")
+        # User not in club
         else:
+            # Member capacity reached
             if self.club.members.count() >= self.club.maximum_members:
                 messages.add_message(request, messages.WARNING,
                     f" Cannot join {self.club.name}. Member capacity has been reached")
+            # Joined
             else:
-                self.club.applicant_manager(self.user)
+                self.club.applicant_manager(request.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
         return redirect('club_list')

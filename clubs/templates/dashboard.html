@@ -124,8 +124,9 @@
           {% elif moment.type == 2 %}
             {% include 'partials/create_club_moment_partial.html' with moment=moment %}
 
-          <!-- BOOK_RECOMMENDATION -->
+          <!-- BOOK_RATING -->
           {% elif moment.type == 3 %}
+            {% include 'partials/book_read_moment_partial.html' with moment=moment %}
 
           <!-- READING_NEW_BOOK -->
           {% elif moment.type == 4 %}
@@ -223,7 +224,7 @@
 
               <div class="col" style="padding-left:4px; padding-top:6px;">
                 <div class="align-text">
-                  <a href="{% url 'show_user' user.id %}">{{user.username}}</a> <small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small>
+                  <a href="{% url 'show_user' user.id %}">{{user.username}}</a><b> <small style="padding-left:12px; color: #6d6d6d">Shared a personal moment</small></b>
                 </div>
                 <div>
                   <small style="color: #6d6d6d">now</small>
