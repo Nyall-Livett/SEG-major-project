@@ -36,7 +36,7 @@ class Command(BaseCommand):
     def _data_exists(self):
         return (
             Post.objects.count() > 0 or
-            Club.objects.count() > 0 or 
+            Club.objects.count() > 0 or
             Book.objects.count() > 0 or
             Meeting.objects.count() > 0 or
             BooksRead.objects.count() > 0 or
@@ -67,7 +67,7 @@ class Command(BaseCommand):
         print("Adding follow requests to users complete")
         self._print_seed_data()
 
-        
+
     def seed_booksRead(self):
         ratings = ['like', 'neutral', 'dislike']
         for user in User.objects.all():
@@ -215,7 +215,7 @@ class Command(BaseCommand):
     def _create_user(self):
         first_name = self.faker.first_name()
         last_name = self.faker.last_name()
-        username = f'@{first_name}{last_name}'
+        username = f'{first_name}{last_name}'
         email = self._email(first_name,last_name)
         bio = self.faker.text(max_nb_chars=520)
         user = User.objects.create(
@@ -237,7 +237,7 @@ class Command(BaseCommand):
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
             theme = random.choice(GENRE_CATEGORY_CHOICES)[0],
-            maximum_members = 2,
+            maximum_members = 20,
             leader = leader
         )
         club.add_or_remove_member(leader)
