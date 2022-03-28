@@ -19,8 +19,8 @@ class Command(BaseCommand):
 
     # Hash of Password123
     PASSWORD = "pbkdf2_sha256$260000$ZWkUBTmqpvVHC80qObjXY8$HCDKrbBS2UAj+rvmYw0Ba2yMN3SPJ3QDr1F8GjF6n7o="
-    CLUB_COUNT = 2
-    USER_COUNT = 4
+    CLUB_COUNT = 5
+    USER_COUNT = 20
     POST_COUNT_PER_CLUB = 4
 
     def __init__(self):
@@ -200,7 +200,7 @@ class Command(BaseCommand):
                 and following_request_user not in main_user.follow_requests.all())
 
     def seed_users(self):
-        user_count = User.objects.all().count()
+        user_count = User.objects.all().exclude(is_superuser=True).count()
         seed_try = user_count
         print(f'Users seeded: {user_count}',  end='\r')
         while seed_try < Command.USER_COUNT:
