@@ -35,11 +35,11 @@ class FollowToggleTest(TestCase):
         user_moment = Moment.objects.get(id=1)
         self.assertEqual(user_moment.type, 1)
         self.assertEqual(user_moment.user, self.user)
-        self.assertEqual(user_moment.associated_user, self.followee.id)
+        self.assertEqual(user_moment.associated_user.id, self.followee.id)
         followee_moment = Moment.objects.get(id=2)
         self.assertEqual(followee_moment.type, 1)
         self.assertEqual(followee_moment.user, self.followee)
-        self.assertEqual(followee_moment.associated_user, self.user.id)
+        self.assertEqual(followee_moment.associated_user.id, self.user.id)
 
     def test_get_accept_request_for_followee(self):
         self.client.login(username=self.user.username, password='Password123')
