@@ -20,7 +20,8 @@ class MeetingTestCase(TestCase, LogInTester):
         self.book = Club.objects.get(pk=1)
         self.url = reverse('set_meeting', kwargs={'club_id': self.club.id})
         self.form_input = {
-            'date': datetime.now() + timedelta(days=1),
+            'start': datetime.now() + timedelta(days=1),
+            'finish': datetime.now() + timedelta(days=2),
             'location': 'London',
             'book': self.book.id,
             'notes': 'This is a meeting for test purposes'
@@ -73,11 +74,11 @@ class MeetingTestCase(TestCase, LogInTester):
     def test_form_has_error_messeges_after_being_invalid(self):
         self.client.login(username=self.user.username, password='Password123')
         self.assertTrue(self._is_logged_in())
-        self.form_input['date'] = 'wrong date format'
+        self.form_input['start'] = 'wrong date format'
         response = self.client.post(self.url, self.form_input, follow=True)
         form = response.context['form']
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['date'][0], 'Enter a valid date/time.')
+        self.assertEqual(form.errors['start'][0], 'Enter a valid date/time.')
         self.assertTemplateUsed(response, 'set_meeting.html')
 
     def test_meeting_URL_works_after_creating_meeting(self):
@@ -85,7 +86,7 @@ class MeetingTestCase(TestCase, LogInTester):
         meetings_before = Meeting.objects.all()
         meetings_before_pk_list = []
         for meeting in meetings_before:
-            meetings_before_pk_list.append(meeting.id)   
+            meetings_before_pk_list.append(meeting.id)
         response = self.client.post(self.url, self.form_input, follow=True)
         meetings_after = Meeting.objects.all()
         self.assertEqual(len(meetings_before)+1, len(meetings_after))
@@ -101,7 +102,7 @@ class MeetingTestCase(TestCase, LogInTester):
         site_url = recently_created_meeting.URL
         if site_url != 'KeyError':
             self.assertTrue(isUrlLegit(site_url))
-
+            
     def test_creating_meeting_creates_notification_for_all_users_of_the_club(self):
         self.client.login(username=self.user.username, password='Password123')
         club = Club.objects.get(id=1)

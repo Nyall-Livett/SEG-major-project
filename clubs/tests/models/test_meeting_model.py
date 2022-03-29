@@ -24,7 +24,8 @@ class MeetingModelTestCase(TestCase):
         self.default_club = Club.objects.get(name='Oxford Book Club')
         self.default_book = Book.objects.get(isbn= "0195153448")
         self.default_meeting = Meeting(
-            date="2022-01-27 11:00:00",
+            start="2022-01-27 11:00:00",
+            finish="2022-01-27 12:00:00",
             club=self.default_club,
             book= self.default_book,
             location="Online",
@@ -35,8 +36,12 @@ class MeetingModelTestCase(TestCase):
     def test_valid_meeting(self):
         self._assert_meeting_is_valid()
 
-    def test_date_cannot_be_blank(self):
-        self.default_meeting.date = ''
+    def test_start_cannot_be_blank(self):
+        self.default_meeting.start = ''
+        self._assert_meeting_is_invalid()
+
+    def test_finish_cannot_be_blank(self):
+        self.default_meeting.finish = ''
         self._assert_meeting_is_invalid()
 
     def test_meeting_must_have_club(self):
@@ -47,8 +52,12 @@ class MeetingModelTestCase(TestCase):
         self.default_meeting.book = None
         self._assert_meeting_is_valid()
 
-    def test_date_must_not_be_blank(self):
-        self.default_meeting.date = ''
+    def test_start_must_not_be_blank(self):
+        self.default_meeting.start = ''
+        self._assert_meeting_is_invalid()
+
+    def test_finish_must_not_be_blank(self):
+        self.default_meeting.finish = ''
         self._assert_meeting_is_invalid()
 
     def test_notes_may_be_blank(self):

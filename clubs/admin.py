@@ -32,7 +32,7 @@ class MeetingAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for meetings."""
 
     list_display = [
-        'id', 'date', 'club',
+        'id', 'start', 'club',
     ]
 
 @admin.register(BooksRead)

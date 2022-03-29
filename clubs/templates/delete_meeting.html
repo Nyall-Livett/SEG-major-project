@@ -5,12 +5,12 @@
     <div class="col-12">
       <form method="post">
         {% csrf_token %}
-        <h1>Delete Club</h1>
-        <p>This will delete {{ club.name }} and all of it's related data permenantly. Are you sure you would like to delete this club?</p>
+        <h1>Delete Meeting</h1>
+        <p>This will delete the meeting and all of it's related data permenantly. Are you sure you would like to delete this meeting?</p>
         <input class="btn btn-danger" type="submit" value="Delete">
       </form>
       <br>
-      <a class="btn btn-primary" href = "{% url 'show_club' club.id %}">Cancel</a>
+      <a class="btn btn-primary" href = "{% url 'show_club' meeting.club.id %}">Cancel</a>
     </div>
 </div>
 {% endblock %}

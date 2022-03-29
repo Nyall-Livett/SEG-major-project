@@ -203,7 +203,6 @@ class acceptClubapplication(LoginRequiredMixin, View):
         self.user = User.objects.get(id=user_id)
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
-        import pdb; pdb.set_trace()
         self.club.acceptmembership(self.user)
         notifier = CreateNotification()
         notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
@@ -222,10 +221,10 @@ class rejectMembership(LoginRequiredMixin, View):
 
         return redirect('pending_requests', club_id = self.club.id)
 
-class ChangeClubTheme(LoginRequiredMixin, UpdateView):
+class ChangeClubDetails(LoginRequiredMixin, UpdateView):
     model = Club
-    fields = ['theme']
-    template_name = 'change_theme.html'
+    fields = ['name', 'description', 'theme', 'maximum_members']
+    template_name = 'change_club_details.html'
     pk_url_kwarg = 'club_id'
 
     def get_context_data(self, **kwargs):

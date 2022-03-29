@@ -21,17 +21,17 @@ from django.db import IntegrityError
 from clubs.enums import NotificationType
 from clubs.factories.notification_factory import CreateNotification
 from clubs.models import User, Club, Meeting, Book
-from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, CompleteMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import json
 import random
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
-class StartMeetingView(LoginRequiredMixin, UpdateView):
+class CompleteMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    form_class = StartMeetingForm
-    template_name = 'start_meeting.html' # templete for updating
+    form_class = CompleteMeetingForm
+    template_name = 'complete_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
     def get_recommendations(self):
@@ -101,7 +101,7 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
 
             # get meeting title, start time, meeting description and generate a zoom meeting URL
             title = obj.club.name
-            start_time = convertDateTime(form.cleaned_data['date'])
+            start_time = convertDateTime(form.cleaned_data['start'])
             meet_desc = form.cleaned_data['notes']
             json_data = create_JSON_meeting_data(title, start_time, meet_desc)
             try:
@@ -137,3 +137,32 @@ class ErrorZoomMeetingView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         return render(request, self.template_name, None)
+
+
+class DeleteMeeting(LoginRequiredMixin, DeleteView):
+    """View that allows a club to delete their meeting"""
+
+    model = Meeting
+    template_name = "delete_meeting.html"
+    pk_url_kwarg = 'meeting_id'
+
+    def get_context_data(self, **kwargs):
+        """Return context data"""
+
+        context = super().get_context_data(**kwargs)
+        context['meeting'] = Meeting.objects.get(id=self.kwargs.get('meeting_id'))
+        return context
+
+    def delete(self, request, *args, **kwargs):
+
+        self.meeting = Meeting.objects.get(id=self.kwargs.get('meeting_id'))
+        self.user = request.user
+        club_leader = self.meeting.club.leader.id
+
+        if self.user.id is club_leader:
+            return super(DeleteMeeting, self).delete(request, *args, **kwargs)
+        else:
+            raise Http404("Object you are looking for doesn't exist")
+
+    def get_success_url(self):
+        return redirect('show_club', self.kwargs.get('club_id'))

@@ -50,10 +50,10 @@
             {% for a in c.meetings.all %}
               <div class="single-item-wrap">
 
-                {% if user.now < a.date %}
+                {% if user.now < a.finish %}
                 <div class="book-details">
                   <a href="{% url 'show_club' a.club.id %}">{{a.club.name}}</a>
-                  <p><small style="font-size:12px">{{a.date}}</small></p>
+                  <p><small style="font-size:12px">{{a.start}}</small></p>
 
                   {% if a.URL == 'KeyError' %}
                   <form target="_blank" action="{% url 'zoom_meeting' %}">
