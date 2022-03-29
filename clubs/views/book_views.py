@@ -48,7 +48,7 @@ class BookReviewView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
-        return reverse('book_review')
+        return reverse('dashboard')
 
 class UploadBooksView(LoginRequiredMixin, FormView):
     form_class = UploadBooksForm
