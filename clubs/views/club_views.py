@@ -223,7 +223,7 @@ class rejectMembership(LoginRequiredMixin, View):
 
 class ChangeClubDetails(LoginRequiredMixin, UpdateView):
     model = Club
-    fields = ['name', 'description', 'theme', 'maximum_members']
+    fields = ['name', 'description', 'theme', 'city', 'maximum_members']
     template_name = 'change_club_details.html'
     pk_url_kwarg = 'club_id'
 
