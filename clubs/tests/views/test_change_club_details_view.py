@@ -52,6 +52,6 @@ class ChangeClubDetailsTest(TestCase, LogInTester):
     def test_other_than_leader_will_recieve_404_when_trying_to_update_club_details(self):
         self.client.login(username = self.other.username, password = 'Password123')
         response = self.client.post(reverse('change_club_details', kwargs={'club_id': self.club.id}),
-        {'theme': 'Humor', 'name':'ox', 'description':'sjbdck;sa', 'maximum_members':'20'})
+        {'theme': 'Humor', 'name':'ox', 'description':'sjbdsa', 'maximum_members':'20', 'city':'London'})
         self.assertEqual(response.status_code, 404)
         self.assertEqual(self.club.theme, 'Fiction')
