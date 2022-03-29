@@ -17,8 +17,8 @@ class ProcessData:
     isbn_to_title = {}
     title_to_isbn = {}
     current_directory = os.getcwd()
-    ratingsPath = current_directory + '/clubs/N_based_RecSys_evaluation/BX-Book-Ratings_formatted_evaluation.csv'
-    booksPath = current_directory + '/clubs/N_based_RecSys_evaluation/BX_Books_formatted_evaluation.csv'
+    ratingsPath = current_directory + '/BX-Book-Ratings_formatted_evaluation.csv'
+    booksPath = current_directory + '/BX_Books_formatted_evaluation.csv'
 
     def loadBooks(self):
 
@@ -127,7 +127,7 @@ class ProcessData:
         if isbn in self.isbn_to_title:
             return self.isbn_to_title.get(isbn)
         else:
-            return ""
+            return f'{isbn}'
 
     def getisbn(self, title):
         if title in self.title_to_isbn:
