@@ -154,12 +154,6 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                     f"You have left {self.club.name} ")
         # User not in club
         else:
-            # Member capacity reached
-            if self.club.members.count() >= self.club.maximum_members:
-                messages.add_message(request, messages.WARNING,
-                    f" Cannot join {self.club.name}. Member capacity has been reached")
-            # Joined
-            else:
                 self.club.applicant_manager(request.user)
                 messages.add_message(request, messages.SUCCESS,
                     f"You have applied to join {self.club.name} ")
@@ -203,9 +197,17 @@ class acceptClubapplication(LoginRequiredMixin, View):
         self.user = User.objects.get(id=user_id)
 
     def post(self, request, user_id, club_id, *args, **kwargs ):
-        self.club.acceptmembership(self.user)
-        notifier = CreateNotification()
-        notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
+        # Member capacity reached
+        if self.club.members.count() >= self.club.maximum_members:
+            messages.add_message(request, messages.WARNING,
+                f" Cannot add {self.user.username}. Member capacity has been reached")
+        # Joined
+        else:
+            self.club.acceptmembership(self.user)
+            notifier = CreateNotification()
+            notifier.notify(NotificationType.CLUB_JOINED, self.user, {'club': self.club})
+            messages.add_message(request, messages.SUCCESS,
+                f"{self.user.username} is now a member")
         return redirect('pending_requests', club_id = self.club.id)
 
 class rejectMembership(LoginRequiredMixin, View):

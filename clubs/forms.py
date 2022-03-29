@@ -197,6 +197,11 @@ class MeetingForm(forms.ModelForm):
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
     location = forms.CharField(initial='Online')
 
+    def clean(self):
+        super().clean()
+        if not (user.now <= self.start <= start.end):
+            raise ValidationError('Invalid date/times')
+
 class CompleteMeetingForm(forms.ModelForm):
     class Meta:
         "Form options"
