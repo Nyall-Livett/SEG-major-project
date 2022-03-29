@@ -38,8 +38,9 @@
                                     <h4>{{club.name}}</h4>
                                 </div>
                                 <p></p>
-                                <p class="text-muted font-size-sm">Club Leader: {{ club.leader.full_name }}</p>
-                                <p class="text-muted font-size-sm">Club theme: {{ club.theme }} </p>
+                                <p class="text-muted font-size-sm">Leader: {{ club.leader.full_name }}</p>
+                                <p class="text-muted font-size-sm">Theme: {{ club.theme }} </p>
+                                <p class="text-muted font-size-sm">City: {{ club.city }} </p>
                                 <p class="text-muted font-size-sm">Members: {{ club.members.count }}/{{ club.maximum_members }} </p>
                                 {% if club in user.clubs.all %}
                                   <a href={% url 'member_list' club.id %}>Members list</a>

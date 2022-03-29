@@ -18,6 +18,7 @@ class UserFormTestCase(TestCase):
             'username': 'janedoe',
             'email': 'janedoe@example.org',
             'bio': 'My bio',
+            'city': 'London',
             'favourite_genre': 'Humor'
         }
 
@@ -30,6 +31,7 @@ class UserFormTestCase(TestCase):
         email_field = form.fields['email']
         self.assertTrue(isinstance(email_field, forms.EmailField))
         self.assertIn('bio', form.fields)
+        self.assertIn('city', form.fields)
 
     def test_valid_user_form(self):
         form = UserForm(data=self.form_input)
@@ -47,3 +49,4 @@ class UserFormTestCase(TestCase):
         self.assertEqual(user.last_name, 'Doe')
         self.assertEqual(user.email, 'janedoe@example.org')
         self.assertEqual(user.bio, 'My bio')
+        self.assertEqual(user.city, 'London')

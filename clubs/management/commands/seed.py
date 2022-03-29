@@ -221,11 +221,13 @@ class Command(BaseCommand):
         username = f'{first_name}{last_name}'
         email = self._email(first_name,last_name)
         bio = self.faker.text(max_nb_chars=520)
+        city = self.faker.city()
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
             email = email,
             bio = bio,
+            city = city,
             username = username,
             password=Command.PASSWORD,
         )
@@ -240,6 +242,7 @@ class Command(BaseCommand):
             name = self._club_name(name),
             description = self.faker.text(max_nb_chars=2048),
             theme = random.choice(GENRE_CATEGORY_CHOICES)[0],
+            city = self.faker.city(),
             maximum_members = 20,
             leader = leader
         )

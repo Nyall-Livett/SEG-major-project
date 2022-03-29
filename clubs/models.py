@@ -250,6 +250,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
     bio = models.CharField(max_length=520, blank=True)
+    city = models.CharField(max_length=200, blank=False)
     followers = models.ManyToManyField('self', symmetrical=False, related_name="followees")
     follow_requests = models.ManyToManyField('self', symmetrical=False, related_name='sent_requests')
     favourite_book = models.ForeignKey(Book, blank=True, null=True, on_delete=models.SET_NULL, related_name='fav_book')
@@ -377,6 +378,7 @@ class Club(models.Model):
     """Club model"""
     name = models.CharField(max_length=64, unique=True, blank=False)
     description = models.CharField(max_length=2048, blank=False)
+    city = models.CharField(max_length=200, blank=False)
     leader = models.ForeignKey(User, related_name="leader_of", on_delete=models.PROTECT)
     members = models.ManyToManyField(User, symmetrical=True, related_name="clubs")
     applicants = models.ManyToManyField(User,blank=True, related_name="applicants" )
