@@ -40,7 +40,7 @@
       </button>
     <ul class="dropdown-menu  dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
       {% for notification in request.user.get_unread_notifications %}
-        <li><a class="dropdown-item" href="#"> {{notification.title}}</a></li>
+        <li style="padding: .25rem 1rem;pointer-events: none;">{{notification.title}}</li>
       {% empty %}
         <li><a class="dropdown-item" style="pointer-events: none" href="#"><b>No new notifications</b></a></li>
       {% endfor %}
