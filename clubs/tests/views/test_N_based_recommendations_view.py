@@ -27,7 +27,7 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.book_review_url = reverse('book_review')
         self.sign_up_url = reverse('sign_up')
         self.delete_account_url = reverse('delete_account',kwargs={'user_id': self.other_user.id})
-        self.start_meeting_url = reverse('start_meeting', kwargs={'pk': self.meeting.pk})
+        self.start_meeting_url = reverse('complete_meeting', kwargs={'pk': self.meeting.pk})
         # self.profile_url = reverse('profile')
 
     def test_urls(self):
@@ -36,7 +36,7 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertEqual(self.book_review_url,f'/book_review')
         # self.assertEqual(self.profile_url,f'/profile/')
         self.assertEqual(self.delete_account_url,f'/delete_account/{self.other_user.id}')
-        self.assertEqual(self.start_meeting_url,f'/start_meeting/{self.meeting.pk}/')
+        self.assertEqual(self.start_meeting_url,f'/complete_meeting/{self.meeting.pk}/')
 
     def test_drop_specfic_ratings(self):
         self.client.login(username='johndoe', password='Password123')
