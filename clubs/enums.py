@@ -13,7 +13,6 @@ class MomentType(models.IntegerChoices):
     BECAME_FRIENDS = 1
     CLUB_CREATED = 2
     BOOK_RATING = 3
-    READING_NEW_BOOK = 4
 
 class AvatarIcon(models.TextChoices):
     BRUTUS = "brutus"
