@@ -74,10 +74,10 @@ class MeetingFormTestCase(TestCase ,LogInTester):
         self.assertTrue(form.is_valid())
 
     # Test the form accepts blank meeting location
-    def test_form_accepts_blank_location(self):
+    def test_location_can_not_be_blank(self):
         self.form_input['location'] = ''
         form = MeetingForm(data=self.form_input)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
 
     # Test the form accepts blank meeting URL
     def test_form_accepts_blank_URL(self):
