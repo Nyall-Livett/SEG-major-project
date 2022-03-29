@@ -10,6 +10,7 @@
           {% for r in request.user.leader_of.all  %}
           {% if r.id == club.id %}
           <th></th>
+          <th></th>
           {% endif %}
           {% endfor %}
         </tr>
@@ -25,6 +26,7 @@
           <td>{{ meeting.notes }}</td>
           {% for r in request.user.leader_of.all  %}
           {% if r.id == club.id %}
+          <td><a href={% url 'complete_meeting' meeting.id %} class="btn btn-primary">Complete Meeting</a></td>
           <td><a href={% url 'delete_meeting' meeting_id=meeting.id club_id=club.id  %} class="btn btn-danger">Delete Meeting</a></td>
           {% endif %}
           {% endfor %}

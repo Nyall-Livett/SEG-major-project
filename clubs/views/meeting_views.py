@@ -21,17 +21,17 @@ from django.db import IntegrityError
 from clubs.enums import NotificationType
 from clubs.factories.notification_factory import CreateNotification
 from clubs.models import User, Club, Meeting, Book
-from clubs.forms import ClubForm, BookForm, MeetingForm, StartMeetingForm, EditMeetingForm, BookReviewForm
+from clubs.forms import ClubForm, BookForm, MeetingForm, CompleteMeetingForm, EditMeetingForm, BookReviewForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import json
 import random
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
-class StartMeetingView(LoginRequiredMixin, UpdateView):
+class CompleteMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
-    form_class = StartMeetingForm
-    template_name = 'start_meeting.html' # templete for updating
+    form_class = CompleteMeetingForm
+    template_name = 'complete_meeting.html' # templete for updating
     success_url="/dashboard" # posts list url
 
     def get_recommendations(self):
