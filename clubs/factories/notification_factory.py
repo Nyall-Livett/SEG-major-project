@@ -76,7 +76,7 @@ class CreateNotification:
 
     def _meeting_created(self, title, receiver, **kwargs):
         club = kwargs['club']
-        description = "You have a meeting soon for the {club}".format(club=club.name)
+        description = "You have a meeting scheduled for the {club}".format(club=club.name)
         Notification.objects.create(
             type=NotificationType.MEETING_CREATED,
             title = NotificationType.MEETING_CREATED.label,
