@@ -60,6 +60,10 @@ class ClubModelTestCase(TestCase):
         self.default_club.theme = ''
         self._assert_club_is_invalid()
 
+    def test_city_must_not_be_blank(self):
+        self.default_club.city = ''
+        self._assert_club_is_invalid()
+
     def test_maximum_members_must_not_be_less_than_2(self):
         self.default_club.maximum_members = 1
         self._assert_club_is_invalid()
@@ -109,5 +113,3 @@ class ClubModelTestCase(TestCase):
     def _assert_club_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.default_club.full_clean()
-
-   

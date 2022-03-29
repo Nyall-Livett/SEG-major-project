@@ -16,6 +16,7 @@ class ClubFormTestCase(TestCase):
             'name': 'London Book Club',
             'description': 'Book club based in London',
             'theme': 'Humor',
+            'city': 'London',
             'maximum_members': 3
         }
 
@@ -54,8 +55,20 @@ class ClubFormTestCase(TestCase):
         form = ClubForm(data=self.form_input)
         self.assertEqual(form.errors["name"], ["This field is required."])
 
-    # Test the form error message for blank name
+    # Test the form error message for blank description
     def test_form_error_message_for_blank_description(self):
         self.form_input['description'] = ''
         form = ClubForm(data=self.form_input)
         self.assertEqual(form.errors["description"], ["This field is required."])
+
+    # Test the form rejects blank name
+    def test_form_rejects_blank_city(self):
+        self.form_input['city'] = ''
+        form = ClubForm(data=self.form_input)
+        self.assertFalse(form.is_valid())
+
+    # Test the form error message for blank city
+    def test_form_error_message_for_blank_city(self):
+        self.form_input['city'] = ''
+        form = ClubForm(data=self.form_input)
+        self.assertEqual(form.errors["city"], ["This field is required."])

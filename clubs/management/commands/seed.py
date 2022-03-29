@@ -227,6 +227,7 @@ class Command(BaseCommand):
             last_name = last_name,
             email = email,
             bio = bio,
+            city = city,
             username = username,
             password=Command.PASSWORD,
         )

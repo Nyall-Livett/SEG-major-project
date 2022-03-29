@@ -126,6 +126,12 @@ class UserModelTestCase(TestCase):
         self.user.bio = 'x' * 521
         self._assert_user_is_invalid()
 
+
+    def test_city_must_not_be_blank(self):
+        self.user.city = ''
+        self._assert_user_is_invalid()
+        
+
     def _assert_user_is_valid(self):
         try:
             self.user.full_clean()
