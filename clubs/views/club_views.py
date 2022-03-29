@@ -154,9 +154,14 @@ class JoinRemoveClubView(LoginRequiredMixin, View):
                     f"You have left {self.club.name} ")
         # User not in club
         else:
-                self.club.applicant_manager(request.user)
-                messages.add_message(request, messages.SUCCESS,
-                    f"You have applied to join {self.club.name} ")
+                if request.user in self.club.applicants.all():
+                    self.club.applicant_manager(request.user)
+                    messages.add_message(request, messages.SUCCESS,
+                        f"Request to join {self.club.name} cancelled")
+                else:
+                    self.club.applicant_manager(request.user)
+                    messages.add_message(request, messages.SUCCESS,
+                        f"You have applied to join {self.club.name} ")
         return redirect('club_list')
 
 

@@ -415,6 +415,8 @@ class Club(models.Model):
     def applicant_manager(self, user):
         if user not in self.applicants.all():
             user.applicants.add(self)
+        else:
+            user.applicants.remove(self)
 
     def acceptmembership(self, user):
         user.applicants.remove(self)
