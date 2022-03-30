@@ -15,6 +15,7 @@ from decouple import config
 
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
+import django_on_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -128,8 +129,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'clubs/static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -159,3 +161,6 @@ AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_QUERYSTRING_AUTH = False
 #Random book
 RANDOM_BOOK = 1
+
+# Activate django on heroku
+django_on_heroku.settings(locals())
