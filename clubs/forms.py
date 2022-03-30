@@ -198,8 +198,8 @@ class MeetingForm(forms.ModelForm):
         model = Meeting
         fields = ['start', 'finish', 'location', 'book', 'notes']
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
-    start = forms.DateTimeField(initial=timezone.now)
-    finish = forms.DateTimeField(initial=timezone.now)
+    #start = forms.DateTimeField(initial=timezone.now)
+    #finish = forms.DateTimeField(initial=timezone.now)
     location = forms.CharField(initial='Online')
 
     #def clean(self):
