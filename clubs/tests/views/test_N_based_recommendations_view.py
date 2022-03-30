@@ -109,13 +109,13 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertContains(response, f'{book_4.name}')
         self.assertContains(response, f'{book_5.name}')
         self.assertEqual(rating_count_before,rating_count_after)
-        self.assertEqual(len(response.context['recommendations']),4)
+        self.assertEqual(len(response.context['recommendations']),5)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
         self.assertEqual(rating_at_first,rating_after_drop)
 
-    def test_aceess_start_meeting_skip_not_found_books(self):
+    def test_aceess_complete_meeting_skip_not_found_books(self):
         Book.objects.get(pk=3).delete()
         self.client.login(username='johndoe', password='Password123')
         self.assertTrue(self._is_logged_in())
@@ -133,7 +133,7 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertContains(response, f'{book_4.name}')
         self.assertContains(response, f'{book_5.name}')
         self.assertEqual(rating_count_before,rating_count_after)
-        self.assertEqual(len(response.context['recommendations']),4)
+        self.assertEqual(len(response.context['recommendations']),5)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)

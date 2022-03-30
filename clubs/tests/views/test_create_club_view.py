@@ -21,6 +21,7 @@ class CreateClubTestCase(TestCase, LogInTester):
             'name': f'{self.form_name}',
             'description': 'Book club based in oxfordshire',
             'theme': 'Humor',
+            'city': 'London',
             'maximum_members': 2
         }
 

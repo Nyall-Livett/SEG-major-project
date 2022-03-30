@@ -2,7 +2,7 @@
 {% block content %}
 {% load humanize %}
 
-<div class="container" style="padding:0 26px; height:100%">
+<div class="container" style="height:100%">
 
   <div class="row" style="height:100%">
 
@@ -127,9 +127,6 @@
           <!-- BOOK_RATING -->
           {% elif moment.type == 3 %}
             {% include 'partials/book_read_moment_partial.html' with moment=moment %}
-
-          <!-- READING_NEW_BOOK -->
-          {% elif moment.type == 4 %}
 
           {% endif %}
         {% empty %}

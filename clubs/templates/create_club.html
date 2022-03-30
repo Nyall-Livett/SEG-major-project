@@ -87,6 +87,14 @@
 
           </div>
 
+          <!-- City -->
+          <div class="col">
+            <label for="city-input" autocomplete="off" class="form-label">City (enter N/A for Online Only):</label>
+            {{ form.city }}
+            {{ form.city.errors }}
+
+          </div>
+
           <!-- Maximum members -->
           <div class="col">
             <label for="email-address-input" class="form-label">Maximum members:</label>
@@ -94,7 +102,8 @@
             {{ form.maximum_members.errors }}
 
           </div>
-        </div>
+
+          </div>
 
         <!-- description -->
         <div class="row mb-3">

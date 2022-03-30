@@ -6,6 +6,7 @@
       "name": "Oxford Book Club",
       "description": "This a book club based in Oxfordshire",
       "theme": "Fiction",
+      "city": "London",
       "maximum_members": 2,
       "leader": 1
     }
@@ -17,6 +18,7 @@
       "name": "London Book Club",
       "description": "This a book club based in London",
       "theme": "Humor",
+      "city": "London",
       "maximum_members": 2,
       "leader": 2
     }
@@ -28,6 +30,7 @@
       "name": "Reading Book Club",
       "description": "This a book club based in Reading",
       "theme": "Fiction",
+      "city": "London",
       "maximum_members": 2,
       "leader": 1
     }

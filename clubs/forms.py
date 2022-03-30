@@ -1,9 +1,12 @@
 """Forms for the clubs app."""
 from django import forms
 from django.contrib.auth import authenticate
+#from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
+#from datetime import datetime
+#from django.utils import timezone
 
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -26,7 +29,7 @@ class SignUpForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'city', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
         widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
 
     new_password = forms.CharField(
@@ -59,6 +62,7 @@ class SignUpForm(forms.ModelForm):
             last_name=self.cleaned_data.get('last_name'),
             email=self.cleaned_data.get('email'),
             bio=self.cleaned_data.get('bio'),
+            city=self.cleaned_data.get('city'),
             password=self.cleaned_data.get('new_password'),
             favourite_book=self.cleaned_data.get('favourite_book'),
             favourite_character=self.cleaned_data.get('favourite_character'),
@@ -156,7 +160,7 @@ class UserForm(forms.ModelForm):
         """Form options."""
 
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'city', 'favourite_book', 'favourite_character', 'favourite_genre', 'favourite_author', 'want_to_read_next', 'using_gravatar']
         widgets = { 'bio': forms.Textarea(), 'favourite_book': autocomplete.ModelSelect2(url='book-autocomplete'), 'want_to_read_next': autocomplete.ModelSelect2(url='book-autocomplete') }
 
     def __init__(self, *args, **kwargs):
@@ -171,7 +175,7 @@ class ClubForm(forms.ModelForm):
         """Form options."""
 
         model = Club
-        fields = ['name', 'description', 'theme', 'maximum_members', 'image']
+        fields = ['name', 'description', 'theme', 'city', 'maximum_members', 'image']
         widgets = {
             'description': forms.Textarea(),
             'maximum_members': forms.NumberInput(attrs={'min': 2, 'max': 64})
@@ -194,7 +198,16 @@ class MeetingForm(forms.ModelForm):
         model = Meeting
         fields = ['start', 'finish', 'location', 'book', 'notes']
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
+    #start = forms.DateTimeField(initial=timezone.now)
+    #finish = forms.DateTimeField(initial=timezone.now)
     location = forms.CharField(initial='Online')
+
+    #def clean(self):
+        #super().clean()
+        #if not (timezone.now() <= self.cleaned_data['start']):
+            #raise ValidationError('Invalid date/times')
+        #elif not (self.cleaned_data['start'] <= self.cleaned_data['finish']):
+            #raise ValidationError('Invalid date/times')
 
 class CompleteMeetingForm(forms.ModelForm):
     class Meta:
