@@ -128,8 +128,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'clubs/static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -159,3 +160,11 @@ AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_QUERYSTRING_AUTH = False
 #Random book
 RANDOM_BOOK = 1
+
+# Activate django on heroku
+#activate heroku
+
+
+if '/app' in os.environ['HOME']:
+    import django_on_heroku
+    django_on_heroku.settings(locals())

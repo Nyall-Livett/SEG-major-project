@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User, Club, Meeting
+from clubs.models import Notification, User, Club, Meeting
 from clubs.tests.helpers import LogInTester, isUrlLegit
 from datetime import datetime, timedelta
+import pytz
 
 class MeetingTestCase(TestCase, LogInTester):
 
@@ -15,13 +16,14 @@ class MeetingTestCase(TestCase, LogInTester):
         ]
 
     def setUp(self):
+        utc=pytz.UTC
         self.user = User.objects.get(pk=1)
         self.club = Club.objects.get(pk=1)
         self.book = Club.objects.get(pk=1)
         self.url = reverse('set_meeting', kwargs={'club_id': self.club.id})
         self.form_input = {
-            'start': datetime.now() + timedelta(days=1),
-            'finish': datetime.now() + timedelta(days=2),
+            'start': datetime.now().replace(tzinfo=utc) + timedelta(days=1),
+            'finish': datetime.now().replace(tzinfo=utc) + timedelta(days=2),
             'location': 'London',
             'book': self.book.id,
             'notes': 'This is a meeting for test purposes'
@@ -102,3 +104,14 @@ class MeetingTestCase(TestCase, LogInTester):
         site_url = recently_created_meeting.URL
         if site_url != 'KeyError':
             self.assertTrue(isUrlLegit(site_url))
+            
+    def test_creating_meeting_creates_notification_for_all_users_of_the_club(self):
+        self.client.login(username=self.user.username, password='Password123')
+        club = Club.objects.get(id=1)
+        user_one = User.objects.get(id=2)
+        user_two = User.objects.get(id=3)
+        club.add_or_remove_member(user_one)
+        notification_before = Notification.objects.count()
+        self.client.post(self.url, self.form_input, follow=True)
+        notification_after = Notification.objects.count()
+        self.assertTrue(notification_before+2, notification_after)

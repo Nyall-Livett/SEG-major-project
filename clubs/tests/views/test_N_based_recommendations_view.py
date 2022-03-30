@@ -1,8 +1,10 @@
+import datetime
 from django.test import TestCase
 from django.urls import reverse
 from clubs.tests.helpers import LogInTester
 from clubs.models import User, Club, Meeting, Book
 from ...helpers import *
+import pytz
 
 class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
     """Test of Neighbourhood-based recommendations view"""
@@ -28,13 +30,13 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.sign_up_url = reverse('sign_up')
         self.delete_account_url = reverse('delete_account',kwargs={'user_id': self.other_user.id})
         self.start_meeting_url = reverse('complete_meeting', kwargs={'pk': self.meeting.pk})
-        # self.profile_url = reverse('profile')
+
+
 
     def test_urls(self):
         self.assertEqual(self.dashboard_url,f'/dashboard/')
         self.assertEqual(self.sign_up_url,f'/sign_up/')
         self.assertEqual(self.book_review_url,f'/book_review')
-        # self.assertEqual(self.profile_url,f'/profile/')
         self.assertEqual(self.delete_account_url,f'/delete_account/{self.other_user.id}')
         self.assertEqual(self.start_meeting_url,f'/complete_meeting/{self.meeting.pk}/')
 
@@ -86,54 +88,6 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         generate_ratings(self.book,self.user.id,'like')
         rating_count_after = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_count_after)
-        amount = rating_count_after - rating_at_first
-        drop_specific_amount_ratings(amount)
-        rating_after_drop = get_ratings_count(self.user.id)
-        self.assertEqual(rating_at_first,rating_after_drop)
-
-    def test_aceess_dashboard_skip_not_found_books(self):
-        Book.objects.get(pk=3).delete()
-        self.client.login(username='johndoe', password='Password123')
-        self.assertTrue(self._is_logged_in())
-        rating_at_first = get_ratings_count(self.user.id)
-        generate_ratings(self.book,self.user.id,'neutral')
-        rating_count_before = get_ratings_count(self.user.id)
-        response = self.client.get(self.dashboard_url)
-        rating_count_after = get_ratings_count(self.user.id)
-        book_2 = Book.objects.get(pk=4)
-        book_3 = Book.objects.get(pk=5)
-        book_4 = Book.objects.get(pk=6)
-        book_5 = Book.objects.get(pk=7)
-        self.assertContains(response, f'{book_2.name}')
-        self.assertContains(response, f'{book_3.name}')
-        self.assertContains(response, f'{book_4.name}')
-        self.assertContains(response, f'{book_5.name}')
-        self.assertEqual(rating_count_before,rating_count_after)
-        self.assertEqual(len(response.context['recommendations']),5)
-        amount = rating_count_after - rating_at_first
-        drop_specific_amount_ratings(amount)
-        rating_after_drop = get_ratings_count(self.user.id)
-        self.assertEqual(rating_at_first,rating_after_drop)
-
-    def test_aceess_complete_meeting_skip_not_found_books(self):
-        Book.objects.get(pk=3).delete()
-        self.client.login(username='johndoe', password='Password123')
-        self.assertTrue(self._is_logged_in())
-        rating_at_first = get_ratings_count(self.user.id)
-        generate_ratings(self.book,self.user.id,'neutral')
-        rating_count_before = get_ratings_count(self.user.id)
-        response = self.client.get(self.start_meeting_url)
-        rating_count_after = get_ratings_count(self.user.id)
-        book_2 = Book.objects.get(pk=4)
-        book_3 = Book.objects.get(pk=5)
-        book_4 = Book.objects.get(pk=6)
-        book_5 = Book.objects.get(pk=7)
-        self.assertContains(response, f'{book_2.name}')
-        self.assertContains(response, f'{book_3.name}')
-        self.assertContains(response, f'{book_4.name}')
-        self.assertContains(response, f'{book_5.name}')
-        self.assertEqual(rating_count_before,rating_count_after)
-        self.assertEqual(len(response.context['recommendations']),5)
         amount = rating_count_after - rating_at_first
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)

@@ -52,13 +52,13 @@
               {% if user in club.members.all %}
                 <form action="{% url 'join_club' club.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-secondary">Leave</button>
+                  <button type="submit" class="btn btn-danger">Leave</button>
                 </form>
               {% else %}
                 {% if user in club.applicants.all %}
                   <form action="{% url 'join_club' club.id %}" method="post">
                     {% csrf_token %}
-                      <button type="submit" class="btn btn-primary">Request sent</button>
+                      <button type="submit" class="btn btn-secondary">Cancel Request</button>
                   </form>
                 {% else %}
                   <form action="{% url 'join_club' club.id %}" method="post">

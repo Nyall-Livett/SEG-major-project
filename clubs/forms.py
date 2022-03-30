@@ -1,9 +1,12 @@
 """Forms for the clubs app."""
 from django import forms
 from django.contrib.auth import authenticate
+#from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
+#from datetime import datetime
+#from django.utils import timezone
 
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -195,7 +198,16 @@ class MeetingForm(forms.ModelForm):
         model = Meeting
         fields = ['start', 'finish', 'location', 'book', 'notes']
         widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
+    #start = forms.DateTimeField(initial=timezone.now)
+    #finish = forms.DateTimeField(initial=timezone.now)
     location = forms.CharField(initial='Online')
+
+    #def clean(self):
+        #super().clean()
+        #if not (timezone.now() <= self.cleaned_data['start']):
+            #raise ValidationError('Invalid date/times')
+        #elif not (self.cleaned_data['start'] <= self.cleaned_data['finish']):
+            #raise ValidationError('Invalid date/times')
 
 class CompleteMeetingForm(forms.ModelForm):
     class Meta:

@@ -15,6 +15,7 @@ class SignUpFormTestCase(TestCase):
             'username': 'janedoe',
             'email': 'janedoe@example.org',
             'bio': 'My bio',
+            'city':'London',
             'new_password': 'Password123',
             'password_confirmation': 'Password123',
             'favourite_genre': 'Humor'
