@@ -29,7 +29,7 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.book_review_url = reverse('book_review')
         self.sign_up_url = reverse('sign_up')
         self.delete_account_url = reverse('delete_account',kwargs={'user_id': self.other_user.id})
-        self.start_meeting_url = reverse('complete_meeting', kwargs={'pk': self.meeting.pk})
+        self.start_meeting_url = reverse('complete_meeting', kwargs={'pk': self.meeting.pk,'club_id':1})
 
 
 
@@ -38,7 +38,7 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.assertEqual(self.sign_up_url,f'/sign_up/')
         self.assertEqual(self.book_review_url,f'/book_review')
         self.assertEqual(self.delete_account_url,f'/delete_account/{self.other_user.id}')
-        self.assertEqual(self.start_meeting_url,f'/complete_meeting/{self.meeting.pk}/')
+        self.assertEqual(self.start_meeting_url,f'/complete_meeting/{self.meeting.pk}/{self.meeting.club.id}')
 
     def test_drop_specfic_ratings(self):
         self.client.login(username='johndoe', password='Password123')
@@ -277,44 +277,3 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         drop_specific_amount_ratings(amount)
         rating_after_drop = get_ratings_count(self.user.id)
         self.assertEqual(rating_count_before,rating_after_drop)
-
-    # def test_sign_up_will_generate_ratings(self):
-    #     # self.client.login(username='johndoe', password='Password123')
-    #     # self.assertTrue(self._is_logged_in())
-    #     self.assertFalse(contain_ratings(self.user.id))
-    #     form_input = {
-    #         'first_name': 'Jane',
-    #         'last_name': 'Doe',
-    #         'username': 'janedoe',
-    #         'email': 'janedoe@example.org',
-    #         'bio': 'My bio',
-    #         'new_password': 'Password123',
-    #         'password_confirmation': 'Password123'
-    #     }
-    #     rating_count_before = get_ratings_count(self.user.id)
-    #     response = self.client.post(self.sign_up_url,form_input, follow=False)
-    #     rating_count_after = get_ratings_count(self.user.id)
-    #     self.assertEqual(rating_count_before,rating_count_after-1)
-    #     delete_ratings(self.user.id)
-    #     rating_after_delete = get_ratings_count(self.user.id)
-    #     self.assertEqual(0,rating_after_delete)
-
-    # def test_update_favourite_book_will_generate_ratings(self):
-    #     self.client.login(username='johndoe', password='Password123')
-    #     self.assertTrue(self._is_logged_in())
-    #     generate_ratings(self.book,self.user.id,'like')
-    #     form_input = {
-    #         'first_name': 'John2',
-    #         'last_name': 'Doe2',
-    #         'username': 'johndoe2',
-    #         'email': 'johndoe2@example.org',
-    #         'bio': 'New bio',
-    #         'favourite_book':self.book_read.id
-    #     }
-    #     rating_count_before = get_ratings_count(self.user.id)
-    #     self.client.post(self.profile_url,form_input, follow=True)
-    #     rating_count_after = get_ratings_count(self.user.id)
-    #     self.assertEqual(rating_count_before,rating_count_after-1)
-    #     delete_ratings(self.user.id)
-    #     rating_after_delete = get_ratings_count(self.user.id)
-    #     self.assertEqual(0,rating_after_delete)
