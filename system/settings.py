@@ -17,7 +17,6 @@ from pathlib import Path
 from django.contrib.messages import constants as message_constants
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -167,5 +166,5 @@ RANDOM_BOOK = 1
 
 
 if '/app' in os.environ['HOME']:
-    import django_heroku
-    django_heroku.settings(locals())
+    import django_on_heroku
+    django_on_heroku.settings(locals())
