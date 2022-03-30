@@ -17,9 +17,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files import File
 from pathlib import Path
 from django.core.files.base import ContentFile
-
-
-
 import pytz
 
 GENRE_CATEGORY_CHOICES = [
@@ -276,26 +273,6 @@ class User(AbstractUser):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=50)
-
-    def future_meetings(self):
-        utc=pytz.UTC
-        list = []
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) > datetime.now().replace(tzinfo=utc):
-                list.append(i)
-        return list
-
-    def previous_meetings(self):
-        utc=pytz.UTC
-        list = []
-        for i in Meeting.objects.all():
-            if i.date.replace(tzinfo=utc) <= datetime.now().replace(tzinfo=utc):
-                list.append(i)
-        return list
-
-    def now(self):
-        utc=pytz.UTC
-        return datetime.now().replace(tzinfo=utc)
 
     def notification_count(self):
         return self.notification_set.filter(read=False).count()

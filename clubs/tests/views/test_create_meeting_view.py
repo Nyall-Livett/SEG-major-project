@@ -4,6 +4,7 @@ from django.urls import reverse
 from clubs.models import User, Club, Meeting
 from clubs.tests.helpers import LogInTester, isUrlLegit
 from datetime import datetime, timedelta
+import pytz
 
 class MeetingTestCase(TestCase, LogInTester):
 
@@ -15,13 +16,14 @@ class MeetingTestCase(TestCase, LogInTester):
         ]
 
     def setUp(self):
+        utc=pytz.UTC
         self.user = User.objects.get(pk=1)
         self.club = Club.objects.get(pk=1)
         self.book = Club.objects.get(pk=1)
         self.url = reverse('set_meeting', kwargs={'club_id': self.club.id})
         self.form_input = {
-            'start': datetime.now() + timedelta(days=1),
-            'finish': datetime.now() + timedelta(days=2),
+            'start': datetime.now().replace(tzinfo=utc) + timedelta(days=1),
+            'finish': datetime.now().replace(tzinfo=utc) + timedelta(days=2),
             'location': 'London',
             'book': self.book.id,
             'notes': 'This is a meeting for test purposes'

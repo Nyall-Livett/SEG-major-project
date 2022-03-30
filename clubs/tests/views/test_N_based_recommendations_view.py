@@ -1,8 +1,10 @@
+import datetime
 from django.test import TestCase
 from django.urls import reverse
 from clubs.tests.helpers import LogInTester
 from clubs.models import User, Club, Meeting, Book
 from ...helpers import *
+import pytz
 
 class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
     """Test of Neighbourhood-based recommendations view"""
@@ -28,13 +30,13 @@ class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
         self.sign_up_url = reverse('sign_up')
         self.delete_account_url = reverse('delete_account',kwargs={'user_id': self.other_user.id})
         self.start_meeting_url = reverse('complete_meeting', kwargs={'pk': self.meeting.pk})
-        # self.profile_url = reverse('profile')
+        
+       
 
     def test_urls(self):
         self.assertEqual(self.dashboard_url,f'/dashboard/')
         self.assertEqual(self.sign_up_url,f'/sign_up/')
         self.assertEqual(self.book_review_url,f'/book_review')
-        # self.assertEqual(self.profile_url,f'/profile/')
         self.assertEqual(self.delete_account_url,f'/delete_account/{self.other_user.id}')
         self.assertEqual(self.start_meeting_url,f'/complete_meeting/{self.meeting.pk}/')
 
