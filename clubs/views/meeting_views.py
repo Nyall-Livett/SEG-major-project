@@ -25,14 +25,16 @@ from clubs.forms import ClubForm, BookForm, MeetingForm, CompleteMeetingForm, Ed
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import json
 import random
+from django.urls import reverse_lazy
+
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
+# this
 class CompleteMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = CompleteMeetingForm
     template_name = 'complete_meeting.html' # templete for updating
-    success_url="/dashboard" # posts list url
 
     def get_recommendations(self):
         user_id = self.request.user.id
@@ -54,11 +56,18 @@ class CompleteMeetingView(LoginRequiredMixin, UpdateView):
         context['recommendations'] = recommended_books
         return context
 
+    def get_success_url(self):
+        clubid=self.kwargs.get("club_id")
+        return reverse_lazy('show_club', kwargs={'club_id': clubid})
+
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
-    success_url="/dashboard" # posts list url
+
+    def get_success_url(self):
+        clubid=self.kwargs.get("club_id")
+        return reverse_lazy('show_club', kwargs={'club_id': clubid})
 
 class PreviousMeetingView(LoginRequiredMixin, ListView):
     model = Meeting
@@ -94,11 +103,8 @@ class CreateMeetingView(LoginRequiredMixin, FormView):
         form = MeetingForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
-
-
             # Set club, URL and chosen member before save
             obj.club = Club.objects.get(id=self.kwargs.get('club_id'))
-
             # get meeting title, start time, meeting description and generate a zoom meeting URL
             title = obj.club.name
             start_time = convertDateTime(form.cleaned_data['start'])
@@ -154,7 +160,6 @@ class DeleteMeeting(LoginRequiredMixin, DeleteView):
         return context
 
     def delete(self, request, *args, **kwargs):
-
         self.meeting = Meeting.objects.get(id=self.kwargs.get('meeting_id'))
         self.user = request.user
         club_leader = self.meeting.club.leader.id
@@ -165,4 +170,5 @@ class DeleteMeeting(LoginRequiredMixin, DeleteView):
             raise Http404("Object you are looking for doesn't exist")
 
     def get_success_url(self):
-        return redirect('show_club', self.kwargs.get('club_id'))
+        clubid=self.kwargs.get("club_id")
+        return reverse_lazy('show_club', kwargs={'club_id': clubid})

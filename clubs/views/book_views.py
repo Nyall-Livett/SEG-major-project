@@ -44,7 +44,9 @@ class BookReviewView(LoginRequiredMixin, FormView):
             generate_ratings(review.book, review.reviewer.id, review.rating)
             return super().form_valid(form)
         except IntegrityError as e:
-            return render(self.request, "book_review.html")
+            form.is_bound = False
+            messages.error(self.request, 'You have already reviewed this book')
+            return render(self.request, "book_review.html", {'form': form})
 
     def get_success_url(self):
         """Return redirect URL after successful update."""
