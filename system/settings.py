@@ -15,7 +15,7 @@ from decouple import config
 
 from pathlib import Path
 from django.contrib.messages import constants as message_constants
-import django_on_heroku
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -163,4 +163,9 @@ AWS_QUERYSTRING_AUTH = False
 RANDOM_BOOK = 1
 
 # Activate django on heroku
-django_on_heroku.settings(locals())
+#activate heroku
+
+
+if '/app' in os.environ['HOME']:
+    import django_heroku
+    django_heroku.settings(locals())
