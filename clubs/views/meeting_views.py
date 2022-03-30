@@ -30,12 +30,11 @@ from django.urls import reverse_lazy
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
-# this 
+# this
 class CompleteMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = CompleteMeetingForm
     template_name = 'complete_meeting.html' # templete for updating
-    success_url="/dashboard" # posts list url
 
     def get_recommendations(self):
         user_id = self.request.user.id
@@ -56,12 +55,19 @@ class CompleteMeetingView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['recommendations'] = recommended_books
         return context
- # this
+
+    def get_success_url(self):
+        clubid=self.kwargs.get("club_id")
+        return reverse_lazy('show_club', kwargs={'club_id': clubid})
+
 class EditMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = EditMeetingForm
     template_name = 'edit_meeting.html' # templete for updating
-    success_url="/dashboard" # posts list url
+
+    def get_success_url(self):
+        clubid=self.kwargs.get("club_id")
+        return reverse_lazy('show_club', kwargs={'club_id': clubid})
 
 class PreviousMeetingView(LoginRequiredMixin, ListView):
     model = Meeting
