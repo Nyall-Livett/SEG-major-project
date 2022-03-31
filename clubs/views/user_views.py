@@ -34,7 +34,7 @@ class MemberListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['club'] = Club.objects.get(id=self.kwargs.get('club_id'))
-        
+
         return context
 
 class FollowRequestsListView(LoginRequiredMixin, ListView):
@@ -127,7 +127,7 @@ class ShowUserView(LoginRequiredMixin, DetailView):
         context['following'] = self.request.user.is_following(user)
         context['request_sent'] = self.request.user.is_request_sent(user)
         context['reviews'] = BooksRead.objects.all()
-        context['moments'] = Moment.objects.all()
+        context['moments'] = Moment.objects.all().order_by('-created_on')[:5]
         return context
 
 @login_required

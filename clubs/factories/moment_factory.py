@@ -19,9 +19,6 @@ class CreateMoment:
         elif type == MomentType.BOOK_RATING:
             return self._book_rating
 
-        elif type == MomentType.READING_NEW_BOOK:
-            return self._reading_new_book
-
 
     def _became_friends(self, user, **kwargs):
         other_user = kwargs['other_user']
@@ -55,14 +52,4 @@ class CreateMoment:
             body = body,
             user = self.user,
             associated_book = book
-        )
-
-    def _reading_new_book(self, user, **kwargs):
-        club = kwargs['club']
-        book = kwargs['book']
-        body = "{user} started reading {book} in the {club}.".format(user=self.user, book=book.name, club=club.name)
-        Moment.objects.create(
-            type=MomentType.READING_NEW_BOOK,
-            body = body,
-            user = self.user
         )

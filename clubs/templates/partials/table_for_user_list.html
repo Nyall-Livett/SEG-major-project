@@ -8,9 +8,18 @@
     {% for user in users %}
     {% if not user.is_superuser %}
         <tr>
-          <td><a href="{% url 'show_user' user.id %}">
-              <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
-          </a></td>
+          <td>        <!-- Avatar -->
+          {% if user.using_gravatar %}
+            <div class="notification-image" style="height:70px; width:70px">
+              <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+            </div>
+          {% else %}
+            <div class="notification-image" style="height:70px;width:70px">
+              <div id="{{user.customavatar.color}}" class="moment-avatar">
+                <img src="/static/images/{{user.customavatar.icon}}.svg">
+              </div>
+            </div>
+          {% endif %}</td>
           <td><a href="{% url 'show_user' user.id %}">{{ user.username }}</a></td>
           <td>{{ user.full_name }}</td>
           <td>{{ user.city }}</td>
