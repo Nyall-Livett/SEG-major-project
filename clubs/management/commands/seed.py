@@ -230,6 +230,7 @@ class Command(BaseCommand):
             city = city,
             username = username,
             password=Command.PASSWORD,
+            using_gravatar = True
         )
 
     def _create_club(self):
