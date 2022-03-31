@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from clubs.models import User, Post, Club, Book, Meeting, BooksRead
 import os, csv
+from django.contrib import messages
 from ...helpers import generate_ratings
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
@@ -230,6 +231,7 @@ class Command(BaseCommand):
             city = city,
             username = username,
             password=Command.PASSWORD,
+            using_gravatar = True
         )
 
     def _create_club(self):
