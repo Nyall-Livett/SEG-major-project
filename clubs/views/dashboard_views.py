@@ -7,6 +7,8 @@ import random, operator
 from operator import attrgetter
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
+from django.db.models import Count
+
 
 class DashboardView(LoginRequiredMixin, ListView):
     """docstring for DashboardView."""
@@ -21,13 +23,29 @@ class DashboardView(LoginRequiredMixin, ListView):
         user_id = self.request.user.id
         if(Book.objects.count() > 0):
             if((contain_ratings(user_id))==False):
-                # book = Book.objects.get(id=1)
                 book = Book.objects.all().first()
                 generate_ratings(book,user_id,'neutral')
             recommendations = generate_recommendations(user_id)
             return recommendations
         else:
             return None
+
+    def get_popular_clubs(self):
+        if Club.objects.count() < 4:
+            return Club.objects.all()
+
+        ordered_clubs = list(Club.objects.annotate(member_count=Count('members')).order_by('-member_count'))
+        bias = int(len(ordered_clubs) / 5)
+        selected = set()
+        counter = 0
+        while len(selected) < 3:
+            if counter >= 15:
+                selected = random.sample(ordered_clubs, 3)
+                break
+            id = int(random.triangular(0, len(ordered_clubs), 1))
+            selected.add(ordered_clubs[id])
+            counter = counter + 1
+        return selected
 
     def flatten(self, list):
         return [item for sublist in list for item in sublist]
@@ -41,11 +59,9 @@ class DashboardView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         club_list = list(Club.objects.all())
-        clubs_range = range(len(club_list))
-        clubs_sample = list(random.sample(club_list, len(club_list) if len(club_list) < 4 else 3))
         recommended_books = self.get_recommendations()
         context = super().get_context_data(**kwargs)
         context['form'] = MomentForm()
-        context['random_clubs'] = clubs_sample
+        context['random_clubs'] = self.get_popular_clubs()
         context['recommendations'] = recommended_books
         return context
