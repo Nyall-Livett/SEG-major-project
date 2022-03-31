@@ -1,11 +1,9 @@
-from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from clubs.enums import MomentType
-from clubs.models import Moment, Notification, User, Club, Meeting
+from clubs.models import Moment, User, Club
 from clubs.tests.helpers import LogInTester, isUrlLegit
-from datetime import datetime, timedelta
-import pytz
+
 
 class MomentTestCase(TestCase, LogInTester):
 
@@ -20,6 +18,8 @@ class MomentTestCase(TestCase, LogInTester):
         self.user = User.objects.get(pk=1)
         self.club = Club.objects.get(pk=1)
         self.book = Club.objects.get(pk=1)
+        self.url = reverse('create_moment')
+        self.data = {'body': 'sdfsdfsdfs'}
 
     def test_moment_created_correctly(self):
         self.client.login(username=self.user.username, password='Password123')
@@ -34,5 +34,8 @@ class MomentTestCase(TestCase, LogInTester):
         self.assertEqual(new_moment.type, 0)
         saved_moment = Moment.objects.all()[0]
         self.assertEqual(saved_moment, new_moment)
+        
+        
+        
 
     
