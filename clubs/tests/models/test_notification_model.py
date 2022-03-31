@@ -78,7 +78,7 @@ class NotificationModelTestCase(TestCase):
     def test_title_is_correct_for_MEETING_SOON(self):
         self.notifier.notify(NotificationType.MEETING_CREATED, self.default_user, {'club': self.default_club})
         latest_notification = Notification.objects.last()
-        self.assertEqual(latest_notification.title, "Meeting reminder")
+        self.assertEqual(latest_notification.title, "Meeting scheduled")
 
     def test_title_is_correct_for_CLUB_CREATED(self):
         self.notifier.notify(NotificationType.CLUB_CREATED, self.default_user, {'club': self.default_club})

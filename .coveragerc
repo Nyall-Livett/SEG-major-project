@@ -1,2 +1,2 @@
 [run]
-omit = *__init__.py,manage.py,*migrations*,*settings.py,*tests*,*dist-packages*,*evaluated_algorithm.py,*evaluation_data.py,*evaluator.py,*process_data.py,*recommender_metrics.py,*content_based_recommend.py
+omit = *__init__.py,manage.py,*migrations*,*settings.py,*tests*,*dist-packages*,*evaluated_algorithm.py,*evaluation_data.py,*evaluator.py,*process_data.py,*recommender_metrics.py,*content_based_recommend.py,*notification_extras.py 
