@@ -14,6 +14,8 @@ class ClubModelTestCase(TestCase):
     ]
 
     def setUp(self):
+        self.user = User.objects.get(username='johndoe')
+        self.applicant = User.objects.get(username = 'janedoe')
         self.default_club = Club.objects.get(name='Oxford Book Club')
 
     def test_valid_club(self):
@@ -99,6 +101,18 @@ class ClubModelTestCase(TestCase):
         self.default_club.add_or_remove_member(petra)
         members_after_removal = self.default_club.members.all().count()
         self.assertEqual(members_before, members_after_removal)
+
+    def test_applicant_manager(self):
+        self.client.login(username=self.user, password='Password123')
+        self.client.login(username=self.applicant, password='Password123')
+        applicants_before = self.default_club.applicants.all().count()
+        Club.applicant_manager(self.default_club, self.applicant)
+        applicants_after = self.default_club.applicants.all().count()
+        self.assertEqual(applicants_before+1, applicants_after)
+        applicants_before_removal = self.default_club.applicants.all().count()
+        Club.applicant_manager(self.default_club, self.applicant)
+        applicants_after_removal = self.default_club.applicants.all().count()
+        self.assertEqual(applicants_before_removal-1, applicants_after_removal)
 
     def test_club_returns_string_of_its_name(self):
         club_name = self.default_club.name
