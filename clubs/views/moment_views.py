@@ -15,7 +15,7 @@ class CreateMomentView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            moment_body = json.loads(request.POST.get('moment_body'))
+            moment_body = (request.POST.get('moment_body'))
             new_moment = Moment(
                 body=moment_body,
                 type=MomentType.CUSTOM,
