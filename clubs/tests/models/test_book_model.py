@@ -34,12 +34,12 @@ class BookModelTestCase(TestCase):
         self.book.isbn = other_book.isbn
         self._assert_book_is_invalid()
 
-    def test_name_can_be_64_characters_long(self):
-        self.book.name = 'x' * 64
+    def test_name_can_be_200_characters_long(self):
+        self.book.name = 'x' * 200
         self._assert_book_is_valid()
 
-    def test_name_cannot_be_over_644_characters_long(self):
-        self.book.name = 'x' * 65
+    def test_name_cannot_be_over_200_characters_long(self):
+        self.book.name = 'x' * 201
         self._assert_book_is_invalid()
 
     def test_name_cannot_be_blank(self):

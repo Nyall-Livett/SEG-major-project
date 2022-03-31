@@ -221,7 +221,7 @@ GENRE_CATEGORY_CHOICES = [
 class Book(models.Model):
     """Book model"""
     isbn = models.CharField(max_length=13, unique=True, blank=False)
-    name = models.CharField(max_length=64, blank=False)
+    name = models.CharField(max_length=200, blank=False)
     description = models.CharField(max_length=2048, blank=True)
     author = models.CharField(max_length=64, blank=False)
     publication_year = models.CharField(max_length=4, blank=True)
