@@ -39,10 +39,12 @@ class BookReviewView(LoginRequiredMixin, FormView):
             moment_notifier = CreateMoment()
             moment_notifier.notify(MomentType.BOOK_RATING, self.request.user, {'book': review.book, 'rating': review.rating })
             generate_ratings(review.book, review.reviewer.id, review.rating)
+            messages.add_message(self.request, messages.SUCCESS, f'You have reviewed {review.book.name}')
             return super().form_valid(form)
         except IntegrityError as e:
             form.is_bound = False
-            messages.error(self.request, 'You have already reviewed this book')
+
+            messages.add_message(self.request, messages.WARNING, 'You have already reviewed this book')
             return render(self.request, "book_review.html", {'form': form})
 
     def get_success_url(self):

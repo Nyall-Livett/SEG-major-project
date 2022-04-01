@@ -13,6 +13,7 @@ from clubs.models import Club, Meeting, Book
 from clubs.forms import MeetingForm, CompleteMeetingForm, EditMeetingForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
 import random
+from django.contrib import messages
 from django.urls import reverse_lazy
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
@@ -52,6 +53,7 @@ class EditMeetingView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         clubid=self.kwargs.get("club_id")
+        messages.add_message(self.request, messages.SUCCESS, "Meeting edited")
         return reverse_lazy('show_club', kwargs={'club_id': clubid})
 
 class PreviousMeetingView(LoginRequiredMixin, ListView):
@@ -150,6 +152,7 @@ class DeleteMeeting(LoginRequiredMixin, DeleteView):
         club_leader = self.meeting.club.leader.id
 
         if self.user.id is club_leader:
+            messages.add_message(self.request, messages.SUCCESS, "Meeting deleted")
             return super(DeleteMeeting, self).delete(request, *args, **kwargs)
         else:
             raise Http404("Object you are looking for doesn't exist")
