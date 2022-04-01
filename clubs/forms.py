@@ -1,26 +1,17 @@
 """Forms for the clubs app."""
 from django import forms
 from django.contrib.auth import authenticate
-#from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
-#from datetime import datetime
-#from django.utils import timezone
+
 
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        #if not self.request.user.is_authenticated:
-        #    return Book.objects.none()
-
         qs = Book.objects.all()
-
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
-
         return qs
-
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -171,6 +162,7 @@ class UserForm(forms.ModelForm):
             self.fields[key].widget.attrs['class'] = 'form-control'
 
 class ClubForm(forms.ModelForm):
+
     class Meta:
         """Form options."""
 
@@ -181,33 +173,24 @@ class ClubForm(forms.ModelForm):
             'maximum_members': forms.NumberInput(attrs={'min': 2, 'max': 64})
         }
 
-
     def __init__(self, *args, **kwargs):
         super(ClubForm, self).__init__(*args, **kwargs)
         keys = list(self.fields)
         for key in keys:
             self.fields[key].widget.attrs['class'] = 'form-control'
-        # self.fields['image'].required = False
-
-
 
 class MeetingForm(forms.ModelForm):
+
     class Meta:
         "Form options"
-
         model = Meeting
         fields = ['start', 'finish', 'location', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
-    #start = forms.DateTimeField(initial=timezone.now)
-    #finish = forms.DateTimeField(initial=timezone.now)
-    location = forms.CharField(initial='Online')
+        widgets = {
+            'notes': forms.Textarea(),
+            'book': autocomplete.ModelSelect2(url='book-autocomplete'),
+        }
 
-    #def clean(self):
-        #super().clean()
-        #if not (timezone.now() <= self.cleaned_data['start']):
-            #raise ValidationError('Invalid date/times')
-        #elif not (self.cleaned_data['start'] <= self.cleaned_data['finish']):
-            #raise ValidationError('Invalid date/times')
+    location = forms.CharField(initial='Online')
 
 class CompleteMeetingForm(forms.ModelForm):
     class Meta:
