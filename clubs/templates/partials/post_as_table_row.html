@@ -1,7 +1,18 @@
 {% load humanize %}
 <tr>
   <td>
-    <img src="{{ post.author.mini_gravatar }}" alt="Gravatar of author {{ post.author.username }}" class="rounded-circle">
+    <!-- Avatar -->
+    {% if post.author.using_gravatar %}
+      <div class="notification-image" style="height:70px; width:70px">
+        <img src="{{ post.author.mini_gravatar }}" alt="Gravatar of {{ post.author.username }}" class="rounded-circle">
+      </div>
+    {% else %}
+      <div class="notification-image" style="height:70px;width:70px">
+        <div id="{{post.author.customavatar.color}}" class="moment-avatar">
+          <img src="/static/images/{{post.author.customavatar.icon}}.svg">
+        </div>
+      </div>
+    {% endif %}
   </td>
   <td>
     <p class="post-author">
