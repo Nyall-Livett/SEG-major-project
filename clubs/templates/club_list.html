@@ -8,6 +8,7 @@
     <div class="col-12">
       <a class="btn btn-primary" style="float: right;" href="{% url 'create_club' %}">Create Club</a>
       <h1>Clubs</h1>
+      {% if clubs %}
       <br>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
       <table class="table">
@@ -72,6 +73,9 @@
         {% endfor %}
       </table>
       {% bootstrap_paginate page_obj range=6 previous_label="Previous" next_label="Next" show_first_last="true" %}
+      {% else %}
+      <p>No club has been created yet!</p>
+      {% endif %}
     </div>
   </div>
 </div>
