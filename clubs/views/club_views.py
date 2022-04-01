@@ -263,7 +263,7 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
         club_leader = self.club.leader.id
 
         if self.user.id is club_leader:
-
+            messages.add_message(self.request, messages.SUCCESS, f"You have successfully deleted {self.club.name}.")
             return super(DeleteClub, self).delete(request, *args, **kwargs)
         else:
             raise Http404("Object you are looking for doesn't exist")
