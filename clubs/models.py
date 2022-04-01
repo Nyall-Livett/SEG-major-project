@@ -349,6 +349,14 @@ class User(AbstractUser):
     def now(self):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
+    
+    def user_meetings(self):
+        clubs = self.clubs.all()
+        meeting = []
+        for club in clubs:
+            meeting += club.meetings.all()
+        return meeting
+        
 
 
 class Club(models.Model):
