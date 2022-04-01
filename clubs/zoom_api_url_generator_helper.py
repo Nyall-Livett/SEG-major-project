@@ -2,8 +2,6 @@ import jwt
 import requests
 import json
 from time import time
-from datetime import datetime
-
 
 # API Key and API secret to connect to zoom API
 API_KEY = 'bsPNOk1ST0ilGm8imZfL3w'

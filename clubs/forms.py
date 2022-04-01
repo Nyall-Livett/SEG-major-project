@@ -5,7 +5,6 @@ from django.core.validators import RegexValidator
 from .models import User, Club, Meeting, Post, Book, Moment, BooksRead
 from dal import autocomplete
 
-
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Book.objects.all()

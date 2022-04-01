@@ -1,7 +1,7 @@
 """Unit tests for the Book model."""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from clubs.models import Book, User
+from clubs.models import Book
 
 class BookModelTestCase(TestCase):
     """Unit tests for the Book model."""
@@ -34,24 +34,24 @@ class BookModelTestCase(TestCase):
         self.book.isbn = other_book.isbn
         self._assert_book_is_invalid()
 
-    def test_name_can_be_64_characters_long(self):
-        self.book.name = 'x' * 64
+    def test_name_can_be_205_characters_long(self):
+        self.book.name = 'x' * 205
         self._assert_book_is_valid()
 
-    def test_name_cannot_be_over_644_characters_long(self):
-        self.book.name = 'x' * 65
+    def test_name_cannot_be_over_205_characters_long(self):
+        self.book.name = 'x' * 206
         self._assert_book_is_invalid()
 
     def test_name_cannot_be_blank(self):
         self.book.name = ''
         self._assert_book_is_invalid()
 
-    def test_author_can_be_64_characters_long(self):
-        self.book.author = 'x' * 64
+    def test_author_can_be_70_characters_long(self):
+        self.book.author = 'x' * 70
         self._assert_book_is_valid()
 
-    def test_author_cannot_be_over_64_characters_long(self):
-        self.book.author = 'x' * 65
+    def test_author_cannot_be_over_70_characters_long(self):
+        self.book.author = 'x' * 71
         self._assert_book_is_invalid()
 
     def test_author_cannot_be_blank(self):
@@ -74,12 +74,12 @@ class BookModelTestCase(TestCase):
         self.book.publication_year = 'x' * 5
         self._assert_book_is_invalid()
 
-    def test_publisher_can_be_64_characters_long(self):
-        self.book.publisher = 'x' * 64
+    def test_publisher_can_be_90_characters_long(self):
+        self.book.publisher = 'x' * 90
         self._assert_book_is_valid()
 
-    def test_publisher_cannot_be_over_64_characters_long(self):
-        self.book.publisher = 'x' * 65
+    def test_publisher_cannot_be_over_90_characters_long(self):
+        self.book.publisher = 'x' * 91
         self._assert_book_is_invalid()
 
     def test_image_url_s_field_must_be_url(self):

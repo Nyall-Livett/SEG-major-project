@@ -1,4 +1,5 @@
 """Unit tests for the Meeting model."""
+from re import L
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from clubs.models import Club, User, Meeting, Book
@@ -9,18 +10,13 @@ class MeetingModelTestCase(TestCase):
     fixtures = [
         "clubs/tests/fixtures/default_user.json",
         "clubs/tests/fixtures/default_club.json",
-        #'clubs/tests/fixtures/other_clubs.json',
-        #"clubs/tests/fixtures/default_meeting.json",
         "clubs/tests/fixtures/default_book.json",
-        #'clubs/tests/fixtures/other_books.json',
-
     ]
 
     def setUp(self):
 
 
         self.default_user = User.objects.get(username='johndoe')
-        #self.default_meeting = Meeting.objects.get(date='2022-01-27 11:00:00')
         self.default_club = Club.objects.get(name='Oxford Book Club')
         self.default_book = Book.objects.get(isbn= "0195153448")
         self.default_meeting = Meeting(
@@ -93,3 +89,5 @@ class MeetingModelTestCase(TestCase):
     def _assert_meeting_is_invalid(self):
         with self.assertRaises(ValidationError):
             self.default_meeting.full_clean()
+
+        

@@ -1,13 +1,10 @@
 """User related views."""
-from re import template
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import redirect, render
-from django.views.generic import ListView, TemplateView
-from django.views import View
+from django.shortcuts import redirect
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.list import MultipleObjectMixin
 from clubs.factories.moment_factory import CreateMoment
 from clubs.models import Moment, User, Club, BooksRead, Notification
 from django.contrib.auth.decorators import login_required

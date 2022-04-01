@@ -1,5 +1,4 @@
 import itertools
-
 from surprise import accuracy
 from collections import defaultdict
 

@@ -1,36 +1,22 @@
 """Meeting related views."""
-from re import template
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, UpdateView
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.detail import DetailView
-from django.urls import reverse
-from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView, DeleteView
-from django.core.exceptions import PermissionDenied
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django import forms
-from django.http import JsonResponse
-from django.db import IntegrityError
 from clubs.enums import NotificationType
 from clubs.factories.notification_factory import CreateNotification
-from clubs.models import User, Club, Meeting, Book
-from clubs.forms import ClubForm, BookForm, MeetingForm, CompleteMeetingForm, EditMeetingForm, BookReviewForm
+from clubs.models import Club, Meeting, Book
+from clubs.forms import MeetingForm, CompleteMeetingForm, EditMeetingForm
 from clubs.zoom_api_url_generator_helper import getZoomMeetingURLAndPasscode, create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
-import json
 import random
 from django.urls import reverse_lazy
-
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 
-# this
 class CompleteMeetingView(LoginRequiredMixin, UpdateView):
     model = Meeting #model
     form_class = CompleteMeetingForm
@@ -42,7 +28,6 @@ class CompleteMeetingView(LoginRequiredMixin, UpdateView):
         chosen_member_id = meeting.chosen_member.id
         if(Book.objects.count() > 0):
             if((contain_ratings(chosen_member_id))==False):
-                # book = Book.objects.get(id=1)
                 book = Book.objects.all().first()
                 generate_ratings(book,chosen_member_id,'neutral')
             recommendations = generate_recommendations(chosen_member_id)

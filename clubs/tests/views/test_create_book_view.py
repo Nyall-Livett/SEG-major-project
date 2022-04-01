@@ -1,9 +1,7 @@
-from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User, Book
 from clubs.tests.helpers import LogInTester, reverse_with_next
-from clubs.forms import BookForm
 
 class CreateBookTestCase(TestCase, LogInTester):
 
@@ -29,12 +27,10 @@ class CreateBookTestCase(TestCase, LogInTester):
     def test_log_in_url(self):
         self.assertEqual(self.url,'/book/')
 
-
     def test_redirect_when_not_logged_in(self):
         redirect_url = reverse_with_next('log_in', self.url)
         response = self.client.get(self.url)
         self.assertRedirects(response, redirect_url, status_code=302, target_status_code=200)
-
 
     def test_create_new_book_successful(self):
         self.client.login(username=self.default_user, password='Password123')

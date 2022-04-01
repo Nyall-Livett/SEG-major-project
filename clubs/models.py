@@ -1,21 +1,16 @@
 """Models in the clubs app."""
 from pickle import TRUE
 from re import T
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.http import request
 from libgravatar import Gravatar
 from django.utils import timezone
-from datetime import date, datetime
+from datetime import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files import File
-from pathlib import Path
 from django.core.files.base import ContentFile
 import pytz
 
@@ -221,11 +216,11 @@ GENRE_CATEGORY_CHOICES = [
 class Book(models.Model):
     """Book model"""
     isbn = models.CharField(max_length=13, unique=True, blank=False)
-    name = models.CharField(max_length=64, blank=False)
+    name = models.CharField(max_length=205, blank=False)
     description = models.CharField(max_length=2048, blank=True)
-    author = models.CharField(max_length=64, blank=False)
+    author = models.CharField(max_length=70, blank=False)
     publication_year = models.CharField(max_length=4, blank=True)
-    publisher = models.CharField(max_length=64, blank=True)
+    publisher = models.CharField(max_length=90, blank=True)
     image_url_s = models.URLField(max_length=200, blank=True)
     image_url_m = models.URLField(max_length=200, blank=True)
     image_url_l = models.URLField(max_length=200, blank=True)
@@ -349,6 +344,14 @@ class User(AbstractUser):
     def now(self):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
+    
+    def user_meetings(self):
+        clubs = self.clubs.all()
+        meeting = []
+        for club in clubs:
+            meeting += club.meetings.all()
+        return meeting
+        
 
 
 class Club(models.Model):

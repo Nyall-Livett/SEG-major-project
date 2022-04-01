@@ -6,16 +6,13 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.edit import FormView
-from django.views.generic.list import MultipleObjectMixin
 from clubs.models import Book, BooksRead
 from clubs.content_based_recommender.content_based_recommend import content_based_recommender
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
 from clubs.forms import UploadBooksForm, BookForm, BookReviewForm
 from django.views.generic.detail import DetailView
 from ..helpers import generate_ratings
-from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import MomentType
