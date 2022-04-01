@@ -8,12 +8,9 @@ from dal import autocomplete
 class BookAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Book.objects.all()
-
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
-
         return qs
-
 
 class SignUpForm(forms.ModelForm):
     """Form enabling unregistered users to sign up."""
@@ -164,6 +161,7 @@ class UserForm(forms.ModelForm):
             self.fields[key].widget.attrs['class'] = 'form-control'
 
 class ClubForm(forms.ModelForm):
+
     class Meta:
         """Form options."""
 
@@ -174,7 +172,6 @@ class ClubForm(forms.ModelForm):
             'maximum_members': forms.NumberInput(attrs={'min': 2, 'max': 64})
         }
 
-
     def __init__(self, *args, **kwargs):
         super(ClubForm, self).__init__(*args, **kwargs)
         keys = list(self.fields)
@@ -182,12 +179,16 @@ class ClubForm(forms.ModelForm):
             self.fields[key].widget.attrs['class'] = 'form-control'
 
 class MeetingForm(forms.ModelForm):
+
     class Meta:
         "Form options"
-
         model = Meeting
         fields = ['start', 'finish', 'location', 'book', 'notes']
-        widgets = { 'notes': forms.Textarea(), 'book': autocomplete.ModelSelect2(url='book-autocomplete') }
+        widgets = {
+            'notes': forms.Textarea(),
+            'book': autocomplete.ModelSelect2(url='book-autocomplete'),
+        }
+
     location = forms.CharField(initial='Online')
 
 class CompleteMeetingForm(forms.ModelForm):
