@@ -345,7 +345,8 @@ class User(AbstractUser):
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
     
-    def user_meetings(self):
+    def user_future_meetings(self):
+        """ return list of users future meetings """
         clubs = self.clubs.all()
         meetings = []
         future_meetings_empty = [] 
