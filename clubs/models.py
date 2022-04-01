@@ -352,10 +352,19 @@ class User(AbstractUser):
     
     def user_meetings(self):
         clubs = self.clubs.all()
-        meeting = []
+        meetings = []
+        future_meetings_empty = [] 
+        future_meetings_count = 0
         for club in clubs:
-            meeting += club.meetings.all()
-        return meeting
+            meetings += club.meetings.all()
+
+        for m in meetings:
+            if m.finish > self.now():
+                future_meetings_count = future_meetings_count+1
+        if future_meetings_count > 0:
+            return meetings
+        else:
+            return future_meetings_empty
         
 
 
