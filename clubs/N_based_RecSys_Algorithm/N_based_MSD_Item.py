@@ -8,7 +8,6 @@ from ..models import Book
 def generate_recommendations(user_id):
 
     user = f'{user_id}'
-    # k = 10
     k = 5
 
     book_ratings = ProcessData()
@@ -33,11 +32,6 @@ def generate_recommendations(user_id):
     # Not getting the top N books, we try to get all the books with rating
     # higher than 8.0
 
-    # kNeighbors = []
-    # for rating in testUserRatings:
-    #     if rating[1] > 8.0:
-    #         kNeighbors.append(rating)
-
     # Get similar items to stuff we liked (weighted by rating)
     candidates = defaultdict(float)
     for itemID, rating in kNeighbors:
@@ -56,9 +50,6 @@ def generate_recommendations(user_id):
     for itemID, ratingSum in sorted(candidates.items(), key=itemgetter(1), reverse=True):
         if not itemID in watched:
             isbn = trainSet.to_raw_iid(itemID)
-            #print(isbn)
-            #print(ml.getMovieName(int(movieID)), ratingSum)
-            # print(book_ratings.getBookTitle(isbn), ratingSum)
             book = Book.objects.filter(isbn = isbn).first()
             if (book == None):
                 continue

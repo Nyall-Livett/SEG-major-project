@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from clubs.models import User, Book
+from clubs.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class UploadBookTestCase(TestCase):
@@ -15,10 +15,3 @@ class UploadBookTestCase(TestCase):
 
     def test_upload_books_url(self):
         self.assertEqual(self.url,'/upload_books/')
-    # 
-    # def test_valid_file(self):
-    #     self.client.login(username=self.user, password='Password123')
-    #     book_count_before = Book.objects.count()
-    #     response = self.client.post(self.url, self.input, follow=True)
-    #     book_count_after = Book.objects.count()
-    #     self.assertEqual(book_count_before, book_count_after-1)

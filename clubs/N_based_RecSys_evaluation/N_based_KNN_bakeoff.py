@@ -2,7 +2,6 @@ from process_data import ProcessData
 from surprise import KNNBasic
 from surprise import NormalPredictor
 from evaluator import Evaluator
-
 import random
 import numpy as np
 

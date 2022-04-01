@@ -1,10 +1,8 @@
-from django.shortcuts import render
-from clubs.models import Book, Club, Moment
+from clubs.models import Book, Club
 from django.views.generic.list import ListView
 from clubs.forms import MomentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 import random, operator
-from operator import attrgetter
 from ..helpers import generate_ratings,contain_ratings
 from ..N_based_RecSys_Algorithm.N_based_MSD_Item import generate_recommendations
 from django.db.models import Count

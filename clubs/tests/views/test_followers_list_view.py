@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User
-from clubs.tests.helpers import reverse_with_next
 
 class ShowFollowersTest(TestCase):   
 

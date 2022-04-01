@@ -1,21 +1,16 @@
 """Models in the clubs app."""
 from pickle import TRUE
 from re import T
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.http import request
 from libgravatar import Gravatar
 from django.utils import timezone
-from datetime import date, datetime
+from datetime import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from clubs.enums import NotificationType, MomentType, AvatarColor, AvatarIcon
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files import File
-from pathlib import Path
 from django.core.files.base import ContentFile
 import pytz
 

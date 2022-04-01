@@ -1,9 +1,7 @@
 """Unit tests for the User model."""
-import datetime
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from clubs.models import User
-import pytz
 
 class UserModelTestCase(TestCase):
     """Unit tests for the User model."""

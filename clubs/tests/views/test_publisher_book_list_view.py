@@ -6,9 +6,10 @@ from clubs.tests.helpers import reverse_with_next
 
 class PublisherBookListTest(TestCase):
 
-    fixtures = ['clubs/tests/fixtures/default_user.json',
-                'clubs/tests/fixtures/default_book.json',
-                ]
+    fixtures = [
+        'clubs/tests/fixtures/default_user.json',
+        'clubs/tests/fixtures/default_book.json',
+    ]
 
     def setUp(self):
 
@@ -71,7 +72,6 @@ class PublisherBookListTest(TestCase):
         page_obj = response.context['page_obj']
         self.assertTrue(page_obj.has_previous())
         self.assertFalse(page_obj.has_next())
-
 
     def test_get_publisher_book_list_redirects_when_not_logged_in(self):
         redirect_url = reverse_with_next('log_in', self.url)

@@ -1,11 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from clubs.models import Club, Meeting,User,Post
+from clubs.models import Club, Meeting,Post
 from django.views.generic import ListView
-from django.views import View
 from clubs.forms import PostForm
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
 
 class ClubForumView(LoginRequiredMixin, ListView):
     """View handle club forum"""

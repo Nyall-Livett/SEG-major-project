@@ -1,8 +1,7 @@
-from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from clubs.models import Club, User
-from clubs.tests.helpers import LogInTester, reverse_with_next
+from clubs.tests.helpers import LogInTester
 
 class MemberListTest(TestCase, LogInTester):
 

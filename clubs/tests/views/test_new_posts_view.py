@@ -4,9 +4,11 @@ from clubs.models import User, Club, Post
 
 class NewPostTest(TestCase):
 
-    fixtures = ['clubs/tests/fixtures/default_user.json',
+    fixtures = [
+        'clubs/tests/fixtures/default_user.json',
         'clubs/tests/fixtures/other_users.json',
-        'clubs/tests/fixtures/default_club.json']
+        'clubs/tests/fixtures/default_club.json'
+        ]
 
     def setUp(self):
         super(TestCase, self).setUp()

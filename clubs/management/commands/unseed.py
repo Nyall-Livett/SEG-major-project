@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from clubs.models import User, Post, Club, Book, Meeting, Moment, Notification, BooksRead
 from ...helpers import delete_ratings
 
