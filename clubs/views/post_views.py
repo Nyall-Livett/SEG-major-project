@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
 from django.urls import reverse
 from clubs.forms import PostForm

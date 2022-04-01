@@ -17,8 +17,6 @@ class ClubListTest(TestCase, LogInTester):
     def test_club_list_url(self):
         self.assertEqual(self.url,'/clubs/')
     
-    
-
     def test_post_access_for_unauthenticated(self):
         self.assertFalse(self._is_logged_in())
         response = self.client.post(self.url, self.form_input, follow=True)

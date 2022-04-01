@@ -1,5 +1,4 @@
 """Club related views."""
-import random
 from django.conf import settings
 from django.views.generic.edit import FormView, UpdateView
 from django.views import View
@@ -7,26 +6,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.urls import reverse
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views.generic import ListView, DeleteView
 from django.core.exceptions import PermissionDenied
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django import forms
 from django.http import JsonResponse
-from django.db import IntegrityError
 import json
-import random
-from clubs.models import Book, Club, User, Notification, Post
-from clubs.forms import ClubForm, MeetingForm
+from clubs.models import Club, User, Notification, Post
+from clubs.forms import ClubForm
 from clubs.factories.notification_factory import CreateNotification
 from clubs.factories.moment_factory import CreateMoment
 from clubs.enums import NotificationType, MomentType
-
-from clubs.zoom_api_url_generator_helper import create_JSON_meeting_data, convertDateTime, getZoomMeetingURLAndPasscode
-
 
 class CreateClubView(LoginRequiredMixin, FormView):
     """docstring for CreateClubView."""
@@ -279,5 +269,4 @@ class DeleteClub(LoginRequiredMixin, DeleteView):
             raise Http404("Object you are looking for doesn't exist")
 
     def get_success_url(self):
-        # self.delete_account_url =  f'/delete_account/{self.user.id}'
         return reverse('club_list')

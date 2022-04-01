@@ -4,8 +4,6 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 import json
-from django.views.decorators.csrf import csrf_exempt
-
 
 class NotificationListView(LoginRequiredMixin, ListView):
     """View for all users notifications"""

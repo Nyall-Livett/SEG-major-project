@@ -1,15 +1,14 @@
-import datetime
 from django.test import TestCase
 from django.urls import reverse
 from clubs.tests.helpers import LogInTester
 from clubs.models import User, Club, Meeting, Book
 from ...helpers import *
-import pytz
 
 class NBasedRecommendationsViewTestCase(TestCase,LogInTester):
     """Test of Neighbourhood-based recommendations view"""
 
-    fixtures = ['clubs/tests/fixtures/default_user.json',
+    fixtures = [
+        'clubs/tests/fixtures/default_user.json',
         'clubs/tests/fixtures/default_club.json',
         'clubs/tests/fixtures/other_meetings.json',
         'clubs/tests/fixtures/default_book.json',

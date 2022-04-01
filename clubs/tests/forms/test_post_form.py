@@ -1,5 +1,5 @@
 from django.test import TestCase
-from clubs.models import User, Club, Post
+from clubs.models import User, Club
 from clubs.forms import PostForm
 
 class PostFormTestCase(TestCase):

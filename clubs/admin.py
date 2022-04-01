@@ -9,11 +9,6 @@ class MembershipInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     """Configuration of the admin interface for users."""
 
-    #inlines = [
-        #MembershipInline,
-        #]
-    #exclude = ('password',)
-
     list_display = [
         'id', 'username', 'first_name', 'last_name', 'email',
     ]

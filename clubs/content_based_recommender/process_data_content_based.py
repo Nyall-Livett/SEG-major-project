@@ -1,16 +1,10 @@
 import os
 import csv
-import sys
 import re
 from surprise import Dataset
 from surprise import Reader
 from collections import defaultdict
-import numpy as np
-import json
-from urllib.request import urlopen
-from evaluator import Evaluator
 import pandas as pd
-import random
 import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')

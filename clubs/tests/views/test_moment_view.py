@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 from clubs.enums import MomentType
 from clubs.models import Moment, User, Club
-from clubs.tests.helpers import LogInTester, isUrlLegit
+from clubs.tests.helpers import LogInTester
 
 
 class MomentTestCase(TestCase, LogInTester):

@@ -1,10 +1,8 @@
 """Tests of the sign up view."""
-from django.contrib.auth.hashers import check_password
-from django.shortcuts import redirect
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import SignUpForm
-from clubs.models import User, Book
+from clubs.models import User
 from clubs.tests.helpers import LogInTester
 
 class SignUpViewTestCase(TestCase, LogInTester):
@@ -56,24 +54,6 @@ class SignUpViewTestCase(TestCase, LogInTester):
         self.assertTrue(isinstance(form, SignUpForm))
         self.assertTrue(form.is_bound)
         self.assertFalse(self._is_logged_in())
-
-    # TODO: test gives  error because of a color attribute
-    # def test_succesful_sign_up(self):
-    #     before_count = User.objects.count()
-    #     response = self.client.post(self.url, self.form_input, follow=True)
-    #     after_count = User.objects.count()
-    #     self.assertEqual(after_count, before_count+1)
-    #     response_url = reverse('dashboard')
-    #     self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
-    #     self.assertTemplateUsed(response, 'dashboard.html')
-    #     user = User.objects.get(username='janedoe')
-    #     self.assertEqual(user.first_name, 'Jane')
-    #     self.assertEqual(user.last_name, 'Doe')
-    #     self.assertEqual(user.email, 'janedoe@example.org')
-    #     self.assertEqual(user.bio, 'My bio')
-    #     is_password_correct = check_password('Password123', user.password)
-    #     self.assertTrue(is_password_correct)
-    #     self.assertTrue(self._is_logged_in())
 
     def test_post_sign_up_redirects_when_logged_in(self):
         self.client.login(username=self.user.username, password="Password123")

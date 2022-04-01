@@ -1,7 +1,7 @@
 """Unit tests for the Book model."""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from clubs.models import Book, User
+from clubs.models import Book
 
 class BookModelTestCase(TestCase):
     """Unit tests for the Book model."""

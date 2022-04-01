@@ -10,11 +10,7 @@ class MeetingModelTestCase(TestCase):
     fixtures = [
         "clubs/tests/fixtures/default_user.json",
         "clubs/tests/fixtures/default_club.json",
-        #'clubs/tests/fixtures/other_clubs.json',
-        #"clubs/tests/fixtures/default_meeting.json",
         "clubs/tests/fixtures/default_book.json",
-        #'clubs/tests/fixtures/other_books.json',
-
     ]
 
     def setUp(self):

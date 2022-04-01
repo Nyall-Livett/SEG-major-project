@@ -2,15 +2,17 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import PostForm
-from clubs.models import User, Club, Post
+from clubs.models import User, Club
 from clubs.tests.helpers import create_posts, reverse_with_next
 
 class ClubForumViewTestCase(TestCase):
     """Tests of the club forum view."""
 
-    fixtures = ['clubs/tests/fixtures/default_user.json',
+    fixtures = [
+        'clubs/tests/fixtures/default_user.json',
         'clubs/tests/fixtures/other_users.json',
-        'clubs/tests/fixtures/default_club.json']
+        'clubs/tests/fixtures/default_club.json'
+        ]
 
     def setUp(self):
         super(TestCase, self).setUp()
