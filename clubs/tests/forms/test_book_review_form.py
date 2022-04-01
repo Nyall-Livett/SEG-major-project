@@ -1,8 +1,7 @@
-from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from clubs.forms import BookReviewForm
-from clubs.models import Book, User, Club
+from clubs.models import Book, User
 from clubs.tests.helpers import LogInTester, reverse_with_next
 
 class BookReviewTest(TestCase,  LogInTester):

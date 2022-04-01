@@ -1,30 +1,13 @@
-
-# import ssl
-# try:
-#      _create_unverified_https_context =     ssl._create_unverified_context
-# except AttributeError:
-#      pass
-# else:
-#     ssl._create_default_https_context = _create_unverified_https_context
 import re
 import os
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
-# nltk.download("stopwords")
-# nltk.download("punkt")
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 books = pd.read_csv(os.getcwd() +"/clubs/content_based_recommender/data_set_smaller.csv")
-
-
-
-
 df = books.copy()
-
 
 """Uses book title, author, publisher and Category to give recommendations"""
 def content_based_recommender(book_title):

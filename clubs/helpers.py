@@ -3,8 +3,6 @@ from django.shortcuts import redirect
 import pandas as pd
 import csv
 import os
-import random
-from .models import Book
 
 def login_prohibited(view_function):
     def modified_view_function(request):

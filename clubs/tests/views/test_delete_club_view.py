@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User, Club
@@ -42,3 +41,11 @@ class DeleteClubTestCase(TestCase, LogInTester):
         self.assertEqual(response.status_code, 404)
         after = Club.objects.count()
         self.assertEqual(before, after)
+
+    def test_correct_message_is_shown_after_deletion(self):
+        self.client.login(username=self.user.username, password='Password123')
+        self.assertTrue(self._is_logged_in())
+        response = self.client.post(self.url, follow=True)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(str(messages_list[0]), f"You have successfully deleted {self.club.name}.")

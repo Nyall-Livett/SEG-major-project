@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse
 from clubs.forms import PasswordForm, UserForm, SignUpForm
 from .mixins import LoginProhibitedMixin
-from clubs.models import Moment, User, Club, CustomAvatar, Book
+from clubs.models import User, Club, CustomAvatar, Book
 from clubs.enums import AvatarIcon, AvatarColor
 import random
 from ..helpers import generate_favourite_ratings,delete_ratings
