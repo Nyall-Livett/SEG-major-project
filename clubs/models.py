@@ -349,19 +349,15 @@ class User(AbstractUser):
         """ return list of users future meetings """
         clubs = self.clubs.all()
         meetings = []
-        future_meetings_empty = [] 
-        future_meetings_count = 0
+        future_meetings = []
         for club in clubs:
             meetings += club.meetings.all()
 
-        for m in meetings:
-            if m.finish > self.now():
-                future_meetings_count = future_meetings_count+1
-        if future_meetings_count > 0:
-            return meetings
-        else:
-            return future_meetings_empty
-        
+        for meeting in meetings:
+            if meeting.finish > self.now():
+                future_meetings.append(meeting)
+
+        return future_meetings
 
 
 class Club(models.Model):
