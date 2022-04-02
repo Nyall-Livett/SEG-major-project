@@ -1,4 +1,46 @@
 # SEG-major-project
 
-Code used from other projects:
-The idea of the design on user profile has taken from SEG-small group project Bat-team.
+Project Title:
+Book Club
+
+Software Name:
+Book Club
+
+Team Name:
+Cautious Spoon
+
+Software Authors:
+Asif (Asif) Alam
+Nithila Daby
+Prabin Gurung
+Dongxin (Bafa) Li
+Nyall Livett
+Bardia Rokhzadifar
+Suliman Sattar
+Xiangyue (Lucy) Wei
+
+Code Reference List:
+- The idea of the design on user profile has taken from SEG-small group project Bat-team.
+- The recommender systems and evaluation systems were based from the 'Building Recommender Systems with Machine Learning and AI' LinkedIn course found at https://www.linkedin.com/learning/building-recommender-systems-with-machine-learning-and-ai/k-nearest-neighbors-knn-and-content-recs?autoplay=true&u=76208058
+
+Browser compatibility:
+(when testing the source code and using the deployed system)
+*Please have JavaScript enabled
+Recommended: Firefox or Chrome
+Avoid: Safai
+
+Deployed System Location:
+http://afternoon-forest-16791.herokuapp.com
+
+Access Credentials for deployed system:
+Username:
+Password:
+Username:
+Password:
+
+File Locations:
+- Source code can be found by unzipping the submitted file
+- Installation Instructions can be found by unzipping the submitted file
+- Screencast demonstration can be found by unzipping the submitted file
+- Testing Report and Recommender System Choice Report can be found in the 'Reports' folder of the unzipped submitted file
+- Evalutation Systems can be found in the 'Clubs' folder of the unzipped submitted file inside folders named 'N_based_RecSys_evaluation' and 'content_based_recommender'
