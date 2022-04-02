@@ -396,29 +396,34 @@ class Club(models.Model):
         """Model options."""
         ordering = ['-id']
 
+    """ Method to add members to clubs and delete them if they are already in the club. """
     def add_or_remove_member(self, user):
         if user not in self.members.all():
             user.clubs.add(self)
         else:
             user.clubs.remove(self)
-
+    """ Method to add applicants to club applicants list """
     def applicant_manager(self, user):
         if user not in self.applicants.all():
             user.applicants.add(self)
         else:
             user.applicants.remove(self)
 
+    """ Method to accept club membership """
     def acceptmembership(self, user):
         user.applicants.remove(self)
         user.clubs.add(self)
 
+    """ Method to reject membership """
     def rejectmembership(self,user):
         user.applicants.remove(self)
 
+    """ Method to pass leadership to another member """
     def grant_leadership(self, user):
         self.leader = user
         self.save()
 
+    """ Returns a list of clubs future meetings """
     def club_future_meetings(self):
         meetings = []
         user = User.objects.first()
@@ -434,6 +439,7 @@ class Club(models.Model):
     def __str__(self):
         return self.name
 
+    """ Check if a user is a member if this club """
     def is_member(self,request):
         for i in self.members.all():
             if request == i:
