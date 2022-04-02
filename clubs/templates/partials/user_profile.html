@@ -1,6 +1,17 @@
 <div class="row content">
   <div class="col-12">
-    <img src="{{ user.gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle profile-image" >
+    <!-- Avatar -->
+    {% if post.author.using_gravatar %}
+      <div class="notification-image" style="height:70px; width:70px">
+        <img src="{{ user.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+      </div>
+    {% else %}
+      <div class="notification-image" style="height:70px;width:70px">
+        <div id="{{user.customavatar.color}}" class="moment-avatar">
+          <img src="/static/images/{{user.customavatar.icon}}.svg">
+        </div>
+      </div>
+    {% endif %}
     <div class="profile-text">
       <h3 class="profile-title">{{ user.full_name }}</h3>
       <p class="profile-username">{{ user.username }}</p>

@@ -133,7 +133,7 @@
         </div>
 
         <div class="card" style="width: 26rem;">
-            <img class="card-img-top" src="https://www.mothersandmore.org/wp-content/uploads/2017/09/book-club.jpg" >
+            <img class="card-img-top" src="/static/images/meeting_club_image.jpeg" >
             <div class="card-body">
               <h5 class="card-title">Meetings</h5>
               {% for i in request.user.leader_of.all  %}
@@ -238,44 +238,6 @@
           </div>
           </div>
 
-
-
-        <!-- Change club theme modal -->
-        <div class="modal fade" id="modal-theme" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Change club theme</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                {% if club.members.count > 0 %}
-                  <select class="form-select" id="select-member" size="3" onchange="enableTransfer();" aria-label="size 3 select example">
-                    {% for member in club.members.all %}
-                      {% if member != user %}
-                      <option value={{member.id}}>{{member.full_name}}</option>
-                      {% endif %}
-                    {% endfor %}
-                  </select>
-                {% else %}
-                  <p>Sorry there is no one to transfer to.</p>
-                {% endif %}
-              </div>
-              <div class="modal-footer">
-                <div id="transfer-buttons">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" id="transfer-button" onclick="showAreYouSure()" disabled class="btn btn-danger">Transfer</button>
-                </div>
-                <div class="hidden" id="are-you-sure">
-                  <p><b>Are you sure?</b></p>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                  <button type="button" id="transfer-button" onclick="transferLeadership()" class="btn btn-danger">Yes</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
 
 {% endblock %}
 {% block javascript %}
