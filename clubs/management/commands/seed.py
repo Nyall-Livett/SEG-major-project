@@ -106,7 +106,7 @@ class Command(BaseCommand):
             e = d + timedelta(minutes=45)
             no_of_meeting = 1
         elif(pastOrFuture == 'future'):
-            d = timezone.make_aware(datetime.now() + timedelta(days=2))
+            d = timezone.make_aware(datetime.now() + timedelta(days=27))
             e = d + timedelta(minutes=45)
             no_of_meeting = 2
         else:
