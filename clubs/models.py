@@ -340,8 +340,8 @@ class User(AbstractUser):
         if self.has_request(user):
             self.follow_requests.remove(user)
 
-    """ method for getting current time """
     def now(self):
+        """ method for getting current time """
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
     
@@ -356,7 +356,6 @@ class User(AbstractUser):
         for meeting in meetings:
             if meeting.finish > self.now():
                 future_meetings.append(meeting)
-
         return future_meetings
 
 
@@ -392,35 +391,37 @@ class Club(models.Model):
         """Model options."""
         ordering = ['-id']
 
-    """ Method to add members to clubs and delete them if they are already in the club. """
+   
     def add_or_remove_member(self, user):
+        """ Method to add members to clubs and delete them if they are already in the club. """
         if user not in self.members.all():
             user.clubs.add(self)
         else:
             user.clubs.remove(self)
-    """ Method to add applicants to club applicants list """
+    
     def applicant_manager(self, user):
+        """ Method to add applicants to club applicants list """
         if user not in self.applicants.all():
             user.applicants.add(self)
         else:
             user.applicants.remove(self)
 
-    """ Method to accept club membership """
     def acceptmembership(self, user):
+        """ Method to accept club membership """
         user.applicants.remove(self)
         user.clubs.add(self)
 
-    """ Method to reject membership """
     def rejectmembership(self,user):
+        """ Method to reject membership """
         user.applicants.remove(self)
 
-    """ Method to pass leadership to another member """
     def grant_leadership(self, user):
+        """ Method to pass leadership to another member """
         self.leader = user
         self.save()
 
-    """ Returns a list of clubs future meetings """
     def club_future_meetings(self):
+        """ Returns a list of clubs future meetings """
         meetings = []
         user = User.objects.first()
         meeting = Meeting.objects.filter(club = self)
@@ -430,13 +431,15 @@ class Club(models.Model):
         return meetings
 
     def member_count(self):
+        """ Return number of members and maximum members of the club. """
         return f"{self.members.count()}/{self.maximum_members}"
 
     def __str__(self):
+        """ Return name of the club. """
         return self.name
 
-    """ Check if a user is a member if this club """
     def is_member(self,request):
+        """ Check if a user is a member if this club """
         for i in self.members.all():
             if request == i:
                 return True
