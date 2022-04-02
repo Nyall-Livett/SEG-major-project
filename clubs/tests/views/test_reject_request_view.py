@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from clubs.models import User
 from clubs.tests.helpers import reverse_with_next
+from django.contrib import messages
 
 class FollowToggleTest(TestCase):
 
@@ -49,3 +50,13 @@ class FollowToggleTest(TestCase):
         response_url = reverse('follow_requests_page')
         self.assertRedirects(response, response_url, status_code=302, target_status_code=200)
         self.assertTemplateUsed(response, 'follow_requests.html')
+
+    def test_correct_message_is_shown_after_rejecting_follow_request(self):
+        self.followee.send_follow_request(self.user)
+        self.client.login(username=self.user.username, password='Password123')
+        url = reverse('reject_request', kwargs={'user_id': self.followee.id})
+        response = self.client.get(url, follow=True)
+        messages_list = list(response.context['messages'])
+        self.assertEqual(len(messages_list), 1)
+        self.assertEqual(str(messages_list[0]), "You have successfully rejected follow request from {user}".format(user=self.followee.username))
+        self.assertEqual(messages_list[0].level, messages.SUCCESS)
