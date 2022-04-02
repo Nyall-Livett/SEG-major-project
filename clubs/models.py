@@ -419,6 +419,15 @@ class Club(models.Model):
         self.leader = user
         self.save()
 
+    def club_future_meetings(self):
+        meetings = []
+        user = User.objects.first()
+        meeting = Meeting.objects.filter(club = self)
+        for i in meeting:
+            if i.finish > user.now():
+                meetings.append(i)
+        return meetings
+
     def member_count(self):
         return f"{self.members.count()}/{self.maximum_members}"
 
