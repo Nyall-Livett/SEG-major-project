@@ -20,6 +20,7 @@ Suliman Sattar
 Xiangyue (Lucy) Wei
 
 Code Reference List:
+- All the code has borrowed ideas from the recommended training videos, e.g 5CCS2SEG Clucker Project
 - The idea of the design on user profile has taken from 5CCS2SEG - Small group project - Bat-team
 - The Club Forum, Post Model, and parts of the following users system have been taken from 5CCS2SEG Clucker project
 - The recommender systems and evaluation systems were based from the 'Building Recommender Systems with Machine Learning and AI' LinkedIn course found at https://www.linkedin.com/learning/building-recommender-systems-with-machine-learning-and-ai/k-nearest-neighbors-knn-and-content-recs?autoplay=true&u=76208058
