@@ -46,11 +46,11 @@
         <div class="row card s-40 p-16">
 
           <div class="collection-wrap">
-            
+
           {% if request.user.user_future_meetings %}
           {% for a in request.user.user_future_meetings %}
-            
-            
+
+
               <div class="single-item-wrap">
 
                 {% if user.now < a.finish %}
@@ -69,14 +69,14 @@
 
                 </div>
                 {% endif %}
-             
+
                 </div>
-               
+
               {% endfor %}
               {% else %}
-                <p>You have no upcomig meetings!</p>
+                <p>You have no Upcoming Meetings!</p>
                 {% endif %}
-              
+
             <p></p><p></p>
           </div>
           <!-- end meetings -->
@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-   
+
     <!-- Middle -->
     <div class="col-sm-8 min" style="padding: 0 18px; height:100%">
 
