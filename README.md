@@ -29,16 +29,17 @@ Browser compatibility:
 (when testing the source code and using the deployed system)
 *Please have JavaScript enabled
 Recommended: Firefox or Chrome
-Avoid: Safai
+Avoid: Safari
 
 Deployed System Location:
 http://afternoon-forest-16791.herokuapp.com
 
 Access Credentials for deployed system:
-Username:
-Password:
-Username:
-Password:
+(Both users follow each other and are members and leaders of clubs)
+Username: JustinConway
+Password: Password123
+Username: OliviaAnderson
+Password: Password123
 
 File Locations:
 - Source code can be found by unzipping the submitted file and going to the source_code directory
