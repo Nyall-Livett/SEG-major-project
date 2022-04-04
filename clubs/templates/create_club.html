@@ -390,6 +390,8 @@
             if (height >= width) {
               cropWrap.width(previewImage.width())
             }
+            if (width >= height) {
+              cropWrap.css("width","");            }
           }
         }
       }
