@@ -196,13 +196,12 @@ class CompleteMeetingForm(forms.ModelForm):
         "Form options"
         model = Meeting
         fields = ['start', 'finish', 'location', 'URL', 'passcode', 'book', 'chosen_member', 'next_book', 'notes']
-        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'disabled':'disabled'}), 'next_book': autocomplete.ModelSelect2(url='book-autocomplete') , 'chosen_member': forms.Select(attrs={'disabled':'disabled'}) }
+        widgets = { 'notes': forms.Textarea(), 'book': forms.Select(attrs={'readonly':True}), 'next_book': autocomplete.ModelSelect2(url='book-autocomplete') , 'chosen_member': forms.Select(attrs={'readonly':True}) }
     start = forms.CharField(disabled=True, required=False)
     finish = forms.CharField(disabled=True, required=False)
     location = forms.CharField(disabled=True, required=False)
     URL = forms.CharField(disabled=True, required=False)
     passcode = forms.CharField(disabled=True, required=False)
-
 
 class EditMeetingForm(forms.ModelForm):
     class Meta:

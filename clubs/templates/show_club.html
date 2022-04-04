@@ -148,11 +148,10 @@
                   <div class="meeting-card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
+                            <p class="text font-size-sm"> Upcoming meetings: <p></p>
 
-                            <p class="text font-size-sm"> Upcoming meetings: <p> </p>
-                            {% for i in  club.meetings.all %}
-                            {% if user.now < i.finish %}
-
+                            {% if club.club_future_meetings %}
+                            {% for i in club.club_future_meetings %}
 
                             <div class="card" style="width: 18rem;">
                                 <div class="card-body">
@@ -174,7 +173,6 @@
                                   <a href={% url 'delete_meeting' meeting_id=i.id club_id=club.id  %} class="btn btn-danger">Delete Meeting</a>
                                   {% endif %}
                                   {% endfor %}
-
                                   {% if i.URL == 'KeyError' %}
                                   <form target="_blank" action="{% url 'zoom_meeting' %}">
                                   {% else %}
@@ -186,8 +184,12 @@
                                   <p></p>
                                 </div>
                               </div>
-                              {% endif %}
+
                               {% endfor %}
+                              {% else %}
+                              <p>You have no Upcoming Meetings!</p>
+                              {% endif %}
+
                             </div>
                         </div>
                     </div>

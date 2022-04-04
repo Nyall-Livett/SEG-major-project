@@ -340,8 +340,8 @@ class User(AbstractUser):
         if self.has_request(user):
             self.follow_requests.remove(user)
 
-    """ method for getting current time """
     def now(self):
+        """ method for getting current time """
         utc=pytz.UTC
         return datetime.now().replace(tzinfo=utc)
     
@@ -349,19 +349,14 @@ class User(AbstractUser):
         """ return list of users future meetings """
         clubs = self.clubs.all()
         meetings = []
-        future_meetings_empty = [] 
-        future_meetings_count = 0
+        future_meetings = []
         for club in clubs:
             meetings += club.meetings.all()
 
-        for m in meetings:
-            if m.finish > self.now():
-                future_meetings_count = future_meetings_count+1
-        if future_meetings_count > 0:
-            return meetings
-        else:
-            return future_meetings_empty
-        
+        for meeting in meetings:
+            if meeting.finish > self.now():
+                future_meetings.append(meeting)
+        return future_meetings
 
 
 class Club(models.Model):
@@ -396,36 +391,55 @@ class Club(models.Model):
         """Model options."""
         ordering = ['-id']
 
+   
     def add_or_remove_member(self, user):
+        """ Method to add members to clubs and delete them if they are already in the club. """
         if user not in self.members.all():
             user.clubs.add(self)
         else:
             user.clubs.remove(self)
-
+    
     def applicant_manager(self, user):
+        """ Method to add applicants to club applicants list """
         if user not in self.applicants.all():
             user.applicants.add(self)
         else:
             user.applicants.remove(self)
 
     def acceptmembership(self, user):
+        """ Method to accept club membership """
         user.applicants.remove(self)
         user.clubs.add(self)
 
     def rejectmembership(self,user):
+        """ Method to reject membership """
         user.applicants.remove(self)
 
     def grant_leadership(self, user):
+        """ Method to pass leadership to another member """
         self.leader = user
         self.save()
 
+    def club_future_meetings(self):
+        """ Returns a list of clubs future meetings """
+        meetings = []
+        user = User.objects.first()
+        meeting = Meeting.objects.filter(club = self)
+        for i in meeting:
+            if i.finish > user.now():
+                meetings.append(i)
+        return meetings
+
     def member_count(self):
+        """ Return number of members and maximum members of the club. """
         return f"{self.members.count()}/{self.maximum_members}"
 
     def __str__(self):
+        """ Return name of the club. """
         return self.name
 
     def is_member(self,request):
+        """ Check if a user is a member if this club """
         for i in self.members.all():
             if request == i:
                 return True

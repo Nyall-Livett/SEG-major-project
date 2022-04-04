@@ -171,7 +171,7 @@ class RemoveFromClubView(LoginRequiredMixin, View):
             else:
                 self.club.add_or_remove_member(self.user)
                 messages.add_message(request, messages.WARNING,
-                    f"You have left {self.club.name} ")
+                    f"User has left {self.club.name} ")
         else:
             if self.club.members.count() >= self.club.maximum_members:
                 messages.add_message(request, messages.WARNING,
