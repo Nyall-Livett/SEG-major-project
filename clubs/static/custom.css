@@ -595,3 +595,10 @@ a {
 .form-image-input{
   margin: 16px 0;
 }
+
+@-moz-document url-prefix() {
+  #crop-wrap {
+      display: flex;
+      justify-content: center;
+  }
+}
