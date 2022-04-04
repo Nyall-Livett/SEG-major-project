@@ -386,8 +386,12 @@
           }
           $('#preview-image').attr('src', e.target.result);
 
+          if (navigator.userAgent.indexOf("Firefox") != -1) {
+            if (height >= width) {
+              cropWrap.width(previewImage.width())
+            }
+          }
         }
-
       }
     }
     reader.readAsDataURL(id_image[0].files[0])
