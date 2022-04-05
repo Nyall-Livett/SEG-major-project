@@ -36,9 +36,9 @@ http://afternoon-forest-16791.herokuapp.com
 
 Access Credentials for deployed system:
 (Both users follow each other and are members and leaders of clubs)
-Username: JustinConway
+Username: CliveCooper
 Password: Password123
-Username: OliviaAnderson
+Username: MartynBoyle
 Password: Password123
 
 File Locations:
