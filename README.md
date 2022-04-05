@@ -44,5 +44,5 @@ Password: Password123
 File Locations:
 - Source code can be found by unzipping the submitted file and going to the source_code directory
   - Evalutation Systems can be found in the 'Clubs' folder in the source_code directory of the unzipped submitted file inside folders named 'N_based_RecSys_evaluation' and 'content_based_recommender'
-- Installation Instructions, Testing Report, and Recommender System Choice Report can be found in the 'reports' folder of the unzipped submitted file
+- Installation Instructions, Testing Report, Recommender System Choice Report, and HTML Code Coverage Report can be found in the 'reports' folder of the unzipped submitted file
 - Screencast demonstration can be found by unzipping the submitted file
